@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+
 urlpatterns = [
     path('', views.vhod, name='vhod'),  # Страница входа
     path('da/', views.da, name='da'),  # Страница после успешной авторизации

@@ -188,11 +188,11 @@
             const otp = this.querySelector('input[type="text"]').value;
 
             // Отправка OTP на сервер для проверки
-            const result = await sendForm('/verify-otp-login/', { otp: otp });
-            if (result.redirect_url) {
+            const result = await sendForm('/verify-otp/', { otp: otp });
+            if (result.success) {
                 window.location.href = result.redirect_url;  // Переход на страницу da.html
             } else {
-                alert(result.error);
+                alert(result.error || 'Invalid OTP or error occurred.');
             }
         });
 

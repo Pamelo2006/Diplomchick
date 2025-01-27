@@ -6,13 +6,14 @@ import json
 import random
 from django.core.mail import send_mail
 from django.conf import settings
+from django.shortcuts import redirect
 
 def vhod(request):
     return render(request, 'vhod.html')
 
 # Страница после успешной авторизации
 def da(request):
-    return render(request, 'da.html')
+    return redirect('/diagrams/main_menu/')
 
 # Обработка регистрации
 @csrf_exempt
@@ -126,7 +127,12 @@ def verify_otp(request):
             # Поиск пользователя по email
             try:
                 user = Users.objects.get(Email=Users.hash_value(email))
-                return JsonResponse({'message': 'OTP verification successful', 'redirect_url': '/da/'}, status=200)
+                # Перенаправляем на main_menu.html
+                return JsonResponse({
+                    'success': True,
+                    'message': 'OTP verification successful',
+                    'redirect_url': '/diagrams/main_menu/'  # Укажите правильный URL
+                }, status=200)
             except Users.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
