@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BPMN Builder</title>
+    <!-- Подключаем BPMN.js -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
+    <style>
+        /* Стили для контейнера диаграммы */
+        #bpmn-container {
+            width: 100%;
+            height: 800px; /* Увеличиваем высоту контейнера */
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+        /* Стили для палитры */
+        .djs-palette {
+            height: 100%; /* Увеличиваем высоту палитры */
+        }
+    </style>
+</head>
+<body>
+    <h1>Блок схема</h1>
+    <!-- Контейнер для диаграммы -->
+    <div id="bpmn-container"></div>
+
+    <!-- Подключаем BPMN.js через CDN -->
+    <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
+    <script>
+        // Инициализация BPMN.js Modeler
+        const container = document.getElementById('bpmn-container');
+        const modeler = new BpmnJS({ container });
+
+        // Загрузка пустой диаграммы
+        modeler.createDiagram(function(err) {
+            if (err) {
+                console.error('Ошибка при создании диаграммы', err);
+            } else {
+                console.log('Диаграмма успешно создана');
+            }
+        });
+
+        // Настройка палитры
+        modeler.on('import.done', function(event) {
+            const palette = modeler.get('palette');
+
+            // Удаляем элементы, у которых нет приписки "create"
+            const paletteEntries = palette.getEntries();
+            Object.keys(paletteEntries).forEach(key => {
+                if (!key.startsWith('create.')) {
+                    delete paletteEntries[key];
+                }
+            });
+
+            // Обновляем палитру
+            palette.registerProvider({
+                getPaletteEntries: function() {
+                    return paletteEntries;
+                }
+            });
+        });
+    </script>
+</body>
+</html>

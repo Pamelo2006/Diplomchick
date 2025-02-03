@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swimlane Diagram with BPMN.js</title>
+    <!-- Подключаем BPMN.js -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .toolbar {
+            margin-bottom: 10px;
+        }
+        .toolbar button {
+            margin-right: 5px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        #bpmn-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Диаграмма плавательных дорожек</h1>
+
+    <!-- Контейнер для BPMN диаграммы -->
+    <div id="bpmn-container"></div>
+
+    <!-- Подключаем BPMN.js через CDN -->
+    <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
+    <script>
+        // Инициализация BPMN.js Modeler
+        const container = document.getElementById('bpmn-container');
+        const modeler = new BpmnJS({ container });
+
+        // Функции для добавления элементов
+        function addLane() {
+            console.log("Добавить дорожку (Lane)");
+            // Логика добавления дорожки
+        }
+
+        function addTask() {
+            console.log("Добавить задачу (Task)");
+            // Логика добавления задачи
+        }
+
+        function addEvent() {
+            console.log("Добавить событие (Event)");
+            // Логика добавления события
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Solutions</title>
+</head>
+<style>
+    body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Красивый шрифт */
+        }
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 10px 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+        }
+        header h1 {
+            margin: 0;
+            padding-right: 20px;
+            font-family: 'Georgia', serif;
+        }
+        nav {
+            display: flex;
+            gap: 10px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        nav a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        nav a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #4CAF50;
+            transition: width 0.3s ease;
+        }
+        nav a:hover::after {
+            width: 100%;
+        }
+        main {
+            padding-top: 70px;
+        }
+        .content {
+            padding: 20px;
+        }
+
+        .block1, .block2, .block3, .block4 {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
+        }
+        .block2, .block4 {
+            text-align: right;
+        }
+        .block2_text {
+            display: inline-block;
+            text-align: left;
+            max-width: 600px;
+        }
+        h2 {
+            font-family: 'Georgia', serif;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        p {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #555;
+            line-height: 1.6;
+        }
+        .right{
+            margin-left: 600px;
+        }
+        .icon {
+            display: flex;
+            gap: 10px;
+        }
+        .small-image {
+            width: 50px;
+            height: auto;
+        }
+
+</style>
+<body>
+    <header>
+        <h1>BPMN</h1>
+        <div class="left">
+            <nav class="nav-links">
+                <a href="{% url 'main_menu' %}">Главная</a>
+                <a href="{% url 'peculiarities' %}">Особенности</a>
+                <a href="#">Шаблоны</a>
+                <a href="{% url 'solutions' %}">Решения</a>
+                <a href="#">Мои диаграммы</a>
+            </nav>
+        </div>
+        <div class="right">
+            <nav class="icon">
+                {% load static %}
+                <img src="{% static 'images/account.svg' %}" alt="" class="small-image">
+                <img src="{% static 'images/chat.svg' %}" alt="" class="small-image">
+                <img src="{% static 'images/setting.svg' %}" alt="" class="small-image">
+            </nav>
+        </div>
+    </header>
+    <main>
+        <div class="content">
+            <a href="{% url 'block' %}">
+                <div class="block1">
+                    <h2>Блок-схема</h2>
+                    <div class="block2_text">
+                        <p>Блок-схема — распространённый тип схем (графических моделей), описывающих алгоритмы или процессы, в которых отдельные шаги изображаются в виде блоков различной формы, соединённых между собой линиями, указывающими направление последовательности.</p>
+                    </div>
+                    <div class="foto">
+                        {% load static %}
+                        <img src="{% static 'images/блок-схема.png' %}" alt="">
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'sipoc' %}">
+                <div class="block2">
+                    <div class="block2_text">
+                        <h2>SIPOC-диаграмма</h2>
+                        <p>SIPOC — один из инструментов описания бизнес-процессов. SIPOC позволяет проследить бизнес-логику процесса, с высоким, но управляемым уровнем абстракции. Во многих случаях SIPOC может быть использован для описания всех бизнес-процессов компании, обзора процессов «с высоты». Этот инструмент может служить поставщиком материала для формализации бизнес-процессов в общепринятых нотациях, например, BPMN.</p>
+                    </div>
+                    <div class="foto1">
+                        <img src="Diplom/diagrams/images/SIPOC-диаграмма.png" alt="">
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'swim' %}">
+                <div class="block3">
+                    <h2>Диаграмма плавательных дорожек</h2>
+                    <div class="block2_text">
+                        <p>Swimlane — это визуально разделенные линии внутри диаграммы процесса, которые группируют действия по ролям, ресурсам, элементам организации или местоположению. Swimlane визуализирует действия, которые выполняются особыми типами ресурсов, ролей или элементами организации, или которые связаны с особым местом. Кроме того, на swimlane-диаграммах можно указать роли исполнителей работ и таким образом более качественно задокументировать ответственность исполнителей.</p>
+                    </div>
+                    <div class="foto2">
+                        <img src="Diplom/diagrams/images/Диаграмма плавательных дорожек.png" alt="">
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'activity' %}">
+                <div class="block4">
+                    <div class="block2_text">
+                        <h2>Диаграмма деятельности</h2>
+                        <p>Диагра́мма де́ятельности — UML-диаграмма, на которой показаны действия, состояния которых описаны на диаграммах состояний. Под деятельностью (англ. activity) понимается спецификация исполняемого поведения в виде координированного последовательного и параллельного выполнения подчинённых элементов — вложенных видов деятельности и отдельных действий англ. action, соединённых между собой потоками, которые идут от выходов одного узла ко входам другого.</p>
+                    </div>
+                    <div class="foto3">
+                        <img src="Diplom/diagrams/images/Диаграмма деятельности.png" alt="">
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

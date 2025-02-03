@@ -36,6 +36,10 @@ def register(request):
         user.set_password(password)  # Хэшируем пароль
         user.save()
 
+        # Сохраняем данные пользователя в сессии
+        request.session['username'] = username
+        request.session['email'] = email
+
         # Возвращаем успешный ответ
         return JsonResponse({'success': True, 'message': 'User registered successfully'}, status=201)
 
@@ -59,7 +63,11 @@ def login(request):
         if not user.check_password(password):
             return JsonResponse({'error': 'Invalid password'}, status=400)
 
-        # Если авторизация успешна, возвращаем успешный ответ
+        # Если авторизация успешна, сохраняем данные пользователя в сессии
+        request.session['username'] = username
+        request.session['email'] = user.Email
+
+        # Возвращаем успешный ответ
         return JsonResponse({'success': True, 'message': 'Login successful'}, status=200)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)

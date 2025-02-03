@@ -1,12 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" id="htmlLang">
 <head>
     <meta charset="UTF-8">
-    <title>Peculiarities</title>
+    <title>Особенности</title>
     <style>
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FFF;
+            color: #000;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        body.dark-theme {
+            background-color: #333;
+            color: #FFF;
         }
         header {
             position: fixed;
@@ -20,6 +27,18 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
+        }
+        .right {
+            margin-left: 600px;
+        }
+        .icon {
+            display: flex;
+            gap: 10px;
+        }
+        .small-image {
+            width: 50px;
+            height: auto;
+            cursor: pointer;
         }
         header h1 {
             margin: 0;
@@ -95,8 +114,8 @@
             border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
-            overflow-y: auto; /* Добавляем вертикальный скролл */
-            height: 600px; /* Фиксированная высота для блока */
+            overflow-y: auto;
+            height: 600px;
         }
         .content div {
             display: none;
@@ -106,59 +125,303 @@
         .content div.active {
             display: block;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Стили для темной темы */
+        body.dark-theme .modal-content {
+            background-color: #444;
+            color: #FFF;
+            border-color: #555;
+        }
+        body.dark-theme .close {
+            color: #FFF;
+        }
+        body.dark-theme .close:hover,
+        body.dark-theme .close:focus {
+            color: #CCC;
+        }
+        body.dark-theme select {
+            background-color: #555;
+            color: #FFF;
+            border-color: #666;
+        }
+        body.dark-theme select:hover {
+            background-color: #666;
+        }
     </style>
+    <script src="https://cdn.localazy.com/localazy.js"></script>
 </head>
 <body>
     <header>
-        <h1>Мой сайт</h1>
-        <nav>
-            <a href="#">Особенности</a>
-            <a href="#">Шаблоны</a>
-            <a href="#">Решения</a>
-        </nav>
+        <h1>BPMN</h1>
+        <div class="left">
+            <nav class="nav-links">
+                <a href="{% url 'main_menu' %}" id="mainMenuLink">Главная</a>
+                <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
+                <a href="#" id="templatesLink">Шаблоны</a>
+                <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
+                <a href="#" id="myDiagramsLink">Мои диаграммы</a>
+            </nav>
+        </div>
+        <div class="right">
+            <nav class="icon">
+                {% load static %}
+                <img src="{% static 'images/account.svg' %}" alt="" class="small-image">
+                <img src="{% static 'images/chat.svg' %}" alt="" class="small-image">
+                <img src="{% static 'images/setting.svg' %}" alt="" class="small-image" onclick="openModal()">
+            </nav>
+        </div>
     </header>
     <div class="container">
         <div class="list">
             <ul>
-                <li data-target="text1" class="active">Что такое диаграмма бизнес-процессов</li>
-                <li data-target="text2">Элементы диаграммы</li>
-                <li data-target="text3">Типы диаграмм бизнес-процессов</li>
+                <li data-target="text1" class="active" id="whatIsBPMN">Что такое диаграмма бизнес-процессов</li>
+                <li data-target="text2" id="elementsOfBPMN">Элементы диаграммы</li>
+                <li data-target="text3" id="typesOfBPMN">Типы диаграмм бизнес-процессов</li>
             </ul>
         </div>
         <div class="content">
             <div id="text1" class="active">
-                <h2>Что такое диаграмма бизнес-процессов?</h2>
-                <p>Диаграммы рабочих процессов — это полезные визуальные инструменты, которые компании используют для упрощения и отображения взаимосвязей рабочих процессов. Они похожи на блок-схемы своей визуальной концепцией и служат для улучшения понимания процессов, важных для бизнеса. Поскольку люди воспринимают в первую очередь визуальную информацию, возможность рассмотреть карту процесса или последовательность рабочего процесса помогает лучше понять его.</p>
-                <p>Диаграмма рабочего процесса показывает этапы процесса и разбивает сложные операции на более удобные для восприятия разделы. Такие диаграммы будут полезны предпринимателям и менеджерам, которые хотят понять различных участников бизнес-процесса и шаги, которые люди должны предпринять для завершения процесса.</p>
+                <h2 id="whatIsBPMNText">Что такое диаграмма бизнес-процессов?</h2>
+                <p id="whatIsBPMNDescription1">Диаграммы рабочих процессов — это полезные визуальные инструменты, которые компании используют для упрощения и отображения взаимосвязей рабочих процессов. Они похожи на блок-схемы своей визуальной концепцией и служат для улучшения понимания процессов, важных для бизнеса. Поскольку люди воспринимают в первую очередь визуальную информацию, возможность рассмотреть карту процесса или последовательность рабочего процесса помогает лучше понять его.</p>
+                <p id="whatIsBPMNDescription2">Диаграмма рабочего процесса показывает этапы процесса и разбивает сложные операции на более удобные для восприятия разделы. Такие диаграммы будут полезны предпринимателям и менеджерам, которые хотят понять различных участников бизнес-процесса и шаги, которые люди должны предпринять для завершения процесса.</p>
             </div>
             <div id="text2">
-                <h2>Элементы используемые в диаграмме бизнес-процессов"?</h2>
-                <h4>Начальные и конечные точки процессов</h4><p>- представлены в виде кругов</p>
-                <h4>Последовательность задач</h4><p>- представлена в виде прямоугольников</p>
-                <h4>Решения</h4><p>- представлены в виде ромбов</p>
-                <h4>Стрелки и соединительные линии</h4><p>- указывают направление последовательности. На диаграмме рабочих процессов стрелки и соединительные линии показывают отношения зависимости между всеми вышеупомянутыми символами и фигурами</p>
+                <h2 id="elementsOfBPMNText">Элементы используемые в диаграмме бизнес-процессов</h2>
+                <h4 id="startEndPoints">Начальные и конечные точки процессов</h4><p id="startEndPointsDescription">- представлены в виде кругов</p>
+                <h4 id="sequenceOfTasks">Последовательность задач</h4><p id="sequenceOfTasksDescription">- представлена в виде прямоугольников</p>
+                <h4 id="decisions">Решения</h4><p id="decisionsDescription">- представлены в виде ромбов</p>
+                <h4 id="arrowsAndLines">Стрелки и соединительные линии</h4><p id="arrowsAndLinesDescription">- указывают направление последовательности. На диаграмме рабочих процессов стрелки и соединительные линии показывают отношения зависимости между всеми вышеупомянутыми символами и фигурами</p>
             </div>
             <div id="text3">
-                <h2>Типы диаграмм бизнес-процессов</h2>
-                <h4>Блок-схема</h4>
-                <p>Блок- схема состоит из разных фигур и символов, каждый из которых обозначает определенный этап последовательности событий или процесса. Эти фигуры представляют различные элементы рабочего процесса, такие как действия, материалы, услуги, исходные данные и результаты.</p>
-                <p>Использование блок-схемы для изображения рабочего процесса может наглядно показать, как задачи будут распределяться между ресурсами. Такое графическое отображение бизнес-процесса или системы может помочь в принятии решений и выявлении слабых мест.</p>
-                <h4>Диаграмма плавательных дорожек</h4>
-                <p>Название диаграммы плавательных дорожек вполне уместно, поскольку она визуально напоминает дорожки в бассейне. Каждая дорожка отображает собственные процессы и членов команды. Диаграмма четко показывает, как действия разных членов команды влияют на результаты в разных дорожках.</p>
-                <p>Диаграммы плавательных дорожек особенно полезны для крупных организаций, в которых есть различные отделы и команды, зависящие друг от друга. Наблюдая за тем, как сотрудники работают в коллективе, но в то же время самостоятельно, можно понять сложный процесс. Таким образом, диаграммы рабочих процессов выступают в качестве источника данных, к которому может обратиться любой сотрудник организации.</p>
-                <h4>Блок-диаграмма</h4>
-                <p>Блок-диаграмма — это вид диаграммы рабочего процесса, который применяется в основном к системам, а не к сложным процессам или бизнес-операциям. </p>
-                <p>При построении блок-диаграммы каждый блок представляет часть системы. Эта система может быть механической или технической, и каждая ее часть связана со следующей по порядку. Каждый блок имеет важное значение для работы системы, и, подобно другим диаграммам рабочего процесса, блок-диаграмма помогает визуализировать работу такой системы.</p>
-                <h4>Диаграмма SIPOC</h4>
-                <p>Название Диаграмма SIPOC отображает первое реальное отклонение от примера стандартной диаграммы рабочих процессов. </p>
-                <p>Вместо визуального представления последовательности шагов и событий в программе, в диаграмме SIPOC используется табличный формат для обобщения исходных данных и итогов процесса. Это позволяет добиться большей прозрачности и понимания процесса.</p>
-                <h4>Диаграмма деятельности UML</h4>
-                <p>Диаграмма деятельности UML дает общее представление обо всем, что происходит в компании или организации. Этот тип диаграммы рабочих процессов отражает составные части всего бизнес-процесса, а не более мелкие функциональные рабочие процессы.</p>
-                <p>Используя диаграмму деятельности UML, вы сможете планировать и оптимизировать процессы вашей компании «сверху вниз». Создав такую диаграмму, можно легко понять различные элементы и роли, которые обеспечивают выполнение процесса.</p>
+                <h2 id="typesOfBPMNText">Типы диаграмм бизнес-процессов</h2>
+                <h4 id="flowchart">Блок-схема</h4>
+                <p id="flowchartDescription1">Блок- схема состоит из разных фигур и символов, каждый из которых обозначает определенный этап последовательности событий или процесса. Эти фигуры представляют различные элементы рабочего процесса, такие как действия, материалы, услуги, исходные данные и результаты.</p>
+                <p id="flowchartDescription2">Использование блок-схемы для изображения рабочего процесса может наглядно показать, как задачи будут распределяться между ресурсами. Такое графическое отображение бизнес-процесса или системы может помочь в принятии решений и выявлении слабых мест.</p>
+                <h4 id="swimlaneDiagram">Диаграмма плавательных дорожек</h4>
+                <p id="swimlaneDiagramDescription1">Название диаграммы плавательных дорожек вполне уместно, поскольку она визуально напоминает дорожки в бассейне. Каждая дорожка отображает собственные процессы и членов команды. Диаграмма четко показывает, как действия разных членов команды влияют на результаты в разных дорожках.</p>
+                <p id="swimlaneDiagramDescription2">Диаграммы плавательных дорожек особенно полезны для крупных организаций, в которых есть различные отделы и команды, зависящие друг от друга. Наблюдая за тем, как сотрудники работают в коллективе, но в то же время самостоятельно, можно понять сложный процесс. Таким образом, диаграммы рабочих процессов выступают в качестве источника данных, к которому может обратиться любой сотрудник организации.</p>
+                <h4 id="blockDiagram">Блок-диаграмма</h4>
+                <p id="blockDiagramDescription1">Блок-диаграмма — это вид диаграммы рабочего процесса, который применяется в основном к системам, а не к сложным процессам или бизнес-операциям. </p>
+                <p id="blockDiagramDescription2">При построении блок-диаграммы каждый блок представляет часть системы. Эта система может быть механической или технической, и каждая ее часть связана со следующей по порядку. Каждый блок имеет важное значение для работы системы, и, подобно другим диаграммам рабочего процесса, блок-диаграмма помогает визуализировать работу такой системы.</p>
+                <h4 id="sipocDiagram">Диаграмма SIPOC</h4>
+                <p id="sipocDiagramDescription1">Название Диаграмма SIPOC отображает первое реальное отклонение от примера стандартной диаграммы рабочих процессов. </p>
+                <p id="sipocDiagramDescription2">Вместо визуального представления последовательности шагов и событий в программе, в диаграмме SIPOC используется табличный формат для обобщения исходных данных и итогов процесса. Это позволяет добиться большей прозрачности и понимания процесса.</p>
+                <h4 id="umlDiagram">Диаграмма деятельности UML</h4>
+                <p id="umlDiagramDescription1">Диаграмма деятельности UML дает общее представление обо всем, что происходит в компании или организации. Этот тип диаграммы рабочих процессов отражает составные части всего бизнес-процесса, а не более мелкие функциональные рабочие процессы.</p>
+                <p id="umlDiagramDescription2">Используя диаграмму деятельности UML, вы сможете планировать и оптимизировать процессы вашей компании «сверху вниз». Создав такую диаграмму, можно легко понять различные элементы и роли, которые обеспечивают выполнение процесса.</p>
+            </div>
+        </div>
+        <div id="settingsModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <h2 id="settingsText">Настройки</h2>
+                <label for="language" id="languageLabel">Язык:</label>
+                <select id="language" name="language" onchange="changeLanguage(this.value)">
+                    <option value="ru">Русский</option>
+                    <option value="en">English</option>
+                </select>
+                <br><br>
+                <label for="theme" id="themeLabel">Тема:</label>
+                <select id="theme" name="theme" onchange="changeTheme(this.value)">
+                    <option value="light">Светлая</option>
+                    <option value="dark">Темная</option>
+                </select>
             </div>
         </div>
     </div>
     <script>
+        localazy.init({
+            projectId: 'YOUR_PROJECT_ID', // Замените на ваш ID проекта
+            apiKey: 'YOUR_API_KEY', // Замените на ваш API ключ
+            defaultLang: 'ru', // Укажите язык по умолчанию
+        });
+        // Функция для открытия модального окна
+        function openModal() {
+            document.getElementById("settingsModal").style.display = "flex";
+        }
+
+        // Функция для закрытия модального окна
+        function closeModal() {
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        // Функция для смены темы
+        function changeTheme(theme) {
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+            } else {
+                document.body.classList.remove('dark-theme');
+            }
+            // Сохраняем выбранную тему в localStorage
+            localStorage.setItem('theme', theme);
+        }
+
+        // Функция для смены языка
+        function changeLanguage(lang) {
+            const htmlElement = document.getElementById('htmlLang');
+            htmlElement.setAttribute('lang', lang);
+
+            // Применяем переводы
+            applyTranslations(lang);
+
+            // Сохраняем выбранный язык в localStorage
+            localStorage.setItem('language', lang);
+        }
+
+        // Функция для применения переводов
+        function applyTranslations(lang) {
+            const translations = {
+                ru: {
+                    mainMenuLink: "Главная",
+                    peculiaritiesLink: "Особенности",
+                    templatesLink: "Шаблоны",
+                    solutionsLink: "Решения",
+                    myDiagramsLink: "Мои диаграммы",
+                    whatIsBPMN: "Что такое диаграмма бизнес-процессов",
+                    elementsOfBPMN: "Элементы диаграммы",
+                    typesOfBPMN: "Типы диаграмм бизнес-процессов",
+                    whatIsBPMNText: "Что такое диаграмма бизнес-процессов?",
+                    whatIsBPMNDescription1: "Диаграммы рабочих процессов — это полезные визуальные инструменты, которые компании используют для упрощения и отображения взаимосвязей рабочих процессов. Они похожи на блок-схемы своей визуальной концепцией и служат для улучшения понимания процессов, важных для бизнеса. Поскольку люди воспринимают в первую очередь визуальную информацию, возможность рассмотреть карту процесса или последовательность рабочего процесса помогает лучше понять его.",
+                    whatIsBPMNDescription2: "Диаграмма рабочего процесса показывает этапы процесса и разбивает сложные операции на более удобные для восприятия разделы. Такие диаграммы будут полезны предпринимателям и менеджерам, которые хотят понять различных участников бизнес-процесса и шаги, которые люди должны предпринять для завершения процесса.",
+                    elementsOfBPMNText: "Элементы используемые в диаграмме бизнес-процессов",
+                    startEndPoints: "Начальные и конечные точки процессов",
+                    startEndPointsDescription: "- представлены в виде кругов",
+                    sequenceOfTasks: "Последовательность задач",
+                    sequenceOfTasksDescription: "- представлена в виде прямоугольников",
+                    decisions: "Решения",
+                    decisionsDescription: "- представлены в виде ромбов",
+                    arrowsAndLines: "Стрелки и соединительные линии",
+                    arrowsAndLinesDescription: "- указывают направление последовательности. На диаграмме рабочих процессов стрелки и соединительные линии показывают отношения зависимости между всеми вышеупомянутыми символами и фигурами",
+                    typesOfBPMNText: "Типы диаграмм бизнес-процессов",
+                    flowchart: "Блок-схема",
+                    flowchartDescription1: "Блок- схема состоит из разных фигур и символов, каждый из которых обозначает определенный этап последовательности событий или процесса. Эти фигуры представляют различные элементы рабочего процесса, такие как действия, материалы, услуги, исходные данные и результаты.",
+                    flowchartDescription2: "Использование блок-схемы для изображения рабочего процесса может наглядно показать, как задачи будут распределяться между ресурсами. Такое графическое отображение бизнес-процесса или системы может помочь в принятии решений и выявлении слабых мест.",
+                    swimlaneDiagram: "Диаграмма плавательных дорожек",
+                    swimlaneDiagramDescription1: "Название диаграммы плавательных дорожек вполне уместно, поскольку она визуально напоминает дорожки в бассейне. Каждая дорожка отображает собственные процессы и членов команды. Диаграмма четко показывает, как действия разных членов команды влияют на результаты в разных дорожках.",
+                    swimlaneDiagramDescription2: "Диаграммы плавательных дорожек особенно полезны для крупных организаций, в которых есть различные отделы и команды, зависящие друг от друга. Наблюдая за тем, как сотрудники работают в коллективе, но в то же время самостоятельно, можно понять сложный процесс. Таким образом, диаграммы рабочих процессов выступают в качестве источника данных, к которому может обратиться любой сотрудник организации.",
+                    blockDiagram: "Блок-диаграмма",
+                    blockDiagramDescription1: "Блок-диаграмма — это вид диаграммы рабочего процесса, который применяется в основном к системам, а не к сложным процессам или бизнес-операциям.",
+                    blockDiagramDescription2: "При построении блок-диаграммы каждый блок представляет часть системы. Эта система может быть механической или технической, и каждая ее часть связана со следующей по порядку. Каждый блок имеет важное значение для работы системы, и, подобно другим диаграммам рабочего процесса, блок-диаграмма помогает визуализировать работу такой системы.",
+                    sipocDiagram: "Диаграмма SIPOC",
+                    sipocDiagramDescription1: "Название Диаграмма SIPOC отображает первое реальное отклонение от примера стандартной диаграммы рабочих процессов.",
+                    sipocDiagramDescription2: "Вместо визуального представления последовательности шагов и событий в программе, в диаграмме SIPOC используется табличный формат для обобщения исходных данных и итогов процесса. Это позволяет добиться большей прозрачности и понимания процесса.",
+                    umlDiagram: "Диаграмма деятельности UML",
+                    umlDiagramDescription1: "Диаграмма деятельности UML дает общее представление обо всем, что происходит в компании или организации. Этот тип диаграммы рабочих процессов отражает составные части всего бизнес-процесса, а не более мелкие функциональные рабочие процессы.",
+                    umlDiagramDescription2: "Используя диаграмму деятельности UML, вы сможете планировать и оптимизировать процессы вашей компании «сверху вниз». Создав такую диаграмму, можно легко понять различные элементы и роли, которые обеспечивают выполнение процесса.",
+                    settingsText: "Настройки",
+                    languageLabel: "Язык:",
+                    themeLabel: "Тема:"
+                },
+                en: {
+                    mainMenuLink: "Main",
+                    peculiaritiesLink: "Features",
+                    templatesLink: "Templates",
+                    solutionsLink: "Solutions",
+                    myDiagramsLink: "My Diagrams",
+                    whatIsBPMN: "What is a Business Process Diagram?",
+                    elementsOfBPMN: "Elements of the Diagram",
+                    typesOfBPMN: "Types of Business Process Diagrams",
+                    whatIsBPMNText: "What is a Business Process Diagram?",
+                    whatIsBPMNDescription1: "Workflow diagrams are useful visual tools that companies use to simplify and display workflow relationships. They are similar to flowcharts in their visual concept and serve to improve understanding of processes important to the business. Since people primarily perceive visual information, the ability to view a process map or workflow sequence helps to better understand it.",
+                    whatIsBPMNDescription2: "A workflow diagram shows the stages of a process and breaks down complex operations into more digestible sections. Such diagrams will be useful for entrepreneurs and managers who want to understand the various participants in the business process and the steps that people must take to complete the process.",
+                    elementsOfBPMNText: "Elements used in a Business Process Diagram",
+                    startEndPoints: "Start and End Points",
+                    startEndPointsDescription: "- represented as circles",
+                    sequenceOfTasks: "Sequence of Tasks",
+                    sequenceOfTasksDescription: "- represented as rectangles",
+                    decisions: "Decisions",
+                    decisionsDescription: "- represented as diamonds",
+                    arrowsAndLines: "Arrows and Connecting Lines",
+                    arrowsAndLinesDescription: "- indicate the direction of the sequence. In workflow diagrams, arrows and connecting lines show dependency relationships between all the aforementioned symbols and shapes.",
+                    typesOfBPMNText: "Types of Business Process Diagrams",
+                    flowchart: "Flowchart",
+                    flowchartDescription1: "A flowchart consists of different shapes and symbols, each representing a specific stage in a sequence of events or a process. These shapes represent various elements of the workflow, such as actions, materials, services, inputs, and outputs.",
+                    flowchartDescription2: "Using a flowchart to depict a workflow can visually show how tasks will be distributed among resources. Such graphical representation of a business process or system can aid in decision-making and identifying weaknesses.",
+                    swimlaneDiagram: "Swimlane Diagram",
+                    swimlaneDiagramDescription1: "The name swimlane diagram is quite appropriate, as it visually resembles lanes in a pool. Each lane displays its own processes and team members. The diagram clearly shows how the actions of different team members affect the results in different lanes.",
+                    swimlaneDiagramDescription2: "Swimlane diagrams are particularly useful for large organizations with various departments and teams that depend on each other. By observing how employees work collectively yet independently, one can understand the complex process. Thus, workflow diagrams serve as a data source that any employee in the organization can refer to.",
+                    blockDiagram: "Block Diagram",
+                    blockDiagramDescription1: "A block diagram is a type of workflow diagram that is mainly applied to systems rather than complex processes or business operations.",
+                    blockDiagramDescription2: "When constructing a block diagram, each block represents a part of the system. This system can be mechanical or technical, and each part is connected to the next in order. Each block is essential for the system's operation, and, like other workflow diagrams, a block diagram helps visualize the system's functioning.",
+                    sipocDiagram: "SIPOC Diagram",
+                    sipocDiagramDescription1: "The name SIPOC diagram represents the first real deviation from the example of a standard workflow diagram.",
+                    sipocDiagramDescription2: "Instead of visually representing the sequence of steps and events in a program, the SIPOC diagram uses a tabular format to summarize the inputs and outputs of the process. This allows for greater transparency and understanding of the process.",
+                    umlDiagram: "UML Activity Diagram",
+                    umlDiagramDescription1: "A UML activity diagram provides an overview of everything that happens in a company or organization. This type of workflow diagram reflects the components of the entire business process, rather than smaller functional workflows.",
+                    umlDiagramDescription2: "Using a UML activity diagram, you can plan and optimize your company's processes 'top-down'. By creating such a diagram, one can easily understand the various elements and roles that ensure the execution of the process.",
+                    settingsText: "Settings",
+                    languageLabel: "Language:",
+                    themeLabel: "Theme:"
+                }
+            };
+
+            Object.keys(translations[lang]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.textContent = translations[lang][key];
+                }
+            });
+        }
+
+        // Загрузка сохраненных настроек при загрузке страницы
+        function loadSettings() {
+            // Загружаем тему
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            changeTheme(savedTheme);
+            document.getElementById('theme').value = savedTheme;
+
+            // Загружаем язык
+            const savedLanguage = localStorage.getItem('language') || 'ru';
+            changeLanguage(savedLanguage);
+            document.getElementById('language').value = savedLanguage;
+        }
+
+        // Закрытие модального окна при клике вне его
+        window.onclick = function(event) {
+            let modal = document.getElementById("settingsModal");
+            if (event.target === modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        // Загружаем настройки при загрузке страницы
+        window.onload = loadSettings;
+
+        // Логика для переключения контента
         const listItems = document.querySelectorAll('.list li');
         const textElements = document.querySelectorAll('.content div');
 

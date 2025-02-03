@@ -1,12 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru" id="htmlLang">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная</title>
     <style>
+        /* Существующие стили */
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Красивый шрифт */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FFF;
+            color: #000;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        body.dark-theme {
+            background-color: #333;
+            color: #FFF;
         }
         header {
             position: fixed;
@@ -26,11 +35,11 @@
             padding-right: 20px;
             font-family: 'Georgia', serif;
         }
-        nav {
+        .nav-links {
             display: flex;
             gap: 10px;
         }
-        nav a {
+        .nav-links a {
             color: white;
             text-decoration: none;
             padding: 8px 12px;
@@ -38,10 +47,10 @@
             transition: all 0.3s ease;
             position: relative;
         }
-        nav a:hover {
+        .nav-links a:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        nav a::after {
+        .nav-links a::after {
             content: "";
             position: absolute;
             width: 0;
@@ -51,8 +60,17 @@
             background-color: #4CAF50;
             transition: width 0.3s ease;
         }
-        nav a:hover::after {
+        .nav-links a:hover::after {
             width: 100%;
+        }
+        .icon {
+            display: flex;
+            gap: 10px;
+        }
+        .small-image {
+            width: 50px;
+            height: auto;
+            cursor: pointer;
         }
         main {
             padding-top: 70px;
@@ -60,8 +78,7 @@
         .content {
             padding: 20px;
         }
-
-        .block1, .block2, .block3, .block4  {
+        .block1, .block2, .block3, .block4, .block {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
@@ -77,15 +94,15 @@
         }
         h2 {
             font-family: 'Georgia', serif;
-            color: #333;
+            color: inherit;
             margin-bottom: 10px;
         }
         p {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            color: #555;
+            color: inherit;
             line-height: 1.6;
         }
-        .block4 {
+        .block4, .block {
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
@@ -104,7 +121,7 @@
             position: relative;
         }
         .block4 li a {
-            color: #333;
+            color: inherit;
             text-decoration: none;
             padding: 8px 12px;
             border-radius: 4px;
@@ -126,46 +143,361 @@
         .block4 li a:hover::after {
             width: 100%;
         }
+        .create-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .create-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        .create-button:active {
+            background-color: #3d8b40;
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .right {
+            margin-left: 600px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        /* Стили для темной темы */
+        body.dark-theme .modal-content {
+            background-color: #444;
+            color: #FFF;
+            border-color: #555;
+        }
+        body.dark-theme .close {
+            color: #FFF;
+        }
+        body.dark-theme .close:hover,
+        body.dark-theme .close:focus {
+            color: #CCC;
+        }
+        body.dark-theme select {
+            background-color: #555;
+            color: #FFF;
+            border-color: #666;
+        }
+        body.dark-theme select:hover {
+            background-color: #666;
+        }
+        .auth-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .auth-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .auth-button:active {
+            background-color: #3d8b40;
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Мой сайт</h1>
-        <nav>
-            <a href="{% url 'peculiarities' %}">Особенности</a>
-            <a href="#">Шаблоны</a>
-            <a href="#">Решения</a>
-        </nav>
+        <h1>BPMN</h1>
+        <div class="left">
+            <nav class="nav-links">
+                <a href="{% url 'main_menu' %}" id="mainMenuLink">Главная</a>
+                <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
+                <a href="#" id="templatesLink">Шаблоны</a>
+                <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
+                <a href="#" id="myDiagramsLink">Мои диаграммы</a>
+            </nav>
+        </div>
+        <div class="right">
+            <nav class="icon">
+                {% load static %}
+                <img src="{% static 'images/account.svg' %}" alt="" class="small-image" onclick="openAccountModal()">
+                <img src="{% static 'images/chat.svg' %}" alt="" class="small-image">
+                <img src="{% static 'images/setting.svg' %}" alt="" class="small-image" onclick="openModal()">
+            </nav>
+        </div>
     </header>
     <main>
         <div class="content">
+            <div class="block">
+                <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
+                <button class="create-button" id="createButton">Создать</button>
+            </div>
             <div class="block1">
-                <h2>Создавайте бизнес-процессы легко и быстро!</h2>
-                <p>Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!</p>
+                <h2 id="createProcessText">Создавайте бизнес-процессы легко и быстро!</h2>
+                <p id="startNowText">Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!</p>
             </div>
             <div class="block2">
                 <div class="block2_text">
-                    <h2>Почему выбирают нас?</h2>
-                    <p>Интуитивный интерфейс: Простое создание диаграмм без сложного обучения</p>
-                    <p>Шаблоны и примеры: Готовые решения для различных отраслей</p>
-                    <p>Доступность: Работайте над своими диаграммами совершенно БЕСПЛАТНО</p>
+                    <h2 id="whyChooseUsText">Почему выбирают нас?</h2>
+                    <p id="intuitiveInterfaceText">Интуитивный интерфейс: Простое создание диаграмм без сложного обучения</p>
+                    <p id="templatesText">Шаблоны и примеры: Готовые решения для различных отраслей</p>
+                    <p id="freeText">Доступность: Работайте над своими диаграммами совершенно БЕСПЛАТНО</p>
                 </div>
             </div>
             <div class="block3">
-                <h2>3 простых шага к идеальной диаграмме</h2>
-                <p>Выберите шаблон или начните с чистого листа</p>
-                <p>Добавьте элементы и настройте процессы под свои задачи</p>
-                <p>Экспортируйте или сохраните результат на свой рабочий стол</p>
+                <h2 id="stepsText">3 простых шага к идеальной диаграмме</h2>
+                <p id="step1Text">Выберите шаблон или начните с чистого листа</p>
+                <p id="step2Text">Добавьте элементы и настройте процессы под свои задачи</p>
+                <p id="step3Text">Экспортируйте или сохраните результат на свой рабочий стол</p>
             </div>
             <div class="block4">
-                <h2>Возможность просмотра большого количества шаблонов под любую задачу</h2>
+                <h2 id="templatesForTasksText">Возможность просмотра большого количества шаблонов под любую задачу</h2>
                 <ul>
-                    <li><a href="#">✅ Шаблоны для сайтов</a></li>
-                    <li><a href="#">✅ Шаблоны для презентаций</a></li>
-                    <li><a href="#">✅ Шаблоны для документов</a></li>
+                    <li><a href="#" id="websiteTemplatesText">✅ Шаблоны для сайтов</a></li>
+                    <li><a href="#" id="presentationTemplatesText">✅ Шаблоны для презентаций</a></li>
+                    <li><a href="#" id="documentTemplatesText">✅ Шаблоны для документов</a></li>
                 </ul>
             </div>
         </div>
     </main>
+    <!-- Модальное окно настроек -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="settingsText">Настройки</h2>
+            <label for="language" id="languageLabel">Язык:</label>
+            <select id="language" name="language" onchange="changeLanguage(this.value)">
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+            </select>
+            <br><br>
+            <label for="theme" id="themeLabel">Тема:</label>
+            <select id="theme" name="theme" onchange="changeTheme(this.value)">
+                <option value="light">Светлая</option>
+                <option value="dark">Темная</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Модальное окно аккаунта -->
+    <div id="accountModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAccountModal()">&times;</span>
+            <h2 id="accountText">Аккаунт</h2>
+            <p id="accountInfoText">Добро пожаловать, {{ username }}! Ваш email: {{ email }}</p>
+        </div>
+    </div>
+
+    <script>
+    // Функция для открытия модального окна настроек
+    function openModal() {
+        document.getElementById("settingsModal").style.display = "flex";
+    }
+
+    // Функция для закрытия модального окна настроек
+    function closeModal() {
+        document.getElementById("settingsModal").style.display = "none";
+    }
+
+    // Функция для открытия модального окна аккаунта
+    function openAccountModal() {
+    fetch('accountModal/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('accountText').innerText = 'Добро пожаловать, ' + data.username;
+                document.getElementById('accountInfoText').innerText = 'Ваш email: ' + data.email;
+                document.getElementById('accountModal').style.display = 'block';
+            } else {
+                alert('Ошибка получения данных');
+            }
+        });
+}
+
+    // Функция для закрытия модального окна аккаунта
+    function closeAccountModal() {
+        document.getElementById('accountModal').style.display = 'none';
+    }
+
+    // Функция для смены темы
+    function changeTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+        // Сохраняем выбранную тему в localStorage
+        localStorage.setItem('theme', theme);
+    }
+
+    // Функция для смены языка
+    function changeLanguage(lang) {
+        const htmlElement = document.getElementById('htmlLang');
+        htmlElement.setAttribute('lang', lang);
+
+        // Применяем переводы
+        applyTranslations(lang);
+
+        // Сохраняем выбранный язык в localStorage
+        localStorage.setItem('language', lang);
+    }
+
+    // Функция для применения переводов
+    function applyTranslations(lang) {
+        const translations = {
+            ru: {
+                createDiagramText: "Попробуйте создать свою диаграмму",
+                createButton: "Создать",
+                createProcessText: "Создавайте бизнес-процессы легко и быстро!",
+                startNowText: "Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!",
+                whyChooseUsText: "Почему выбирают нас?",
+                intuitiveInterfaceText: "Интуитивный интерфейс: Простое создание диаграмм без сложного обучения",
+                templatesText: "Шаблоны и примеры: Готовые решения для различных отраслей",
+                freeText: "Доступность: Работайте над своими диаграммами совершенно БЕСПЛАТНО",
+                stepsText: "3 простых шага к идеальной диаграмме",
+                step1Text: "Выберите шаблон или начните с чистого листа",
+                step2Text: "Добавьте элементы и настройте процессы под свои задачи",
+                step3Text: "Экспортируйте или сохраните результат на свой рабочий стол",
+                templatesForTasksText: "Возможность просмотра большого количества шаблонов под любую задачу",
+                websiteTemplatesText: "✅ Шаблоны для сайтов",
+                presentationTemplatesText: "✅ Шаблоны для презентаций",
+                documentTemplatesText: "✅ Шаблоны для документов",
+                settingsText: "Настройки",
+                languageLabel: "Язык:",
+                themeLabel: "Тема:",
+                mainMenuLink: "Главная",
+                peculiaritiesLink: "Особенности",
+                templatesLink: "Шаблоны",
+                solutionsLink: "Решения",
+                myDiagramsLink: "Мои диаграммы",
+                accountText: "Аккаунт",
+                accountInfoText: "Здесь будет информация о вашем аккаунте.",
+                logoutButton: "Выйти"
+            },
+            en: {
+                createDiagramText: "Try creating your own diagram",
+                createButton: "Create",
+                createProcessText: "Create business processes easily and quickly!",
+                startNowText: "Professional diagrams for your business in just a few clicks. Start right now!",
+                whyChooseUsText: "Why choose us?",
+                intuitiveInterfaceText: "Intuitive interface: Easy diagram creation without complex learning",
+                templatesText: "Templates and examples: Ready-made solutions for various industries",
+                freeText: "Accessibility: Work on your diagrams completely FREE",
+                stepsText: "3 simple steps to the perfect diagram",
+                step1Text: "Choose a template or start from scratch",
+                step2Text: "Add elements and customize processes for your tasks",
+                step3Text: "Export or save the result to your desktop",
+                templatesForTasksText: "Ability to view a large number of templates for any task",
+                websiteTemplatesText: "✅ Website templates",
+                presentationTemplatesText: "✅ Presentation templates",
+                documentTemplatesText: "✅ Document templates",
+                settingsText: "Settings",
+                languageLabel: "Language:",
+                themeLabel: "Theme:",
+                mainMenuLink: "Main",
+                peculiaritiesLink: "Features",
+                templatesLink: "Templates",
+                solutionsLink: "Solutions",
+                myDiagramsLink: "My Diagrams",
+                accountText: "Account",
+                accountInfoText: "Here will be your account information.",
+                logoutButton: "Logout"
+            }
+        };
+
+        Object.keys(translations[lang]).forEach(key => {
+            const element = document.getElementById(key);
+            if (element) {
+                element.textContent = translations[lang][key];
+            }
+        });
+    }
+
+    // Функция для выхода из аккаунта
+    function logout() {
+        alert("Вы вышли из аккаунта");
+        closeAccountModal();
+    }
+
+    // Закрытие модального окна при клике вне его
+    window.onclick = function(event) {
+        let settingsModal = document.getElementById("settingsModal");
+        let accountModal = document.getElementById("accountModal");
+        if (event.target === settingsModal) {
+            settingsModal.style.display = "none";
+        }
+        if (event.target === accountModal) {
+            accountModal.style.display = "none";
+        }
+    }
+
+    // Загружаем настройки при загрузке страницы
+    function loadSettings() {
+        // Загружаем тему
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        changeTheme(savedTheme);
+        document.getElementById('theme').value = savedTheme;
+
+        // Загружаем язык
+        const savedLanguage = localStorage.getItem('language') || 'ru';
+        changeLanguage(savedLanguage);
+        document.getElementById('language').value = savedLanguage;
+    }
+
+    // Загружаем настройки при загрузке страницы
+    window.onload = loadSettings;
+</script>
 </body>
 </html>

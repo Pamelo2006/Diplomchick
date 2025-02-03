@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BPMN Builder</title>
+    <!-- Подключаем BPMN.js -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
+    <style>
+        /* Стили для контейнера диаграммы */
+        #bpmn-container {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Диаграмма SIPOC</h1>
+    <!-- Контейнер для диаграммы -->
+    <div id="bpmn-container"></div>
+
+    <!-- Подключаем BPMN.js через CDN -->
+    <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
+    <script>
+        // Инициализация BPMN.js Modeler
+        const container = document.getElementById('bpmn-container');
+        const modeler = new BpmnJS({ container });
+
+        // Настройка палитры
+        modeler.on('import.done', function(event) {
+            const palette = modeler.get('palette');
+
+            // Оставляем только элементы, подходящие для диаграммы SIPOC
+            const sipocElements = [
+                'create.start-event',      // Стартовое событие
+                'create.end-event',        // Завершающее событие
+                'create.task',             // Задача (Process)
+                'create.data-object',      // Данные (Input/Output)
+                'create.data-store',       // Хранилище данных (Supplier/Customer)
+                'create.text-annotation'   // Текстовая аннотация (для пояснений)
+            ];
+
+            // Получаем текущие элементы палитры
+            const paletteEntries = palette.getEntries();
+
+            // Удаляем все элементы, кроме тех, что в списке sipocElements
+            Object.keys(paletteEntries).forEach(key => {
+                if (!sipocElements.includes(key)) {
+                    delete paletteEntries[key];
+                }
+            });
+
+            // Обновляем палитру
+            palette.registerProvider({
+                getPaletteEntries: function() {
+                    return paletteEntries;
+                }
+            });
+        });
+
+        // Пример BPMN-диаграммы (XML)
+        const bpmnXML = `<?xml version="1.0" encoding="UTF-8"?>
+        <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+          <bpmn:process id="Process_1" isExecutable="false">
+            <bpmn:startEvent id="StartEvent_1" />
+            <bpmn:task id="Task_1" name="Process Step 1" />
+            <bpmn:task id="Task_2" name="Process Step 2" />
+            <bpmn:endEvent id="EndEvent_1" />
+            <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1" />
+            <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Task_2" />
+            <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_2" targetRef="EndEvent_1" />
+          </bpmn:process>
+          <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+            <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+              <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+                <dc:Bounds x="173" y="102" width="36" height="36" />
+              </bpmndi:BPMNShape>
+              <bpmndi:BPMNShape id="_BPMNShape_Task_1" bpmnElement="Task_1">
+                <dc:Bounds x="270" y="80" width="100" height="80" />
+              </bpmndi:BPMNShape>
+              <bpmndi:BPMNShape id="_BPMNShape_Task_2" bpmnElement="Task_2">
+                <dc:Bounds x="420" y="80" width="100" height="80" />
+              </bpmndi:BPMNShape>
+              <bpmndi:BPMNShape id="_BPMNShape_EndEvent_2" bpmnElement="EndEvent_1">
+                <dc:Bounds x="570" y="102" width="36" height="36" />
+              </bpmndi:BPMNShape>
+              <bpmndi:BPMNEdge id="_BPMNEdge_Flow_1" bpmnElement="Flow_1">
+                <di:waypoint x="209" y="120" />
+                <di:waypoint x="270" y="120" />
+              </bpmndi:BPMNEdge>
+              <bpmndi:BPMNEdge id="_BPMNEdge_Flow_2" bpmnElement="Flow_2">
+                <di:waypoint x="370" y="120" />
+                <di:waypoint x="420" y="120" />
+              </bpmndi:BPMNEdge>
+              <bpmndi:BPMNEdge id="_BPMNEdge_Flow_3" bpmnElement="Flow_3">
+                <di:waypoint x="520" y="120" />
+                <di:waypoint x="570" y="120" />
+              </bpmndi:BPMNEdge>
+            </bpmndi:BPMNPlane>
+          </bpmndi:BPMNDiagram>
+        </bpmn:definitions>`;
+
+        // Загрузка диаграммы
+        modeler.importXML(bpmnXML)
+            .then(() => {
+                console.log('Диаграмма успешно загружена!');
+                modeler.get('canvas').zoom('fit-viewport');
+            })
+            .catch(err => {
+                console.error('Ошибка загрузки диаграммы:', err);
+            });
+    </script>
+</body>
+</html>
