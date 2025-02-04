@@ -8,14 +8,28 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import redirect
 
+
 def vhod(request):
+    # Проверяем, передаёт ли пользователь данные (например, POST-запрос при логине)
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        # Если данные введены, проверяем их
+        if username and password:
+            try:
+                user = Users.objects.get(Username=username)
+                if user.check_password(password):
+                    request.session['username'] = username
+                    request.session['email'] = user.Email
+                    return redirect('/diagrams/main_menu/')  # Перенаправление после успешного входа
+            except Users.DoesNotExist:
+                pass  # Ошибка пользователя, но не редиректим сразу
+
+    # Если данных нет — просто отображаем страницу входа
     return render(request, 'vhod.html')
 
-# Страница после успешной авторизации
-def da(request):
-    return redirect('/diagrams/main_menu/')
 
-# Обработка регистрации
 @csrf_exempt
 def register(request):
     if request.method == 'POST':
@@ -24,51 +38,44 @@ def register(request):
         email = data.get('email')
         password = data.get('password')
 
-        # Проверяем, существует ли пользователь с таким username или email
         if Users.objects.filter(Username=username).exists():
             return JsonResponse({'error': 'Username already exists'}, status=400)
         if Users.objects.filter(Email=Users.hash_value(email)).exists():
             return JsonResponse({'error': 'Email already exists'}, status=400)
 
-        # Создаем нового пользователя
         user = Users(Username=username)
-        user.set_email(email)  # Хэшируем email
-        user.set_password(password)  # Хэшируем пароль
+        user.set_email(email)
+        user.set_password(password)
         user.save()
 
-        # Сохраняем данные пользователя в сессии
+        # Сохраняем данные в сессии
         request.session['username'] = username
         request.session['email'] = email
+        request.session.set_expiry(30 * 24 * 60 * 60)  # 30 дней
 
-        # Возвращаем успешный ответ
         return JsonResponse({'success': True, 'message': 'User registered successfully'}, status=201)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
 # Обработка авторизации
-@csrf_exempt
 def login(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
 
-        # Ищем пользователя по username
         try:
             user = Users.objects.get(Username=username)
         except Users.DoesNotExist:
             return JsonResponse({'error': 'User not found'}, status=404)
 
-        # Проверяем пароль
         if not user.check_password(password):
             return JsonResponse({'error': 'Invalid password'}, status=400)
 
-        # Если авторизация успешна, сохраняем данные пользователя в сессии
         request.session['username'] = username
         request.session['email'] = user.Email
 
-        # Возвращаем успешный ответ
-        return JsonResponse({'success': True, 'message': 'Login successful'}, status=200)
+        return JsonResponse({'success': True, 'message': 'Login successful'})
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -82,13 +89,13 @@ def send_otp_email(email, otp):
         send_mail(
             subject,
             message,
-            settings.EMAIL_HOST_USER,  # Отправитель
-            [email],  # Получатель
+            settings.EMAIL_HOST_USER,
+            [email],
             fail_silently=False,
         )
     except Exception as e:
-        print(f"Error sending email: {e}")  # Логируем ошибку
-        raise  # Повторно выбрасываем исключение
+        print(f"Error sending email: {e}")
+        raise
 
 @csrf_exempt
 @csrf_exempt
@@ -97,14 +104,11 @@ def send_otp(request):
         data = json.loads(request.body)
         email = data.get('email')
 
-        # Генерация OTP
         otp = generate_otp()
 
-        # Сохранение OTP в сессии
         request.session['otp'] = otp
         request.session['email'] = email
 
-        # Отправка OTP на email
         try:
             send_otp_email(email, otp)
             return JsonResponse({'success': True, 'message': 'OTP sent to your email!'})
@@ -119,30 +123,41 @@ def verify_otp(request):
         data = json.loads(request.body)
         user_otp = data.get('otp')
 
-        # Получение OTP из сессии
         stored_otp = request.session.get('otp')
         email = request.session.get('email')
 
         if not stored_otp or not email:
             return JsonResponse({'error': 'OTP expired or not sent'}, status=400)
 
-        # Проверка OTP
         if user_otp == stored_otp:
-            # Очистка сессии
             del request.session['otp']
             del request.session['email']
 
-            # Поиск пользователя по email
             try:
                 user = Users.objects.get(Email=Users.hash_value(email))
-                # Перенаправляем на main_menu.html
                 return JsonResponse({
                     'success': True,
                     'message': 'OTP verification successful',
-                    'redirect_url': '/diagrams/main_menu/'  # Укажите правильный URL
+                    'redirect_url': '/diagrams/main_menu/'
                 }, status=200)
             except Users.DoesNotExist:
                 return JsonResponse({'error': 'User not found'}, status=404)
         else:
             return JsonResponse({'error': 'Invalid OTP'}, status=400)
+
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def auto_login(request):
+    if 'username' in request.session and 'email' in request.session:
+        return JsonResponse({'success': True, 'message': 'Auto login successful'})
+
+    return JsonResponse({'success': False, 'message': 'Auto login failed'}, status=401)
+
+def get_session_data(request):
+    username = request.session.get('username')
+    email = request.session.get('email')
+
+    if username and email:
+        return JsonResponse({'username': username, 'email': email})
+    else:
+        return JsonResponse({'error': 'No session data found'}, status=400)

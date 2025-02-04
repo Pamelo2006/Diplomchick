@@ -4,24 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98baf57d-15a7-458b-b8d7-485156fe643b" name="Changes" comment="add doc">
-      <change afterPath="$PROJECT_DIR$/Diplom/builder/templates/builder/SIPOC_diagram.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/builder/templates/builder/Swim_lane_diagram.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/builder/templates/builder/activity.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/builder/templates/builder/block_diagrams.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/SIPOC-диаграмма.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/account.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/chat.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/setting.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/Диаграмма деятельности.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/Диаграмма плавательных дорожек.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/static/images/блок-схема.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/solutions.html" afterDir="false" />
+    <list default="true" id="98baf57d-15a7-458b-b8d7-485156fe643b" name="Changes" comment="работает создание диаграмм, есть наброски кастомизации">
+      <change afterPath="$PROJECT_DIR$/Diplom/builder/urls.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Diplom/media/uploaded_docs/english_doc.docx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Diplom/media/uploaded_docs/russian_doc.docx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/Diplom/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/Diplom/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/accounts/templates/da.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/Diplom/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/Diplom/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/accounts/templates/vhod.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/accounts/templates/vhod.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/accounts/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/accounts/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/builder/templates/builder/block_diagrams.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/builder/templates/builder/block_diagrams.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/main_menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/main_menu.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/peculiarities.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/peculiarities.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/urls.py" afterDir="false" />
@@ -35,8 +31,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -77,10 +73,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\media" />
+      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\uploaded_docs" />
       <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams\static\images" />
       <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams\static" />
       <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams\images" />
-      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams\templates\diagrams" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -123,7 +120,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738003327719</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="работает создание диаграмм, есть наброски кастомизации">
+      <option name="closed" value="true" />
+      <created>1738592362306</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1738592362306</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -141,6 +146,7 @@
     <MESSAGE value="First" />
     <MESSAGE value="second" />
     <MESSAGE value="add doc" />
-    <option name="LAST_COMMIT_MESSAGE" value="add doc" />
+    <MESSAGE value="работает создание диаграмм, есть наброски кастомизации" />
+    <option name="LAST_COMMIT_MESSAGE" value="работает создание диаграмм, есть наброски кастомизации" />
   </component>
 </project>

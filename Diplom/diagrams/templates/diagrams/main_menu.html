@@ -332,15 +332,46 @@
     </div>
 
     <!-- Модальное окно аккаунта -->
-    <div id="accountModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeAccountModal()">&times;</span>
-            <h2 id="accountText">Аккаунт</h2>
-            <p id="accountInfoText">Добро пожаловать, {{ username }}! Ваш email: {{ email }}</p>
-        </div>
+<div id="accountModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAccountModal()">&times;</span>
+        <h2 id="accountText">Аккаунт</h2>
+        <p id="accountInfoText">Ваш email: {{ email }}</p>  <!-- Использование данных из cookies -->
     </div>
+</div>
 
-    <script>
+<script>
+      // Функция для открытия модального окна
+    function openAccountModal() {
+        document.getElementById('accountModal').style.display = 'block';
+    }
+
+    // Функция для закрытия модального окна
+    function closeAccountModal() {
+        document.getElementById('accountModal').style.display = 'none';
+    }
+
+    function getSessionData() {
+    fetch('/accounts/get_session_data/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.username && data.email) {
+                document.getElementById('accountText').innerText = 'Добро пожаловать, ' + data.username;
+                document.getElementById('accountInfoText').innerText = 'Ваш email: ' + data.email;
+            } else {
+                document.getElementById('accountText').innerText = 'Ошибка';
+                document.getElementById('accountInfoText').innerText = 'Данные не найдены';
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            document.getElementById('accountText').innerText = 'Ошибка загрузки данных';
+        });
+}
+
+window.onload = getSessionData;
+
+
     // Функция для открытия модального окна настроек
     function openModal() {
         document.getElementById("settingsModal").style.display = "flex";
@@ -349,26 +380,6 @@
     // Функция для закрытия модального окна настроек
     function closeModal() {
         document.getElementById("settingsModal").style.display = "none";
-    }
-
-    // Функция для открытия модального окна аккаунта
-    function openAccountModal() {
-    fetch('accountModal/')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('accountText').innerText = 'Добро пожаловать, ' + data.username;
-                document.getElementById('accountInfoText').innerText = 'Ваш email: ' + data.email;
-                document.getElementById('accountModal').style.display = 'block';
-            } else {
-                alert('Ошибка получения данных');
-            }
-        });
-}
-
-    // Функция для закрытия модального окна аккаунта
-    function closeAccountModal() {
-        document.getElementById('accountModal').style.display = 'none';
     }
 
     // Функция для смены темы
