@@ -1,0 +1,180 @@
+{% extends "admin/change_form.html" %}
+{% load static %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <!-- Подключаем стили и скрипты BPMN-редактора -->
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
+
+    <style>
+        /* Основные стили */
+        #top-panel { background: #f1f1f1; padding: 10px; display: flex; }
+        .btn { padding: 10px; margin-right: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .btn:hover { background: #45a049; }
+        #bpmn-editor { width: 100%; height: 600px; border: 1px solid #ccc; background: #f9f9f9; margin-top: 10px; }
+
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+    </style>
+
+    <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
+
+    <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const bpmnContainer = document.getElementById('bpmn-editor');
+    const xmlDataField = document.getElementById('id_xml_data'); // Скрытое поле для XML
+    const form = document.querySelector('form');
+    let bpmnModeler;
+
+    if (!bpmnContainer) {
+        console.error('Контейнер #bpmn-editor не найден');
+        return;
+    }
+
+    bpmnModeler = new BpmnJS({
+        container: bpmnContainer
+    });
+
+    // Получаем XML из скрытого поля или создаем новую диаграмму
+    let initialXML = xmlDataField?.value?.trim();
+
+    if (!initialXML) {
+        initialXML = `<?xml version="1.0" encoding="UTF-8"?>
+        <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                          xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                          xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                          id="Definitions_1"
+                          targetNamespace="http://bpmn.io/schema/bpmn">
+          <bpmn:process id="Process_1" isExecutable="false">
+            <bpmn:startEvent id="StartEvent_1"/>
+          </bpmn:process>
+          <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+            <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+              <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+                <dc:Bounds x="100" y="100" width="36" height="36"/>
+              </bpmndi:BPMNShape>
+            </bpmndi:BPMNPlane>
+          </bpmndi:BPMNDiagram>
+        </bpmn:definitions>`;
+    }
+
+    // Импортируем диаграмму
+    bpmnModeler.importXML(initialXML).then(() => {
+        console.log("Диаграмма загружена");
+    }).catch(err => {
+        console.error("Ошибка импорта BPMN XML:", err);
+    });
+
+    // Функция сохранения диаграммы на сервер
+    async function saveDiagram(name) {
+        try {
+            const { xml } = await bpmnModeler.saveXML({ format: true });
+
+            const response = await fetch('/builder/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    bpmn: xml
+                })
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert('Диаграмма успешно сохранена!');
+                console.log('Ответ сервера:', result);
+            } else {
+                console.error('Ошибка при сохранении:', result);
+                alert('Ошибка при сохранении диаграммы.');
+            }
+
+        } catch (err) {
+            console.error("Ошибка сохранения BPMN XML:", err);
+        }
+    }
+
+    // Обработчик кнопки "Сохранить"
+    document.getElementById('save-button').addEventListener('click', function (event) {
+        event.preventDefault(); // Останавливаем стандартное поведение
+
+        // Показываем модальное окно для ввода имени диаграммы
+        const modal = document.getElementById('nameModal');
+        modal.style.display = "block";
+    });
+
+    // Обработчик кнопки "Сохранить" в модальном окне
+    document.getElementById('modal-save-button').addEventListener('click', function (event) {
+        const nameInput = document.getElementById('diagram-name');
+        const name = nameInput.value.trim();
+        if (name) {
+            // Скрываем модальное окно
+            const modal = document.getElementById('nameModal');
+            modal.style.display = "none";
+
+            // Сохраняем диаграмму с введенным именем
+            saveDiagram(name);
+        } else {
+            alert('Пожалуйста, введите имя диаграммы');
+        }
+    });
+
+    // Перед отправкой формы сохраняем XML диаграммы в скрытое поле
+    form.addEventListener('submit', async function () {
+        try {
+            const { xml } = await bpmnModeler.saveXML({ format: true });
+            xmlDataField.value = xml; // Записываем XML обратно в форму перед отправкой
+        } catch (err) {
+            console.error("Ошибка сохранения BPMN XML перед отправкой формы:", err);
+        }
+
+    });
+});
+    </script>
+{% endblock %}
+
+{% block content %}
+    <h1>Редактор диаграмм BPMN</h1>
+    <div id="top-panel">
+        <button id="save-button" class="btn">💾 Сохранить</button>
+    </div>
+    <div id="bpmn-editor"></div>
+    {{ block.super }}
+    <!-- Скрытое поле для хранения XML -->
+    <input type="hidden" id="id_xml_data" name="xml_data" value="{{ form.initial.xml_data }}">
+
+    <!-- Модальное окно для ввода имени диаграммы -->
+    <div id="nameModal" class="modal">
+        <div class="modal-content">
+            <h2>Сохранение диаграммы</h2>
+            <p>Введите имя диаграммы:</p>
+            <input type="text" id="diagram-name" placeholder="Название диаграммы">
+            <button id="modal-save-button" class="btn">💾 Сохранить</button>
+        </div>
+    </div>
+{% endblock %}

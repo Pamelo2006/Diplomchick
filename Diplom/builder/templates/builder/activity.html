@@ -8,71 +8,99 @@
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
     <style>
-        /* Стили для контейнера диаграммы */
-        #bpmn-container {
-            width: 100%;
-            height: 800px; /* Увеличиваем высоту контейнера */
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
-        /* Стили для палитры */
-        .djs-palette {
-            height: 100%; /* Увеличиваем высоту палитры */
-        }
+       /* Основные стили */
+        #top-panel { background: #f1f1f1; padding: 10px; display: flex; }
+        .btn { padding: 10px; margin-right: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .btn:hover { background: #45a049; }
+        #bpmn-container { width: 100%; height: 600px; border: 1px solid #ccc; background: #f9f9f9; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h1>Диаграмма деятельности</h1>
     <!-- Контейнер для диаграммы -->
+<div id="top-panel">
+    <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
+    <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+</div>
     <div id="bpmn-container"></div>
 
     <!-- Подключаем BPMN.js через CDN -->
     <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
     <script>
-        // Инициализация BPMN.js Modeler
         const container = document.getElementById('bpmn-container');
-        const modeler = new BpmnJS({ container });
+    const modeler = new BpmnJS({ container });
 
-        // Загрузка пустой диаграммы
-        modeler.createDiagram(function(err) {
-            if (err) {
-                console.error('Ошибка при создании диаграммы', err);
-            } else {
-                console.log('Диаграмма успешно создана');
+    const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+    <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                      xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                      xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="Definitions_1"
+                      targetNamespace="http://bpmn.io/schema/bpmn">
+      <bpmn:process id="Process_1" isExecutable="false">
+        <bpmn:startEvent id="StartEvent_1"/>
+      </bpmn:process>
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+          <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+            <dc:Bounds x="100" y="100" width="36" height="36"/>
+          </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+      </bpmndi:BPMNDiagram>
+    </bpmn:definitions>`;
+
+    async function createDiagram() {
+        try {
+            await modeler.importXML(emptyDiagram);
+            console.log("Диаграмма загружена");
+        } catch (err) {
+            console.error("Ошибка загрузки диаграммы:", err);
+        }
+    }
+
+    createDiagram();
+
+    async function saveDiagram() {
+        const name = prompt("Введите название диаграммы:", "Новая диаграмма");
+
+        try {
+            const { xml } = await modeler.saveXML({ format: true });
+
+            const response = await fetch('/builder/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    bpmn: xml
+                })
+            });
+
+            if(response.ok) {
+                alert('Успешно сохранено!');
             }
-        });
+        } catch(error) {
+            console.error('Ошибка:', error);
+        }
+    }
 
-        // Настройка палитры
-        modeler.on('import.done', function(event) {
-            const palette = modeler.get('palette');
+    async function loadDiagram() {
+        const diagramId = prompt("Введите ID диаграммы:");
 
-            // Оставляем только элементы с индексом create, подходящие для диаграммы деятельности
-            const activityElements = [
-                'create.start-event',       // Стартовое событие
-                'create.end-event',         // Завершающее событие
-                'create.task',              // Задача
-                'create.exclusive-gateway', // Шлюз исключающего ИЛИ
-                'create.parallel-gateway',  // Шлюз параллельного ИЛИ
-                'create.sequence-flow'      // Поток выполнения
-            ];
+        if (!diagramId) return;
 
-            // Получаем текущие элементы палитры
-            const paletteEntries = palette.getEntries();
+        try {
+            const response = await fetch(`/builder/load/${diagramId}/`);
+            const { xml } = await response.json();
 
-            // Удаляем все элементы, кроме тех, что в списке activityElements
-            Object.keys(paletteEntries).forEach(key => {
-                if (!activityElements.includes(key)) {
-                    delete paletteEntries[key];
-                }
-            });
-
-            // Обновляем палитру
-            palette.registerProvider({
-                getPaletteEntries: function() {
-                    return paletteEntries;
-                }
-            });
-        });
+            await modeler.importXML(xml);
+            modeler.get('canvas').zoom('fit-viewport');
+        } catch(error) {
+            console.error('Ошибка загрузки:', error);
+        }
+    }
     </script>
 </body>
 </html>

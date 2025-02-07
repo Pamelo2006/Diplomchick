@@ -8,110 +8,99 @@
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
     <style>
-        /* Стили для контейнера диаграммы */
-        #bpmn-container {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
+        /* Основные стили */
+        #top-panel { background: #f1f1f1; padding: 10px; display: flex; }
+        .btn { padding: 10px; margin-right: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .btn:hover { background: #45a049; }
+        #bpmn-container { width: 100%; height: 600px; border: 1px solid #ccc; background: #f9f9f9; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h1>Диаграмма SIPOC</h1>
+    <div id="top-panel">
+        <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
+        <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+    </div>
     <!-- Контейнер для диаграммы -->
     <div id="bpmn-container"></div>
 
     <!-- Подключаем BPMN.js через CDN -->
     <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
     <script>
-        // Инициализация BPMN.js Modeler
         const container = document.getElementById('bpmn-container');
-        const modeler = new BpmnJS({ container });
+    const modeler = new BpmnJS({ container });
 
-        // Настройка палитры
-        modeler.on('import.done', function(event) {
-            const palette = modeler.get('palette');
+    const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+    <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                      xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                      xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="Definitions_1"
+                      targetNamespace="http://bpmn.io/schema/bpmn">
+      <bpmn:process id="Process_1" isExecutable="false">
+        <bpmn:startEvent id="StartEvent_1"/>
+      </bpmn:process>
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+          <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+            <dc:Bounds x="100" y="100" width="36" height="36"/>
+          </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+      </bpmndi:BPMNDiagram>
+    </bpmn:definitions>`;
 
-            // Оставляем только элементы, подходящие для диаграммы SIPOC
-            const sipocElements = [
-                'create.start-event',      // Стартовое событие
-                'create.end-event',        // Завершающее событие
-                'create.task',             // Задача (Process)
-                'create.data-object',      // Данные (Input/Output)
-                'create.data-store',       // Хранилище данных (Supplier/Customer)
-                'create.text-annotation'   // Текстовая аннотация (для пояснений)
-            ];
+    async function createDiagram() {
+        try {
+            await modeler.importXML(emptyDiagram);
+            console.log("Диаграмма загружена");
+        } catch (err) {
+            console.error("Ошибка загрузки диаграммы:", err);
+        }
+    }
 
-            // Получаем текущие элементы палитры
-            const paletteEntries = palette.getEntries();
+    createDiagram();
 
-            // Удаляем все элементы, кроме тех, что в списке sipocElements
-            Object.keys(paletteEntries).forEach(key => {
-                if (!sipocElements.includes(key)) {
-                    delete paletteEntries[key];
-                }
+    async function saveDiagram() {
+        const name = prompt("Введите название диаграммы:", "Новая диаграмма");
+
+        try {
+            const { xml } = await modeler.saveXML({ format: true });
+
+            const response = await fetch('/builder/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    bpmn: xml
+                })
             });
 
-            // Обновляем палитру
-            palette.registerProvider({
-                getPaletteEntries: function() {
-                    return paletteEntries;
-                }
-            });
-        });
+            if(response.ok) {
+                alert('Успешно сохранено!');
+            }
+        } catch(error) {
+            console.error('Ошибка:', error);
+        }
+    }
 
-        // Пример BPMN-диаграммы (XML)
-        const bpmnXML = `<?xml version="1.0" encoding="UTF-8"?>
-        <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
-          <bpmn:process id="Process_1" isExecutable="false">
-            <bpmn:startEvent id="StartEvent_1" />
-            <bpmn:task id="Task_1" name="Process Step 1" />
-            <bpmn:task id="Task_2" name="Process Step 2" />
-            <bpmn:endEvent id="EndEvent_1" />
-            <bpmn:sequenceFlow id="Flow_1" sourceRef="StartEvent_1" targetRef="Task_1" />
-            <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_1" targetRef="Task_2" />
-            <bpmn:sequenceFlow id="Flow_3" sourceRef="Task_2" targetRef="EndEvent_1" />
-          </bpmn:process>
-          <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-            <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-              <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
-                <dc:Bounds x="173" y="102" width="36" height="36" />
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNShape id="_BPMNShape_Task_1" bpmnElement="Task_1">
-                <dc:Bounds x="270" y="80" width="100" height="80" />
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNShape id="_BPMNShape_Task_2" bpmnElement="Task_2">
-                <dc:Bounds x="420" y="80" width="100" height="80" />
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNShape id="_BPMNShape_EndEvent_2" bpmnElement="EndEvent_1">
-                <dc:Bounds x="570" y="102" width="36" height="36" />
-              </bpmndi:BPMNShape>
-              <bpmndi:BPMNEdge id="_BPMNEdge_Flow_1" bpmnElement="Flow_1">
-                <di:waypoint x="209" y="120" />
-                <di:waypoint x="270" y="120" />
-              </bpmndi:BPMNEdge>
-              <bpmndi:BPMNEdge id="_BPMNEdge_Flow_2" bpmnElement="Flow_2">
-                <di:waypoint x="370" y="120" />
-                <di:waypoint x="420" y="120" />
-              </bpmndi:BPMNEdge>
-              <bpmndi:BPMNEdge id="_BPMNEdge_Flow_3" bpmnElement="Flow_3">
-                <di:waypoint x="520" y="120" />
-                <di:waypoint x="570" y="120" />
-              </bpmndi:BPMNEdge>
-            </bpmndi:BPMNPlane>
-          </bpmndi:BPMNDiagram>
-        </bpmn:definitions>`;
+    async function loadDiagram() {
+        const diagramId = prompt("Введите ID диаграммы:");
 
-        // Загрузка диаграммы
-        modeler.importXML(bpmnXML)
-            .then(() => {
-                console.log('Диаграмма успешно загружена!');
-                modeler.get('canvas').zoom('fit-viewport');
-            })
-            .catch(err => {
-                console.error('Ошибка загрузки диаграммы:', err);
-            });
+        if (!diagramId) return;
+
+        try {
+            const response = await fetch(`/builder/load/${diagramId}/`);
+            const { xml } = await response.json();
+
+            await modeler.importXML(xml);
+            modeler.get('canvas').zoom('fit-viewport');
+        } catch(error) {
+            console.error('Ошибка загрузки:', error);
+        }
+    }
     </script>
 </body>
 </html>

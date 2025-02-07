@@ -1,7 +1,8 @@
 from django.urls import path
-from .views import save_bpmn, load_bpmn
+from .views import save_bpmn, load_bpmn, list_diagrams
 
 urlpatterns = [
-    path('builder/save/', save_bpmn, name='save_bpmn'),
-    path('builder/load/<int:diagram_id>/', load_bpmn, name='load_bpmn'),
+    path('save/', save_bpmn),
+    path('load/<int:diagram_id>/', load_bpmn),
+    path('list/', list_diagrams),
 ]

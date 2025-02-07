@@ -60,43 +60,44 @@
     createDiagram();
 
     async function saveDiagram() {
+        const name = prompt("Введите название диаграммы:", "Новая диаграмма");
+
         try {
             const { xml } = await modeler.saveXML({ format: true });
 
             const response = await fetch('/builder/save/', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: 'Моя диаграмма', bpmn: xml })
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    bpmn: xml
+                })
             });
 
-            const result = await response.json();
-
-            if (response.ok) {
-                alert('Диаграмма сохранена! ID: ' + result.id);
-            } else {
-                alert('Ошибка сохранения: ' + result.error);
+            if(response.ok) {
+                alert('Успешно сохранено!');
             }
-        } catch (error) {
+        } catch(error) {
             console.error('Ошибка:', error);
         }
     }
 
     async function loadDiagram() {
-        const diagramId = prompt('Введите ID диаграммы:');
+        const diagramId = prompt("Введите ID диаграммы:");
+
         if (!diagramId) return;
 
         try {
             const response = await fetch(`/builder/load/${diagramId}/`);
-            const result = await response.json();
+            const { xml } = await response.json();
 
-            if (response.ok) {
-                await modeler.importXML(result.xml_data);
-                alert('Диаграмма загружена!');
-            } else {
-                alert('Ошибка загрузки: ' + result.error);
-            }
-        } catch (error) {
-            console.error('Ошибка:', error);
+            await modeler.importXML(xml);
+            modeler.get('canvas').zoom('fit-viewport');
+        } catch(error) {
+            console.error('Ошибка загрузки:', error);
         }
     }
 </script>

@@ -255,6 +255,19 @@
             transform: translateY(0);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
+        .account-info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .account-info h2 {
+            font-size: 24px;
+        }
+        .account-info p {
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
@@ -264,9 +277,9 @@
             <nav class="nav-links">
                 <a href="{% url 'main_menu' %}" id="mainMenuLink">Главная</a>
                 <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
-                <a href="#" id="templatesLink">Шаблоны</a>
+                <a href="{% url 'templates' %}">Шаблоны</a>
                 <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
-                <a href="#" id="myDiagramsLink">Мои диаграммы</a>
+                <a href="{% url 'my_diagrams' %}"id="myDiagramsLink">Мои диаграммы</a>
             </nav>
         </div>
         <div class="right">
@@ -276,9 +289,22 @@
                 <img src="{% static 'images/chat.svg' %}" alt="" class="small-image">
                 <img src="{% static 'images/setting.svg' %}" alt="" class="small-image" onclick="openModal()">
             </nav>
+            <div id="userInfo" class="user-info" style="display:none;">
+                <span id="userName">Добро пожаловать, Гость</span>
+                <button onclick="logout()">Выйти</button>
+            </div>
         </div>
     </header>
     <main>
+        <div class="content">
+            <div class="block">
+                <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
+                <button class="create-button" id="createButton">Создать</button>
+            </div>
+            <div class="account-info" id="accountInfo">
+                <!-- Информация о пользователе будет вставлена сюда -->
+            </div>
+        </div>
         <div class="content">
             <div class="block">
                 <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
@@ -336,40 +362,39 @@
     <div class="modal-content">
         <span class="close" onclick="closeAccountModal()">&times;</span>
         <h2 id="accountText">Аккаунт</h2>
-        <p id="accountInfoText">Ваш email: {{ email }}</p>  <!-- Использование данных из cookies -->
+        <p id="accountInfoText">Ваш email: </p>  <!-- Data will be injected here -->
     </div>
 </div>
-
+<a href="{% url 'account_modal' %}">Открыть модальное окно</a>
 <script>
-      // Функция для открытия модального окна
-    function openAccountModal() {
-        document.getElementById('accountModal').style.display = 'block';
-    }
+      // Функция для получения параметров из URL
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const username = urlParams.get('username');
+            const email = urlParams.get('email');
+            return { username, email };
+        }
 
-    // Функция для закрытия модального окна
-    function closeAccountModal() {
-        document.getElementById('accountModal').style.display = 'none';
-    }
+        // Функция для отображения данных о пользователе
+        function displayAccountInfo() {
+            const params = getUrlParams();
+            const accountInfoElement = document.getElementById('accountInfo');
 
-    function getSessionData() {
-    fetch('/accounts/get_session_data/')
-        .then(response => response.json())
-        .then(data => {
-            if (data.username && data.email) {
-                document.getElementById('accountText').innerText = 'Добро пожаловать, ' + data.username;
-                document.getElementById('accountInfoText').innerText = 'Ваш email: ' + data.email;
+            if (params.username && params.email) {
+                accountInfoElement.innerHTML = `
+                    <h2>Добро пожаловать, ${params.username}!</h2>
+                    <p>Ваш email: ${params.email}</p>
+                `;
             } else {
-                document.getElementById('accountText').innerText = 'Ошибка';
-                document.getElementById('accountInfoText').innerText = 'Данные не найдены';
+                accountInfoElement.innerHTML = `
+                    <h2>Ошибка</h2>
+                    <p>Не удалось загрузить информацию о вашем аккаунте.</p>
+                `;
             }
-        })
-        .catch(error => {
-            console.error('Ошибка:', error);
-            document.getElementById('accountText').innerText = 'Ошибка загрузки данных';
-        });
-}
+        }
 
-window.onload = getSessionData;
+        // Вызываем функцию отображения данных при загрузке страницы
+        window.onload = displayAccountInfo;
 
 
     // Функция для открытия модального окна настроек

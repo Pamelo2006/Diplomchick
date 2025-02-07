@@ -22,3 +22,20 @@ class Document(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class BPMNFile(models.Model):
+    name = models.CharField(max_length=255, default="Новая диаграмма")
+    xml_data = models.TextField(blank=True)  # Храним XML-данные диаграммы
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name  # Возвращаем название диаграммы как строку
+
+class BPMNDiagrams(models.Model):
+    name = models.CharField(max_length=255, default="Новая диаграмма")
+    xml_data = models.TextField()  # Основное поле для хранения XML
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

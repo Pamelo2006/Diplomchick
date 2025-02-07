@@ -5,6 +5,12 @@ from django.conf import settings
 from django.shortcuts import render
 from docx import Document
 from .models import Document
+from .models import BPMNDiagrams
+import json
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from .models import BPMNFile
+
 
 def main_menu(request):
     return render(request, 'diagrams/main_menu.html')
@@ -20,20 +26,26 @@ def sipoc(request):
     return  render(request, 'builder/SIPOC_diagram.html')
 def swim(request):
     return  render(request, 'builder/Swim_lane_diagram.html')
-def log_in(request):
-    return render(request, 'login.html')
-def sig_in(request):
-    return render(request, 'vhod.html')
+def my_diagrams(request):
+    diagrams = BPMNDiagrams.objects.all()  # Получаем все диаграммы из базы данных
+    return render(request, 'diagrams/my_diagrams.html', {'diagrams': diagrams})
+def templates(request):
+    diagrams = BPMNFile.objects.all().order_by('-created_at')  # Получаем все диаграммы, сортируем по дате создания
+    return render(request, 'diagrams/templates.html', {'diagrams': diagrams})
+
+def view_diagram(request, id):
+    diagram = get_object_or_404(BPMNFile, id=id)
+    return render(request, 'diagrams/view_diagram.html', {'diagram': diagram})
 
 def account_modal(request):
     username = request.session.get('username', None)
     email = request.session.get('email', None)
 
-    # Если данных нет в сессии, возвращаем ошибку
+    # If no data in session, return an error
     if not username or not email:
         return JsonResponse({'success': False})
 
-    # Передаем данные в формате JSON
+    # Return session data as JSON
     return JsonResponse({
         'success': True,
         'username': username,
@@ -57,3 +69,35 @@ def peculiarities_view(request):
         "russian_text": russian_doc.content if russian_doc else "Файл не найден",
         "english_text": english_doc.content if english_doc else "Файл не найден"
     })
+
+def get_bpmn_xml(request, pk):
+    bpmn_file = get_object_or_404(BPMNFile, pk=pk)
+    return JsonResponse({'xml_data': bpmn_file.xml_data})
+
+
+@csrf_exempt  # Отключает проверку CSRF для тестирования (лучше использовать CSRF-токен)
+def save_bpmn_xml(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            name = data.get('name', 'Новая диаграмма')
+            xml = data.get('bpmn', '')
+
+            bpmn_file = BPMNFile.objects.create(name=name, xml_data=xml)
+            return JsonResponse({'status': 'success', 'id': bpmn_file.id})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+def create_bpmn(request):
+    new_diagram = BPMNFile.objects.create()
+    return redirect('bpmn_editor', pk=new_diagram.pk)
+
+def bpmn_editor(request, pk=None):
+    if pk:
+        diagram = get_object_or_404(BPMNFile, pk=pk)
+    else:
+        diagram = BPMNFile.objects.create(name="Новая диаграмма")  # Создаём новую, если pk нет
+        return redirect('bpmn_editor', pk=diagram.pk)  # Перенаправляем на редактирование с pk
+
+    return render(request, 'diagrams/editor.html', {'diagram': diagram})

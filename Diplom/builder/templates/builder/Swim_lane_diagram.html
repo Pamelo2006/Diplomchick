@@ -8,28 +8,19 @@
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        .toolbar {
-            margin-bottom: 10px;
-        }
-        .toolbar button {
-            margin-right: 5px;
-            padding: 10px;
-            font-size: 14px;
-        }
-        #bpmn-container {
-            width: 100%;
-            height: 600px;
-            border: 1px solid #ccc;
-            background-color: #f9f9f9;
-        }
+        /* Основные стили */
+        #top-panel { background: #f1f1f1; padding: 10px; display: flex; }
+        .btn { padding: 10px; margin-right: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .btn:hover { background: #45a049; }
+        #bpmn-container { width: 100%; height: 600px; border: 1px solid #ccc; background: #f9f9f9; margin-top: 10px; }
     </style>
 </head>
 <body>
     <h1>Диаграмма плавательных дорожек</h1>
+    <div id="top-panel">
+        <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
+        <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+    </div>
 
     <!-- Контейнер для BPMN диаграммы -->
     <div id="bpmn-container"></div>
@@ -37,25 +28,80 @@
     <!-- Подключаем BPMN.js через CDN -->
     <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
     <script>
-        // Инициализация BPMN.js Modeler
-        const container = document.getElementById('bpmn-container');
-        const modeler = new BpmnJS({ container });
+       const container = document.getElementById('bpmn-container');
+    const modeler = new BpmnJS({ container });
 
-        // Функции для добавления элементов
-        function addLane() {
-            console.log("Добавить дорожку (Lane)");
-            // Логика добавления дорожки
-        }
+    const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+    <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
+                      xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+                      xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      id="Definitions_1"
+                      targetNamespace="http://bpmn.io/schema/bpmn">
+      <bpmn:process id="Process_1" isExecutable="false">
+        <bpmn:startEvent id="StartEvent_1"/>
+      </bpmn:process>
+      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+          <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+            <dc:Bounds x="100" y="100" width="36" height="36"/>
+          </bpmndi:BPMNShape>
+        </bpmndi:BPMNPlane>
+      </bpmndi:BPMNDiagram>
+    </bpmn:definitions>`;
 
-        function addTask() {
-            console.log("Добавить задачу (Task)");
-            // Логика добавления задачи
+    async function createDiagram() {
+        try {
+            await modeler.importXML(emptyDiagram);
+            console.log("Диаграмма загружена");
+        } catch (err) {
+            console.error("Ошибка загрузки диаграммы:", err);
         }
+    }
 
-        function addEvent() {
-            console.log("Добавить событие (Event)");
-            // Логика добавления события
+    createDiagram();
+
+    async function saveDiagram() {
+        const name = prompt("Введите название диаграммы:", "Новая диаграмма");
+
+        try {
+            const { xml } = await modeler.saveXML({ format: true });
+
+            const response = await fetch('/builder/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    name: name,
+                    bpmn: xml
+                })
+            });
+
+            if(response.ok) {
+                alert('Успешно сохранено!');
+            }
+        } catch(error) {
+            console.error('Ошибка:', error);
         }
+    }
+
+    async function loadDiagram() {
+        const diagramId = prompt("Введите ID диаграммы:");
+
+        if (!diagramId) return;
+
+        try {
+            const response = await fetch(`/builder/load/${diagramId}/`);
+            const { xml } = await response.json();
+
+            await modeler.importXML(xml);
+            modeler.get('canvas').zoom('fit-viewport');
+        } catch(error) {
+            console.error('Ошибка загрузки:', error);
+        }
+    }
     </script>
 </body>
 </html>

@@ -104,11 +104,11 @@
         <h1>BPMN</h1>
         <div class="left">
             <nav class="nav-links">
-                <a href="{% url 'main_menu' %}">Главная</a>
-                <a href="{% url 'peculiarities' %}">Особенности</a>
-                <a href="#">Шаблоны</a>
-                <a href="{% url 'solutions' %}">Решения</a>
-                <a href="#">Мои диаграммы</a>
+                <a href="{% url 'main_menu' %}" id="mainMenuLink">Главная</a>
+                <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
+                <a href="{% url 'templates' %}">Шаблоны</a>
+                <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
+                <a href="{% url 'my_diagrams' %}"id="myDiagramsLink">Мои диаграммы</a>
             </nav>
         </div>
         <div class="right">

@@ -10,4 +10,5 @@ urlpatterns = [
     path('verify-otp/', views.verify_otp, name='verify_otp'),
     path('auto_login/', auto_login, name='auto_login'),
     path('get_session_data/', get_session_data, name='get_session_data'),
+    path('account_modal/', views.account_modal, name='account_modal'),
 ]

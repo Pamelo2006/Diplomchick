@@ -51,7 +51,7 @@ def register(request):
         # Сохраняем данные в сессии
         request.session['username'] = username
         request.session['email'] = email
-        request.session.set_expiry(30 * 24 * 60 * 60)  # 30 дней
+
 
         return JsonResponse({'success': True, 'message': 'User registered successfully'}, status=201)
 
@@ -72,6 +72,7 @@ def login(request):
         if not user.check_password(password):
             return JsonResponse({'error': 'Invalid password'}, status=400)
 
+        # Сохраняем данные пользователя в сессии
         request.session['username'] = username
         request.session['email'] = user.Email
 
@@ -161,3 +162,19 @@ def get_session_data(request):
         return JsonResponse({'username': username, 'email': email})
     else:
         return JsonResponse({'error': 'No session data found'}, status=400)
+
+
+def account_modal(request):
+    username = request.session.get('username', None)
+    email = request.session.get('email', None)
+
+    # If no data in session, return an error
+    if not username or not email:
+        return JsonResponse({'success': False})
+
+    # Return session data as JSON
+    return JsonResponse({
+        'success': True,
+        'username': username,
+        'email': email
+    })
