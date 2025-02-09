@@ -98,7 +98,7 @@ def send_otp_email(email, otp):
         print(f"Error sending email: {e}")
         raise
 
-@csrf_exempt
+
 @csrf_exempt
 def send_otp(request):
     if request.method == 'POST':
@@ -178,3 +178,96 @@ def account_modal(request):
         'username': username,
         'email': email
     })
+
+
+def generate_reset_code():
+    """Генерация 6-значного кода"""
+    return str(random.randint(100000, 999999))
+
+
+def send_reset_email(email, code):
+    """Отправка кода подтверждения на email"""
+    subject = "Восстановление пароля"
+    message = f"Ваш код для сброса пароля: {code}"
+
+    send_mail(
+        subject,
+        message,
+        settings.EMAIL_HOST_USER,
+        [email],
+        fail_silently=False,
+    )
+
+
+@csrf_exempt
+def request_password_reset(request):
+    """Запрос на восстановление пароля (получение кода)"""
+    if request.method == "POST":
+        data = json.loads(request.body)
+        username = data.get("username")
+        email = data.get("email")
+
+        try:
+            user = Users.objects.get(Username=username, Email=Users.hash_value(email))
+        except Users.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        # Генерируем и сохраняем код в сессии
+        reset_code = generate_reset_code()
+        request.session["reset_code"] = reset_code
+        request.session["reset_email"] = email
+
+        # Отправляем код на email
+        send_reset_email(email, reset_code)
+
+        return JsonResponse({"success": True, "message": "Reset code sent to your email."}, status=200)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def verify_reset_code(request):
+    """Проверка введённого пользователем кода"""
+    if request.method == "POST":
+        data = json.loads(request.body)
+        user_code = data.get("code")
+        stored_code = request.session.get("reset_code")
+
+        if not stored_code:
+            return JsonResponse({"error": "Reset code expired or not found"}, status=400)
+
+        if user_code == stored_code:
+            return JsonResponse({"success": True, "message": "Code verified, you can reset your password."}, status=200)
+        else:
+            return JsonResponse({"error": "Invalid code"}, status=400)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def reset_password(request):
+    """Сброс пароля после подтверждения кода"""
+    if request.method == "POST":
+        data = json.loads(request.body)
+        new_password = data.get("new_password")
+        email = request.session.get("reset_email")
+
+        if not email:
+            return JsonResponse({"error": "Session expired or invalid request"}, status=400)
+
+        try:
+            user = Users.objects.get(Email=Users.hash_value(email))
+        except Users.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
+
+        # Сохраняем новый пароль
+        user.set_password(new_password)
+        user.save()
+
+        # Очищаем сессию
+        del request.session["reset_code"]
+        del request.session["reset_email"]
+
+        return JsonResponse({"success": True, "message": "Password reset successfully."}, status=200)
+
+    return JsonResponse({"error": "Invalid request method"}, status=405)

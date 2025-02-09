@@ -1,15 +1,12 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-import os
-from django.conf import settings
 from django.shortcuts import render
 from docx import Document
 from .models import Document
-from .models import BPMNDiagrams
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
-from .models import BPMNFile
+from .models import BPMNFile, BPMNDiagrams
 
 
 def main_menu(request):
@@ -35,7 +32,11 @@ def templates(request):
 
 def view_diagram(request, id):
     diagram = get_object_or_404(BPMNFile, id=id)
-    return render(request, 'diagrams/view_diagram.html', {'diagram': diagram})
+    return render(request, 'builder/use_templates.html', {'diagram': diagram})
+
+def view_diagram1(request, id):
+    diagram = get_object_or_404(BPMNDiagrams, id=id)
+    return render(request, 'builder/use_templates.html', {'diagram': diagram})
 
 def account_modal(request):
     username = request.session.get('username', None)
@@ -101,3 +102,27 @@ def bpmn_editor(request, pk=None):
         return redirect('bpmn_editor', pk=diagram.pk)  # Перенаправляем на редактирование с pk
 
     return render(request, 'diagrams/editor.html', {'diagram': diagram})
+
+@csrf_exempt
+def save_diagram(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            diagram_id = data.get("id")  # ID диаграммы (если передан)
+            name = data.get("name", "Новая диаграмма")  # Название диаграммы
+            xml = data.get("bpmn")  # XML-данные
+
+            if diagram_id:
+                # Обновляем существующую диаграмму
+                diagram = get_object_or_404(BPMNDiagrams, id=diagram_id)
+                diagram.name = name
+                diagram.xml_data = xml
+            else:
+                # Создаём новую диаграмму
+                diagram = BPMNDiagrams(name=name, xml_data=xml)
+
+            diagram.save()  # Сохраняем изменения
+            return JsonResponse({"status": "success", "id": diagram.id})
+
+        except Exception as e:
+            return JsonResponse({"status": "error", "message": str(e)}, status=400)

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ diagram.name }}</title>
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/diagram-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
+    <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
+    <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        #top-panel {
+            background: #f1f1f1;
+            padding: 10px;
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #45a049;
+        }
+        .diagram-container {
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            margin: auto;
+            border: 1px solid #ccc;
+            background: #fff;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>{{ diagram.name }}</h1>
+
+    <!-- Кнопки управления -->
+    <div id="top-panel">
+        <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
+        <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+    </div>
+
+    <!-- Контейнер для диаграммы -->
+    <div id="bpmn-container" class="diagram-container"></div>
+
+    <script>
+        const container = document.getElementById('bpmn-container');
+        const modeler = new BpmnJS({ container });
+
+        async function loadDiagram() {
+            try {
+                await modeler.importXML(`{{ diagram.xml_data|escapejs }}`);
+                modeler.get("canvas").zoom("fit-viewport");
+            } catch (err) {
+                console.error("Ошибка загрузки диаграммы:", err);
+            }
+        }
+
+        async function saveDiagram() {
+    const name = prompt("Введите название диаграммы:", "Новая диаграмма");
+
+    try {
+        const { xml } = await modeler.saveXML({ format: true });
+
+        const response = await fetch('/builder/save1/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({
+                name: name,
+                bpmn: xml
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            alert('Успешно сохранено! ID: ' + data.id);
+        }
+    } catch (error) {
+        console.error('Ошибка:', error);
+    }
+}
+
+        document.addEventListener("DOMContentLoaded", loadDiagram);
+    </script>
+
+</body>
+</html>

@@ -301,15 +301,6 @@
                 <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
                 <button class="create-button" id="createButton">Создать</button>
             </div>
-            <div class="account-info" id="accountInfo">
-                <!-- Информация о пользователе будет вставлена сюда -->
-            </div>
-        </div>
-        <div class="content">
-            <div class="block">
-                <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
-                <button class="create-button" id="createButton">Создать</button>
-            </div>
             <div class="block1">
                 <h2 id="createProcessText">Создавайте бизнес-процессы легко и быстро!</h2>
                 <p id="startNowText">Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!</p>
@@ -356,16 +347,6 @@
             </select>
         </div>
     </div>
-
-    <!-- Модальное окно аккаунта -->
-<div id="accountModal" class="modal">
-    <div class="modal-content">
-        <span class="close" onclick="closeAccountModal()">&times;</span>
-        <h2 id="accountText">Аккаунт</h2>
-        <p id="accountInfoText">Ваш email: </p>  <!-- Data will be injected here -->
-    </div>
-</div>
-<a href="{% url 'account_modal' %}">Открыть модальное окно</a>
 <script>
       // Функция для получения параметров из URL
         function getUrlParams() {
