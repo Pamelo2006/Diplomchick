@@ -8,9 +8,21 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from .models import BPMNFile, BPMNDiagrams
 
+from django.contrib.admin.views.decorators import staff_member_required
+
+@staff_member_required
+def chat_admin(request):
+    return render(request, 'diagrams/admin/chat_admin.html')
 
 def main_menu(request):
-    return render(request, 'diagrams/main_menu.html')
+    username = request.session.get('username')
+    email = request.session.get('email')
+    context = {
+        'username': username,
+        'email': email,
+    }
+    return render(request, 'diagrams/main_menu.html', context)
+
 def peculiarities(request):
     return render(request, 'diagrams/peculiarities.html')
 def solutions(request):

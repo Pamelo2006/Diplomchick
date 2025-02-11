@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
-
+from django.conf import settings
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,9 +29,10 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
 
+# Application definition
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,8 +42,18 @@ INSTALLED_APPS = [
     'accounts',
     'diagrams',
     'builder',
-    'rest_framework'
+    'rest_framework',
+    'channels',
+
+
 ]
+ASGI_APPLICATION = 'Diplom.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",  # Используется InMemory для тестирования
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -122,7 +133,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # Дополнительно для пользовательских стилей и скриптов
+    BASE_DIR / "diagrams/static",  # Дополнительно для пользовательских стилей и скриптов
 ]
 
 # Default primary key field type

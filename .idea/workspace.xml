@@ -4,17 +4,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98baf57d-15a7-458b-b8d7-485156fe643b" name="Changes" comment="админ может создавать шаблоны, сохраняю свои диаграммы">
-      <change afterPath="$PROJECT_DIR$/Diplom/builder/templates/builder/use_templates.html" afterDir="false" />
+    <list default="true" id="98baf57d-15a7-458b-b8d7-485156fe643b" name="Changes" comment="работает восстановление пароля">
+      <change afterPath="$PROJECT_DIR$/Diplom/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/consumers.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/routing.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/admin/chat.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/Diplom/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/Diplom/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/accounts/templates/vhod.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/accounts/templates/vhod.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/accounts/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/accounts/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/Diplom/asgi.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/Diplom/asgi.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/Diplom/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/Diplom/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/models.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/main_menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/main_menu.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/my_diagrams.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/my_diagrams.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/templates.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/templates.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/views.py" afterDir="false" />
     </list>
@@ -68,11 +69,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams" />
+      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\Diplom" />
       <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\builder\templates\builder" />
       <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams\templates\diagrams" />
       <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\media" />
-      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\uploaded_docs" />
-      <recent name="C:\Users\ivank\OneDrive\Desktop\BPMN\Diplom\diagrams\static\images" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -139,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738948478927</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="работает восстановление пароля">
+      <option name="closed" value="true" />
+      <created>1739122395111</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1739122395111</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -160,6 +169,7 @@
     <MESSAGE value="работает создание диаграмм, есть наброски кастомизации" />
     <MESSAGE value="документация готова, редактирование документации готово" />
     <MESSAGE value="админ может создавать шаблоны, сохраняю свои диаграммы" />
-    <option name="LAST_COMMIT_MESSAGE" value="админ может создавать шаблоны, сохраняю свои диаграммы" />
+    <MESSAGE value="работает восстановление пароля" />
+    <option name="LAST_COMMIT_MESSAGE" value="работает восстановление пароля" />
   </component>
 </project>

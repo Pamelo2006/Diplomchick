@@ -268,6 +268,97 @@
         .account-info p {
             font-size: 18px;
         }
+
+        #supportButton {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        #supportButton:hover {
+            background-color: #45a049;
+        }
+
+        /* Стили для боковой панели с чатом */
+        #chat-sidebar {
+            position: fixed;
+            top: 0;
+            right: -20%; /* Скрываем панель за пределами экрана */
+            width: 20%;
+            height: 100%;
+            background-color: #f4f4f4;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+
+        #chat-sidebar.active {
+            right: 0; /* Показываем панель */
+        }
+
+        /* Стили для чата внутри панели */
+        #chat {
+            padding: 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        #chat-message-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #chat-message-submit {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #chat-message-submit:hover {
+            background-color: #45a049;
+        }
+
+        /* Адаптация для темной темы */
+        body.dark-theme #chat-sidebar {
+            background-color: #444;
+            color: #FFF;
+        }
+
+        body.dark-theme #chat-log {
+            border-color: #555;
+        }
+
+        body.dark-theme #chat-message-input {
+            background-color: #555;
+            color: #FFF;
+            border-color: #666;
+        }
+
+        body.dark-theme #chat-message-submit {
+            background-color: #666;
+        }
     </style>
 </head>
 <body>
@@ -283,16 +374,7 @@
             </nav>
         </div>
         <div class="right">
-            <nav class="icon">
-                {% load static %}
-                <img src="{% static 'images/account.svg' %}" alt="" class="small-image" onclick="openAccountModal()">
-                <img src="{% static 'images/chat.svg' %}" alt="" class="small-image">
-                <img src="{% static 'images/setting.svg' %}" alt="" class="small-image" onclick="openModal()">
-            </nav>
-            <div id="userInfo" class="user-info" style="display:none;">
-                <span id="userName">Добро пожаловать, Гость</span>
-                <button onclick="logout()">Выйти</button>
-            </div>
+            <button id="supportButton" onclick="toggleChat()">Тех. поддержка</button>
         </div>
     </header>
     <main>
@@ -301,6 +383,11 @@
                 <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
                 <button class="create-button" id="createButton">Создать</button>
             </div>
+                    <div id="accountInfo" data-username="{{ username }}"></div>
+                        <div class="account-info">
+                            <h2>Добро пожаловать, {{ username }}</h2>
+                        </div>
+
             <div class="block1">
                 <h2 id="createProcessText">Создавайте бизнес-процессы легко и быстро!</h2>
                 <p id="startNowText">Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!</p>
@@ -347,174 +434,78 @@
             </select>
         </div>
     </div>
+
+    <!-- чатик -->
+     <div id="chat-sidebar">
+        <div id="chat">
+            <div id="chat-log"></div>
+            <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+            <button id="chat-message-submit">Отправить</button>
+        </div>
+    </div>
 <script>
-      // Функция для получения параметров из URL
-        function getUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const username = urlParams.get('username');
-            const email = urlParams.get('email');
-            return { username, email };
-        }
-
-        // Функция для отображения данных о пользователе
-        function displayAccountInfo() {
-            const params = getUrlParams();
-            const accountInfoElement = document.getElementById('accountInfo');
-
-            if (params.username && params.email) {
-                accountInfoElement.innerHTML = `
-                    <h2>Добро пожаловать, ${params.username}!</h2>
-                    <p>Ваш email: ${params.email}</p>
-                `;
-            } else {
-                accountInfoElement.innerHTML = `
-                    <h2>Ошибка</h2>
-                    <p>Не удалось загрузить информацию о вашем аккаунте.</p>
-                `;
-            }
-        }
-
-        // Вызываем функцию отображения данных при загрузке страницы
-        window.onload = displayAccountInfo;
-
-
-    // Функция для открытия модального окна настроек
-    function openModal() {
-        document.getElementById("settingsModal").style.display = "flex";
+    // Функция для открытия/закрытия чата
+    function toggleChat() {
+        const chatSidebar = document.getElementById('chat-sidebar');
+        chatSidebar.classList.toggle('active');
     }
 
-    // Функция для закрытия модального окна настроек
-    function closeModal() {
-        document.getElementById("settingsModal").style.display = "none";
-    }
+    document.addEventListener("DOMContentLoaded", function () {
+        // Получаем имя пользователя из data-атрибутов
+        const accountInfo = document.getElementById('accountInfo');
+        const username = accountInfo.getAttribute('data-username') || 'Гость'; // Если нет имени, будет "Гость"
 
-    // Функция для смены темы
-    function changeTheme(theme) {
-        if (theme === 'dark') {
-            document.body.classList.add('dark-theme');
-        } else {
-            document.body.classList.remove('dark-theme');
-        }
-        // Сохраняем выбранную тему в localStorage
-        localStorage.setItem('theme', theme);
-    }
+        // Создаем WebSocket
+        const chatSocket = new WebSocket(
+            'ws://' + window.location.host + '/ws/chat/'
+        );
 
-    // Функция для смены языка
-    function changeLanguage(lang) {
-        const htmlElement = document.getElementById('htmlLang');
-        htmlElement.setAttribute('lang', lang);
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').innerHTML +=
+                `<div><strong>${data.username}:</strong> ${data.message}</div>`;
+        };
 
-        // Применяем переводы
-        applyTranslations(lang);
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
 
-        // Сохраняем выбранный язык в localStorage
-        localStorage.setItem('language', lang);
-    }
-
-    // Функция для применения переводов
-    function applyTranslations(lang) {
-        const translations = {
-            ru: {
-                createDiagramText: "Попробуйте создать свою диаграмму",
-                createButton: "Создать",
-                createProcessText: "Создавайте бизнес-процессы легко и быстро!",
-                startNowText: "Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!",
-                whyChooseUsText: "Почему выбирают нас?",
-                intuitiveInterfaceText: "Интуитивный интерфейс: Простое создание диаграмм без сложного обучения",
-                templatesText: "Шаблоны и примеры: Готовые решения для различных отраслей",
-                freeText: "Доступность: Работайте над своими диаграммами совершенно БЕСПЛАТНО",
-                stepsText: "3 простых шага к идеальной диаграмме",
-                step1Text: "Выберите шаблон или начните с чистого листа",
-                step2Text: "Добавьте элементы и настройте процессы под свои задачи",
-                step3Text: "Экспортируйте или сохраните результат на свой рабочий стол",
-                templatesForTasksText: "Возможность просмотра большого количества шаблонов под любую задачу",
-                websiteTemplatesText: "✅ Шаблоны для сайтов",
-                presentationTemplatesText: "✅ Шаблоны для презентаций",
-                documentTemplatesText: "✅ Шаблоны для документов",
-                settingsText: "Настройки",
-                languageLabel: "Язык:",
-                themeLabel: "Тема:",
-                mainMenuLink: "Главная",
-                peculiaritiesLink: "Особенности",
-                templatesLink: "Шаблоны",
-                solutionsLink: "Решения",
-                myDiagramsLink: "Мои диаграммы",
-                accountText: "Аккаунт",
-                accountInfoText: "Здесь будет информация о вашем аккаунте.",
-                logoutButton: "Выйти"
-            },
-            en: {
-                createDiagramText: "Try creating your own diagram",
-                createButton: "Create",
-                createProcessText: "Create business processes easily and quickly!",
-                startNowText: "Professional diagrams for your business in just a few clicks. Start right now!",
-                whyChooseUsText: "Why choose us?",
-                intuitiveInterfaceText: "Intuitive interface: Easy diagram creation without complex learning",
-                templatesText: "Templates and examples: Ready-made solutions for various industries",
-                freeText: "Accessibility: Work on your diagrams completely FREE",
-                stepsText: "3 simple steps to the perfect diagram",
-                step1Text: "Choose a template or start from scratch",
-                step2Text: "Add elements and customize processes for your tasks",
-                step3Text: "Export or save the result to your desktop",
-                templatesForTasksText: "Ability to view a large number of templates for any task",
-                websiteTemplatesText: "✅ Website templates",
-                presentationTemplatesText: "✅ Presentation templates",
-                documentTemplatesText: "✅ Document templates",
-                settingsText: "Settings",
-                languageLabel: "Language:",
-                themeLabel: "Theme:",
-                mainMenuLink: "Main",
-                peculiaritiesLink: "Features",
-                templatesLink: "Templates",
-                solutionsLink: "Solutions",
-                myDiagramsLink: "My Diagrams",
-                accountText: "Account",
-                accountInfoText: "Here will be your account information.",
-                logoutButton: "Logout"
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {  // Enter key
+                document.querySelector('#chat-message-submit').click();
             }
         };
 
-        Object.keys(translations[lang]).forEach(key => {
-            const element = document.getElementById(key);
-            if (element) {
-                element.textContent = translations[lang][key];
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value.trim();
+
+            if (message) {
+                chatSocket.send(JSON.stringify({
+                    'username': username,  // Передаем имя пользователя
+                    'message': message
+                }));
+                messageInputDom.value = '';
             }
-        });
+        };
+    });
+
+    // Функция для отображения данных о пользователе
+    function displayAccountInfo() {
+        const accountInfoElement = document.getElementById('accountInfo');
+        const username = accountInfoElement.getAttribute('data-username') || 'Гость';
+
+
+        accountInfoElement.innerHTML = `
+            <h2>Добро пожаловать, ${username}!</h2>
+            <p>Ваш email: ${email}</p>
+        `;
     }
 
-    // Функция для выхода из аккаунта
-    function logout() {
-        alert("Вы вышли из аккаунта");
-        closeAccountModal();
-    }
+    // Вызываем функцию отображения данных при загрузке страницы
+    window.onload = displayAccountInfo;
 
-    // Закрытие модального окна при клике вне его
-    window.onclick = function(event) {
-        let settingsModal = document.getElementById("settingsModal");
-        let accountModal = document.getElementById("accountModal");
-        if (event.target === settingsModal) {
-            settingsModal.style.display = "none";
-        }
-        if (event.target === accountModal) {
-            accountModal.style.display = "none";
-        }
-    }
-
-    // Загружаем настройки при загрузке страницы
-    function loadSettings() {
-        // Загружаем тему
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        changeTheme(savedTheme);
-        document.getElementById('theme').value = savedTheme;
-
-        // Загружаем язык
-        const savedLanguage = localStorage.getItem('language') || 'ru';
-        changeLanguage(savedLanguage);
-        document.getElementById('language').value = savedLanguage;
-    }
-
-    // Загружаем настройки при загрузке страницы
-    window.onload = loadSettings;
 </script>
 </body>
 </html>

@@ -1,0 +1,103 @@
+<!-- diagrams/templates/admin/chat.html -->
+{% extends "admin/base_site.html" %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* Стили для чата */
+    #chat-sidebar {
+        position: fixed;
+        top: 0;
+        right: -300px;
+        width: 300px;
+        height: 100%;
+        background-color: #f4f4f4;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        transition: right 0.3s ease;
+        z-index: 1001;
+    }
+
+    #chat-sidebar.active {
+        right: 0;
+    }
+
+    #chat {
+        padding: 20px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    #chat-log {
+        flex-grow: 1;
+        overflow-y: auto;
+        margin-bottom: 10px;
+        border-bottom: 1px solid #ddd;
+        padding-bottom: 10px;
+    }
+
+    #chat-input-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    #chat-message-input {
+        flex-grow: 1;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    #chat-message-submit {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    #chat-message-submit:hover {
+        background-color: #45a049;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="chat-sidebar">
+    <div id="chat">
+        <div id="chat-log"></div>
+        <div id="chat-input-container">
+            <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+            <button id="send-system-message" style="background: red; color: white; padding: 10px; border: none; cursor: pointer;">Отправить системное сообщение</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/admin_chat/');
+        const chatLog = document.querySelector("#chat-log");
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = `<b>${data.message}</b>`;
+            chatLog.appendChild(messageElement);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        };
+
+        document.querySelector('#send-system-message').onclick = function() {
+            const messageInput = document.querySelector('#chat-message-input');
+            const systemMessage = `Системное сообщение: ${messageInput.value}`;  // Пример отправки системного сообщения
+            chatSocket.send(JSON.stringify({
+                'message': systemMessage
+            }));
+            messageInput.value = '';
+        };
+    });
+</script>
+{% endblock %}

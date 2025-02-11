@@ -6,6 +6,7 @@ from django.conf import settings
 from .views import my_diagrams
 from .views import get_bpmn_xml, save_bpmn_xml, templates, view_diagram, view_diagram1
 
+
 urlpatterns = [
     path('main_menu/', views.main_menu, name='main_menu'),
     path('peculiarities/', peculiarities_view, name='peculiarities'),
@@ -26,5 +27,7 @@ urlpatterns = [
     path('diagrams/view/<int:id>/', view_diagram, name='view_diagram'),
     path('diagrams/view1/<int:id>/', view_diagram1, name='view_diagram1'),
     path('builder/save1/', views.save_diagram, name='save_diagram'),
+
+    path('admin/chat/', views.chat_admin, name='chat_admin'),  # URL для чата
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,6 +3,10 @@ from django import forms
 from .models import Document, BPMNFile
 from docx import Document as DocxDocument
 from django.utils.html import mark_safe
+from django.urls import path
+from .consumers import ChatConsumer
+from django.shortcuts import render
+
 
 
 class BPMNFileForm(forms.ModelForm):
@@ -65,7 +69,6 @@ class BPMNFileAdmin(admin.ModelAdmin):
         initial = super().get_change_form_initial(request, obj)
         if obj and obj.xml_data:
             initial['xml_data'] = obj.xml_data  # Загружаем XML-данные для редактирования
-
 
 class DocumentForm(forms.ModelForm):
     class Meta:
