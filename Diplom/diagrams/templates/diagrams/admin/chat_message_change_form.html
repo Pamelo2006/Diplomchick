@@ -1,4 +1,4 @@
-{% extends "admin/chat.html" %}
+{% extends "admin/change_form.html" %}
 {% load static %}
 
 {% block extrahead %}
@@ -56,41 +56,43 @@
     </style>
 
     <script>
-        // Подключение к WebSocket
-        const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/ws/admin_chat/'
-        );
+       document.addEventListener("DOMContentLoaded", function () {
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/admin_chat/'
+    );
 
-        // Обработка входящих сообщений
-        chatSocket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            const messages = document.getElementById('messages');
+    // Обработка входящих сообщений
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const messages = document.getElementById('messages');
 
-            // Создаем элемент сообщения
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
+        // Создаем элемент сообщения
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
 
-            const usernameElement = document.createElement('span');
-            usernameElement.classList.add('username');
-            usernameElement.textContent = data.username + ': ';
+        const usernameElement = document.createElement('span');
+        usernameElement.classList.add('username');
+        usernameElement.textContent = data.username + ': ';
 
-            const messageTextElement = document.createElement('span');
-            messageTextElement.textContent = data.message;
+        const messageTextElement = document.createElement('span');
+        messageTextElement.textContent = data.message;
 
-            const timestampElement = document.createElement('div');
-            timestampElement.classList.add('timestamp');
-            timestampElement.textContent = new Date().toLocaleTimeString();
+        const timestampElement = document.createElement('div');
+        timestampElement.classList.add('timestamp');
+        timestampElement.textContent = new Date().toLocaleTimeString();
 
-            messageElement.appendChild(usernameElement);
-            messageElement.appendChild(messageTextElement);
-            messageElement.appendChild(timestampElement);
+        messageElement.appendChild(usernameElement);
+        messageElement.appendChild(messageTextElement);
+        messageElement.appendChild(timestampElement);
 
-            messages.appendChild(messageElement);
-            messages.scrollTop = messages.scrollHeight; // Прокрутка вниз
-        };
+        messages.appendChild(messageElement);
+        messages.scrollTop = messages.scrollHeight; // Прокрутка вниз
+    };
 
-        // Отправка сообщения
-        document.getElementById('send-button').onclick = function () {
+    // Отправка сообщения
+    const sendButton = document.getElementById('send-button');
+    if (sendButton) {  // Проверяем, существует ли элемент
+        sendButton.onclick = function () {
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value.trim();
 
@@ -101,13 +103,18 @@
                 messageInput.value = ''; // Очистка поля ввода
             }
         };
+    } else {
+        console.error("Элемент #send-button не найден в DOM.");
+    }
 
-        // Обработка закрытия соединения
-        chatSocket.onclose = function (e) {
-            console.error('WebSocket закрыт неожиданно');
-        };
+    // Обработка закрытия соединения
+    chatSocket.onclose = function (e) {
+        console.error('WebSocket закрыт неожиданно');
+    };
+});
     </script>
 {% endblock %}
+
 {% block content %}
     <div id="chat">
         <h1>Административный чат</h1>

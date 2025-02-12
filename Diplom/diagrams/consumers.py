@@ -1,27 +1,62 @@
-import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from django.contrib.auth.models import AnonymousUser
+from asgiref.sync import sync_to_async
+import json
+from diagrams.models import ChatMessage
+from accounts.models import Users
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
+        self.room_group_name = "chat_group"  # Используем одну группу для всех пользователей
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
         await self.accept()
 
     async def disconnect(self, close_code):
-        pass
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
 
     async def receive(self, text_data):
         data = json.loads(text_data)
-        username = data.get('username', 'Аноним')  # Получаем имя пользователя
         message = data.get('message', '')
+        username = data.get('username', 'Гость')  # Получаем имя пользователя из сообщения
 
-        await self.send(text_data=json.dumps({
-            'username': username,
-            'message': message
-        }))
+        # Преобразуем имя пользователя в экземпляр модели Users
+        user_instance = await self.get_user(username)
+
+        if user_instance:
+            # Сохраняем сообщение в базе данных
+            await self.save_message_to_db(user_instance, message)
+
+            # Отправляем сообщение в группу
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'chat_message',
+                    'username': username,  # Используем имя пользователя из сообщения
+                    'message': message,
+                }
+            )
 
     async def chat_message(self, event):
-        """ Отправка сообщения всем в группе """
-        message = event["message"]
+        # Отправляем сообщение клиенту
+        await self.send(text_data=json.dumps({
+            'username': event['username'],
+            'message': event['message']
+        }))
 
-        # Отправляем сообщение клиентам
-        await self.send(text_data=json.dumps({"message": message, "is_admin": event["is_admin"]}))
+    @sync_to_async
+    def get_user(self, username):
+        try:
+            return Users.objects.get(Username=username)
+        except Users.DoesNotExist:
+            return None
+
+    @sync_to_async
+    def save_message_to_db(self, user, message):
+        if user:
+            ChatMessage.objects.create(user=user, message=message)

@@ -6,7 +6,7 @@ from django.utils.html import mark_safe
 from django.urls import path
 from .consumers import ChatConsumer
 from django.shortcuts import render
-
+from .models import ChatMessage
 
 
 class BPMNFileForm(forms.ModelForm):
@@ -98,4 +98,18 @@ class DocumentAdmin(admin.ModelAdmin):
         if 'file' in form.changed_data:
             obj.content = obj.read_docx(obj.file.path)
         super().save_model(request, obj, form, change)
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'message', 'timestamp')  # Поля, отображаемые в списке
+    list_filter = ('user', 'timestamp')  # Фильтры по пользователю и времени
+    search_fields = ('message', 'user__Username')  # Поиск по сообщению и имени пользователя
+    readonly_fields = ('timestamp',)  # Время отправки только для чтения
+    change_form_template = 'diagrams/admin/chat_message_change_form.html'  # Укажите путь к вашему шаблону
+
+    def get_queryset(self, request):
+        """Оптимизация запросов к базе данных."""
+        return super().get_queryset(request).select_related('user')
+
+
 

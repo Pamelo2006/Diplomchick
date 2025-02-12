@@ -7,12 +7,25 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from .models import BPMNFile, BPMNDiagrams
-
+from .models import ChatMessage
 from django.contrib.admin.views.decorators import staff_member_required
+
+
+def chat_history(request):
+    messages = ChatMessage.objects.all().order_by('-timestamp')[:50]  # Последние 50 сообщений
+    data = [
+        {
+            'username': msg.user.Username,
+            'message': msg.message,
+            'timestamp': msg.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+        }
+        for msg in messages
+    ]
+    return JsonResponse(data, safe=False)
 
 @staff_member_required
 def chat_admin(request):
-    return render(request, 'diagrams/admin/chat_admin.html')
+    return render(request, 'diagrams/admin/chat.html')
 
 def main_menu(request):
     username = request.session.get('username')

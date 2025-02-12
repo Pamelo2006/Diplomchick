@@ -29,5 +29,6 @@ urlpatterns = [
     path('builder/save1/', views.save_diagram, name='save_diagram'),
 
     path('admin/chat/', views.chat_admin, name='chat_admin'),  # URL для чата
+    path('chat/history/', views.chat_history, name='chat_history'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

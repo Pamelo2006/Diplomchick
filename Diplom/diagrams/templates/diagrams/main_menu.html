@@ -451,7 +451,7 @@
     }
 
     document.addEventListener("DOMContentLoaded", function () {
-        // Получаем имя пользователя из data-атрибутов
+        // Получаем имя пользователя из data-атрибута
         const accountInfo = document.getElementById('accountInfo');
         const username = accountInfo.getAttribute('data-username') || 'Гость'; // Если нет имени, будет "Гость"
 
@@ -460,30 +460,41 @@
             'ws://' + window.location.host + '/ws/chat/'
         );
 
+        // Обработка входящих сообщений
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').innerHTML +=
-                `<div><strong>${data.username}:</strong> ${data.message}</div>`;
+            const chatLog = document.querySelector('#chat-log');
+
+            // Создаем элемент сообщения и добавляем его в чат
+            const messageElement = document.createElement('div');
+            messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+            chatLog.appendChild(messageElement);
+
+            // Прокручиваем чат вниз
+            chatLog.scrollTop = chatLog.scrollHeight;
         };
 
+        // Обработка закрытия соединения
         chatSocket.onclose = function (e) {
             console.error('Chat socket closed unexpectedly');
         };
 
-        document.querySelector('#chat-message-input').focus();
+        // Отправка сообщения при нажатии Enter
         document.querySelector('#chat-message-input').onkeyup = function (e) {
             if (e.keyCode === 13) {  // Enter key
                 document.querySelector('#chat-message-submit').click();
             }
         };
 
+        // Отправка сообщения при нажатии кнопки
         document.querySelector('#chat-message-submit').onclick = function (e) {
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value.trim();
 
             if (message) {
+                // Отправляем сообщение с именем пользователя
                 chatSocket.send(JSON.stringify({
-                    'username': username,  // Передаем имя пользователя
+                    'username': username,  // Используем имя пользователя из data-username
                     'message': message
                 }));
                 messageInputDom.value = '';
@@ -491,21 +502,17 @@
         };
     });
 
-    // Функция для отображения данных о пользователе
-    function displayAccountInfo() {
-        const accountInfoElement = document.getElementById('accountInfo');
-        const username = accountInfoElement.getAttribute('data-username') || 'Гость';
-
-
-        accountInfoElement.innerHTML = `
-            <h2>Добро пожаловать, ${username}!</h2>
-            <p>Ваш email: ${email}</p>
-        `;
+    // Загрузка истории сообщений
+    async function loadChatHistory() {
+        const response = await fetch('/diagrams/chat/history/');  // API для получения истории
+        const messages = await response.json();
+        messages.reverse().forEach(msg => {  // Переворачиваем, чтобы новые сообщения были внизу
+            document.querySelector('#chat-log').innerHTML +=
+                `<div><strong>${msg.username}:</strong> ${msg.message}</div>`;
+        });
     }
 
-    // Вызываем функцию отображения данных при загрузке страницы
-    window.onload = displayAccountInfo;
-
+    document.addEventListener("DOMContentLoaded", loadChatHistory);
 </script>
 </body>
 </html>

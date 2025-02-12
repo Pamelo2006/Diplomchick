@@ -1,6 +1,6 @@
 from django.db import models
 from docx import Document as DocxDocument
-from accounts.models import Users  # Импортируем вашу модель пользователя
+from accounts.models import Users
 
 class Document(models.Model):
     name = models.CharField(max_length=255)  # Название документа
@@ -42,10 +42,9 @@ class BPMNDiagrams(models.Model):
         return self.name
 
 class ChatMessage(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='chat_messages')
-    message = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-    is_admin = models.BooleanField(default=False)  # True, если сообщение от админа
+    user = models.ForeignKey(Users, on_delete=models.CASCADE)  # Связь с пользователем
+    message = models.TextField()  # Текст сообщения
+    timestamp = models.DateTimeField(auto_now_add=True)  # Время отправки
 
     def __str__(self):
         return f"{self.user.Username}: {self.message}"
