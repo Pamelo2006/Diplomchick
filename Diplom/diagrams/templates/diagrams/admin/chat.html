@@ -4,115 +4,67 @@
 {% block extrahead %}
     {{ block.super }}
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        #chat {
-            width: 80%;
-            margin: 20px auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        #messages {
-            height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #f9f9f9;
-        }
-        #message-input {
-            width: calc(100% - 90px);
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        #send-button {
-            width: 80px;
-            padding: 10px;
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .message {
-            margin-bottom: 10px;
-            padding: 5px;
-            border-bottom: 1px solid #eee;
-        }
-        .message .username {
-            font-weight: bold;
-            color: #333;
-        }
-        .message .timestamp {
-            font-size: 0.8em;
-            color: #777;
-        }
+        /* Ваши стили */
     </style>
 
     <script>
-        // Подключение к WebSocket
-        const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/ws/admin_chat/'
-        );
+       document.addEventListener("DOMContentLoaded", function () {
+    const chatSocket = new WebSocket(
+        'ws://' + window.location.host + '/ws/chat/'  // Общий WebSocket
+    );
 
-        // Обработка входящих сообщений
-        chatSocket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            const messages = document.getElementById('messages');
+    // Обработка входящих сообщений
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        const messages = document.getElementById('messages');
 
-            // Создаем элемент сообщения
-            const messageElement = document.createElement('div');
-            messageElement.classList.add('message');
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
 
-            const usernameElement = document.createElement('span');
-            usernameElement.classList.add('username');
-            usernameElement.textContent = data.username + ': ';
+        const usernameElement = document.createElement('span');
+        usernameElement.classList.add('username');
+        usernameElement.textContent = data.username + ': ';
 
-            const messageTextElement = document.createElement('span');
-            messageTextElement.textContent = data.message;
+        const messageTextElement = document.createElement('span');
+        messageTextElement.textContent = data.message;
 
-            const timestampElement = document.createElement('div');
-            timestampElement.classList.add('timestamp');
-            timestampElement.textContent = new Date().toLocaleTimeString();
+        const timestampElement = document.createElement('div');
+        timestampElement.classList.add('timestamp');
+        timestampElement.textContent = new Date().toLocaleTimeString();
 
-            messageElement.appendChild(usernameElement);
-            messageElement.appendChild(messageTextElement);
-            messageElement.appendChild(timestampElement);
+        messageElement.appendChild(usernameElement);
+        messageElement.appendChild(messageTextElement);
+        messageElement.appendChild(timestampElement);
 
-            messages.appendChild(messageElement);
-            messages.scrollTop = messages.scrollHeight; // Прокрутка вниз
-        };
+        messages.appendChild(messageElement);
+        messages.scrollTop = messages.scrollHeight;
+    };
 
-        // Отправка сообщения
-        document.getElementById('send-button').onclick = function () {
+    // Отправка сообщения
+    const sendButton = document.getElementById('send-button');
+    if (sendButton) {
+        sendButton.onclick = function () {
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value.trim();
 
             if (message) {
                 chatSocket.send(JSON.stringify({
+                    'username': 'Администратор',  // Имя администратора
                     'message': message
                 }));
-                messageInput.value = ''; // Очистка поля ввода
+                messageInput.value = '';
             }
         };
-
-        // Обработка закрытия соединения
-        chatSocket.onclose = function (e) {
-            console.error('WebSocket закрыт неожиданно');
-        };
+    }
+});
     </script>
 {% endblock %}
+
 {% block content %}
     <div id="chat">
         <h1>Административный чат</h1>
         <div id="messages">
-            <!-- Сообщения будут загружены здесь -->
+            <!-- История чата будет загружена здесь -->
         </div>
         <input type="text" id="message-input" placeholder="Введите сообщение...">
         <button id="send-button">Отправить</button>

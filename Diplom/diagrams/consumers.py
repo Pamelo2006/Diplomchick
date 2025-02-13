@@ -1,3 +1,4 @@
+# consumers.py
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 import json
@@ -7,7 +8,7 @@ from accounts.models import Users
 
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.room_group_name = "chat_group"  # Используем одну группу для всех пользователей
+        self.room_group_name = "chat_group"  # Общая группа для всех
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -23,24 +24,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         data = json.loads(text_data)
         message = data.get('message', '')
-        username = data.get('username', 'Гость')  # Получаем имя пользователя из сообщения
+        username = data.get('username', 'Гость')  # Имя пользователя или администратора
 
-        # Преобразуем имя пользователя в экземпляр модели Users
+        # Сохраняем сообщение в базе данных
         user_instance = await self.get_user(username)
-
         if user_instance:
-            # Сохраняем сообщение в базе данных
             await self.save_message_to_db(user_instance, message)
 
-            # Отправляем сообщение в группу
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'username': username,  # Используем имя пользователя из сообщения
-                    'message': message,
-                }
-            )
+        # Отправляем сообщение в группу
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chat_message',
+                'username': username,
+                'message': message,
+            }
+        )
 
     async def chat_message(self, event):
         # Отправляем сообщение клиенту

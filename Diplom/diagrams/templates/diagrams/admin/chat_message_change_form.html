@@ -58,7 +58,7 @@
     <script>
        document.addEventListener("DOMContentLoaded", function () {
     const chatSocket = new WebSocket(
-        'ws://' + window.location.host + '/ws/admin_chat/'
+        'ws://' + window.location.host + '/ws/chat/'  // Общий WebSocket
     );
 
     // Обработка входящих сообщений
@@ -66,7 +66,6 @@
         const data = JSON.parse(e.data);
         const messages = document.getElementById('messages');
 
-        // Создаем элемент сообщения
         const messageElement = document.createElement('div');
         messageElement.classList.add('message');
 
@@ -86,31 +85,25 @@
         messageElement.appendChild(timestampElement);
 
         messages.appendChild(messageElement);
-        messages.scrollTop = messages.scrollHeight; // Прокрутка вниз
+        messages.scrollTop = messages.scrollHeight;
     };
 
     // Отправка сообщения
     const sendButton = document.getElementById('send-button');
-    if (sendButton) {  // Проверяем, существует ли элемент
+    if (sendButton) {
         sendButton.onclick = function () {
             const messageInput = document.getElementById('message-input');
             const message = messageInput.value.trim();
 
             if (message) {
                 chatSocket.send(JSON.stringify({
+                    'username': 'Администратор',  // Имя администратора
                     'message': message
                 }));
-                messageInput.value = ''; // Очистка поля ввода
+                messageInput.value = '';
             }
         };
-    } else {
-        console.error("Элемент #send-button не найден в DOM.");
     }
-
-    // Обработка закрытия соединения
-    chatSocket.onclose = function (e) {
-        console.error('WebSocket закрыт неожиданно');
-    };
 });
     </script>
 {% endblock %}

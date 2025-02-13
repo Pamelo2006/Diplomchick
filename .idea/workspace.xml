@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="98baf57d-15a7-458b-b8d7-485156fe643b" name="Changes" comment="пользователь может писать сообщения(пока только на основную страницу)">
-      <change afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/admin/chat_message_change_form.html" afterDir="false" />
+    <list default="true" id="98baf57d-15a7-458b-b8d7-485156fe643b" name="Changes" comment="могу писать сообщения как пользователь, админ их видит, но админ пока сам написать не может">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/db.sqlite3" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/admin.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/routing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/admin/chat.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/admin/chat.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/main_menu.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/main_menu.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/admin/chat_message_change_form.html" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/templates/diagrams/admin/chat_message_change_form.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Diplom/diagrams/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/urls.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Diplom/diagrams/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/Diplom/diagrams/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +150,15 @@
       <option name="project" value="LOCAL" />
       <updated>1739288898233</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="могу писать сообщения как пользователь, админ их видит, но админ пока сам написать не может">
+      <option name="closed" value="true" />
+      <created>1739392709700</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1739392709700</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -176,6 +181,7 @@
     <MESSAGE value="админ может создавать шаблоны, сохраняю свои диаграммы" />
     <MESSAGE value="работает восстановление пароля" />
     <MESSAGE value="пользователь может писать сообщения(пока только на основную страницу)" />
-    <option name="LAST_COMMIT_MESSAGE" value="пользователь может писать сообщения(пока только на основную страницу)" />
+    <MESSAGE value="могу писать сообщения как пользователь, админ их видит, но админ пока сам написать не может" />
+    <option name="LAST_COMMIT_MESSAGE" value="могу писать сообщения как пользователь, админ их видит, но админ пока сам написать не может" />
   </component>
 </project>
