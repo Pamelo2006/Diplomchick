@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from .views import auto_login, get_session_data, request_password_reset, verify_reset_code, reset_password
+from .views import auto_login, get_session_data, request_password_reset, verify_reset_code, reset_password, admin_login, verify_admin_otp
 
 urlpatterns = [
     path('', views.vhod, name='vhod'),  # Страница входа
@@ -14,4 +14,6 @@ urlpatterns = [
     path("request-reset/", request_password_reset, name="request_reset"),
     path("verify-code/", verify_reset_code, name="verify_reset_code"),
     path("reset-password/", reset_password, name="reset_password"),
+    path('admin-login/', admin_login, name='admin_login'),
+    path('verify-admin-otp/', verify_admin_otp, name='verify_admin_otp'),
 ]

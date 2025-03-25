@@ -7,7 +7,7 @@ import random
 from django.core.mail import send_mail
 from django.conf import settings
 from django.shortcuts import redirect
-
+from django.contrib.auth.models import User
 
 def vhod(request):
     # Проверяем, передаёт ли пользователь данные (например, POST-запрос при логине)
@@ -43,17 +43,28 @@ def register(request):
         if Users.objects.filter(Email=Users.hash_value(email)).exists():
             return JsonResponse({'error': 'Email already exists'}, status=400)
 
+        # Создаем пользователя
         user = Users(Username=username)
         user.set_email(email)
         user.set_password(password)
         user.save()
 
-        # Сохраняем данные в сессии
-        request.session['username'] = username
+        # Генерируем и отправляем OTP
+        otp = generate_otp()
+        request.session['otp'] = otp
         request.session['email'] = email
+        request.session['username'] = username  # Сохраняем для последующей верификации
 
-
-        return JsonResponse({'success': True, 'message': 'User registered successfully'}, status=201)
+        try:
+            send_otp_email(email, otp)
+            return JsonResponse({
+                'success': True,
+                'message': 'User registered successfully. OTP sent to your email!',
+                'next_step': 'verify_otp'  # Фронтенд переключится на форму OTP
+            }, status=201)
+        except Exception as e:
+            user.delete()  # Откатываем регистрацию при ошибке отправки
+            return JsonResponse({'error': f'Failed to send OTP: {str(e)}'}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
@@ -118,6 +129,7 @@ def send_otp(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'}, status=405)
 
+
 @csrf_exempt
 def verify_otp(request):
     if request.method == 'POST':
@@ -131,11 +143,15 @@ def verify_otp(request):
             return JsonResponse({'error': 'OTP expired or not sent'}, status=400)
 
         if user_otp == stored_otp:
+            # Очищаем сессию
             del request.session['otp']
-            del request.session['email']
 
+            # Активируем пользователя (если нужно)
             try:
                 user = Users.objects.get(Email=Users.hash_value(email))
+                user.is_active = True  # Если у вас есть поле активации
+                user.save()
+
                 return JsonResponse({
                     'success': True,
                     'message': 'OTP verification successful',
@@ -271,3 +287,77 @@ def reset_password(request):
         return JsonResponse({"success": True, "message": "Password reset successfully."}, status=200)
 
     return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+@csrf_exempt
+def admin_login(request):
+    """Обработка входа администратора"""
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        username = data.get('username')
+        password = data.get('password')
+        email = data.get('email')
+
+        try:
+            # Ищем пользователя по username и email
+            user = User.objects.get(username=username, email=email)
+        except User.DoesNotExist:
+            return JsonResponse({'error': 'User not found'}, status=404)
+
+        # Проверяем пароль
+        if not user.check_password(password):
+            return JsonResponse({'error': 'Invalid password'}, status=400)
+
+        # Проверяем, является ли пользователь администратором
+        if not user.is_staff:
+            return JsonResponse({'error': 'You do not have admin privileges'}, status=403)
+
+        # Генерация и отправка OTP
+        otp = generate_otp()
+        request.session['otp'] = otp
+        request.session['email'] = email
+
+        try:
+            send_otp_email(email, otp)
+            return JsonResponse({'success': True, 'message': 'OTP sent to your email!'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def verify_admin_otp(request):
+    """Проверка OTP для администратора"""
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        user_otp = data.get('otp')
+
+        stored_otp = request.session.get('otp')
+        email = request.session.get('email')
+
+        if not stored_otp or not email:
+            return JsonResponse({'error': 'OTP expired or not sent'}, status=400)
+
+        if user_otp == stored_otp:
+            del request.session['otp']
+            del request.session['email']
+
+            try:
+                # Ищем пользователя по email
+                user = User.objects.get(email=email)
+                if user.is_staff:
+                    return JsonResponse({
+                        'success': True,
+                        'message': 'OTP verification successful',
+                        'redirect_url': 'http://127.0.0.1:8000/admin/'  # Перенаправление в панель администратора
+                    }, status=200)
+                else:
+                    return JsonResponse({
+                        'error': 'You do not have admin privileges'
+                    }, status=403)
+            except User.DoesNotExist:
+                return JsonResponse({'error': 'User not found'}, status=404)
+        else:
+            return JsonResponse({'error': 'Invalid OTP'}, status=400)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)

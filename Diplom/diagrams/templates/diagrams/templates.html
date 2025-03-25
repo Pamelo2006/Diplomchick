@@ -118,6 +118,7 @@
             cursor: pointer;
             border-radius: 10px;
         }
+
     </style>
 </head>
 <body>
@@ -129,16 +130,10 @@
                 <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
                 <a href="{% url 'templates' %}">Шаблоны</a>
                 <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
-                <a href="{% url 'my_diagrams' %}"id="myDiagramsLink">Мои диаграммы</a>
+                <a href="{% url 'my_diagrams' %}" id="myDiagramsLink">Мои диаграммы</a>
             </nav>
         </div>
         <div class="right">
-            <nav class="icon">
-                {% load static %}
-                <img src="{% static 'images/account.svg' %}" alt="" class="small-image" onclick="openAccountModal()">
-                <img src="{% static 'images/chat.svg' %}" alt="" class="small-image">
-                <img src="{% static 'images/setting.svg' %}" alt="" class="small-image" onclick="openModal()">
-            </nav>
             <div id="userInfo" class="user-info" style="display:none;">
                 <span id="userName">Добро пожаловать, Гость</span>
                 <button onclick="logout()">Выйти</button>
@@ -146,7 +141,7 @@
         </div>
 </header>
 <main>
-    <h2>Шаблоны</h2>
+    <h2 id="lol" style="text-align: center;">Шаблоны</h2>
     <div class="diagram-list">
         {% for diagram in diagrams %}
             <div class="diagram-item">
@@ -175,7 +170,7 @@
 
 <script>
     function viewDiagram(id) {
-        window.location.href = `/diagrams/view/${id}/`;  // Перенаправление на страницу просмотра диаграммы
+        window.location.href = `{% url 'view_diagram' id=0 %}`.replace('0', id);
     }
 </script>
 </body>

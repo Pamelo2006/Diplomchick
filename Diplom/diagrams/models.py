@@ -37,6 +37,7 @@ class BPMNDiagrams(models.Model):
     name = models.CharField(max_length=255, default="Новая диаграмма")
     xml_data = models.TextField()  # Основное поле для хранения XML
     created_at = models.DateTimeField(auto_now_add=True)
+    username = models.CharField(max_length=255, blank=True, null=True)  # Новое поле для имени пользователя
 
     def __str__(self):
         return self.name
@@ -48,3 +49,4 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"{self.user.Username}: {self.message}"
+

@@ -7,6 +7,7 @@ from django.urls import path
 from .consumers import ChatConsumer
 from django.shortcuts import render
 from .models import ChatMessage
+from django.utils.html import mark_safe
 
 
 class BPMNFileForm(forms.ModelForm):
@@ -14,14 +15,12 @@ class BPMNFileForm(forms.ModelForm):
         model = BPMNFile
         fields = []  # Удалили поля 'name' и 'xml_data' из формы
 
-
 @admin.register(BPMNFile)
 class BPMNFileAdmin(admin.ModelAdmin):
     form = BPMNFileForm
     list_display = ('name','created_at',)
     readonly_fields = ('created_at',)  # Дата создания только для чтения
     change_form_template = 'diagrams/admin/bpmnfile_form.html'
-
     class Media:
         css = {
             'all': (
@@ -33,7 +32,6 @@ class BPMNFileAdmin(admin.ModelAdmin):
     def save_model(self, request, obj, form, change):
         """Создает пустую BPMN-диаграмму при создании нового объекта."""
         super().save_model(request, obj, form, change)
-
         if not obj.xml_data:  # Если XML отсутствует, записываем более сложный шаблон
             obj.xml_data = '''
             <?xml version="1.0" encoding="UTF-8"?>
@@ -69,6 +67,7 @@ class BPMNFileAdmin(admin.ModelAdmin):
         initial = super().get_change_form_initial(request, obj)
         if obj and obj.xml_data:
             initial['xml_data'] = obj.xml_data  # Загружаем XML-данные для редактирования
+
 
 class DocumentForm(forms.ModelForm):
     class Meta:

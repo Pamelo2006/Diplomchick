@@ -17,6 +17,7 @@
 </head>
 <body>
     <h1>Диаграмма плавательных дорожек</h1>
+    <h2>{{ username }}</h2>
     <div id="top-panel">
         <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
         <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
@@ -32,23 +33,79 @@
     const modeler = new BpmnJS({ container });
 
     const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                      xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-                      xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      id="Definitions_1"
-                      targetNamespace="http://bpmn.io/schema/bpmn">
-      <bpmn:process id="Process_1" isExecutable="false">
-        <bpmn:startEvent id="StartEvent_1"/>
-      </bpmn:process>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-          <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
-            <dc:Bounds x="100" y="100" width="36" height="36"/>
-          </bpmndi:BPMNShape>
-        </bpmndi:BPMNPlane>
-      </bpmndi:BPMNDiagram>
-    </bpmn:definitions>`;
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_1dhhwh8">
+    <bpmn:participant id="Participant_0komfq1" processRef="Process_1" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:laneSet id="LaneSet_0ryq5ui">
+      <bpmn:lane id="Lane_0s9tz3x" name="Реалтзация">
+        <bpmn:flowNodeRef>Activity_0ebhlb3</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_0osje4e" name="Иотг">
+        <bpmn:flowNodeRef>Activity_0u5bj0c</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_1rpwhmo" name="Идея">
+        <bpmn:flowNodeRef>Activity_13njn8r</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:task id="Activity_13njn8r" name="Задумка">
+      <bpmn:outgoing>Flow_0434ytz</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0434ytz" sourceRef="Activity_13njn8r" targetRef="Activity_0ebhlb3" />
+    <bpmn:task id="Activity_0ebhlb3" name="создание">
+      <bpmn:incoming>Flow_0434ytz</bpmn:incoming>
+      <bpmn:outgoing>Flow_1akoszk</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1akoszk" sourceRef="Activity_0ebhlb3" targetRef="Activity_0u5bj0c" />
+    <bpmn:task id="Activity_0u5bj0c" name="Результат">
+      <bpmn:incoming>Flow_1akoszk</bpmn:incoming>
+    </bpmn:task>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1dhhwh8">
+      <bpmndi:BPMNShape id="Participant_0komfq1_di" bpmnElement="Participant_0komfq1" isHorizontal="true">
+        <dc:Bounds x="370" y="80" width="600" height="370" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0s9tz3x_di" bpmnElement="Lane_0s9tz3x" isHorizontal="true">
+        <dc:Bounds x="400" y="200" width="570" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_0osje4e_di" bpmnElement="Lane_0osje4e" isHorizontal="true">
+        <dc:Bounds x="400" y="325" width="570" height="125" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1rpwhmo_di" bpmnElement="Lane_1rpwhmo" isHorizontal="true">
+        <dc:Bounds x="400" y="80" width="570" height="120" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_13njn8r_di" bpmnElement="Activity_13njn8r">
+        <dc:Bounds x="460" y="100" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ebhlb3_di" bpmnElement="Activity_0ebhlb3">
+        <dc:Bounds x="590" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0u5bj0c_di" bpmnElement="Activity_0u5bj0c">
+        <dc:Bounds x="780" y="340" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_0434ytz_di" bpmnElement="Flow_0434ytz">
+        <di:waypoint x="560" y="140" />
+        <di:waypoint x="575" y="140" />
+        <di:waypoint x="575" y="260" />
+        <di:waypoint x="590" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1akoszk_di" bpmnElement="Flow_1akoszk">
+        <di:waypoint x="690" y="260" />
+        <di:waypoint x="735" y="260" />
+        <di:waypoint x="735" y="380" />
+        <di:waypoint x="780" y="380" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
 
     async function createDiagram() {
         try {
@@ -75,7 +132,8 @@
                 },
                 body: JSON.stringify({
                     name: name,
-                    bpmn: xml
+                    bpmn: xml,
+                    username: '{{ username }}'  // Добавляем имя пользователя
                 })
             });
 

@@ -9,6 +9,8 @@ from django.shortcuts import get_object_or_404
 from .models import BPMNFile, BPMNDiagrams
 from .models import ChatMessage
 from django.contrib.admin.views.decorators import staff_member_required
+from builder.models import BPMNDiagram
+
 
 
 def chat_history(request):
@@ -27,12 +29,26 @@ def chat_history(request):
 def chat_admin(request):
     return render(request, 'diagrams/admin/chat.html')
 
-def main_menu(request):
+def my_diagrams(request):
+    # Получаем имя пользователя из сессии
     username = request.session.get('username')
-    email = request.session.get('email')
+
+    # Фильтруем диаграммы по имени пользователя
+    diagrams = BPMNDiagram.objects.filter(username=username)
+
+    # Формируем контекст для передачи в шаблон
     context = {
         'username': username,
-        'email': email,
+        'diagrams': diagrams,
+    }
+
+    # Рендерим шаблон с контекстом
+    return render(request, 'diagrams/my_diagrams.html', context)
+
+def main_menu(request):
+    username = request.session.get('username')
+    context = {
+        'username': username,
     }
     return render(request, 'diagrams/main_menu.html', context)
 
@@ -40,28 +56,58 @@ def peculiarities(request):
     return render(request, 'diagrams/peculiarities.html')
 def solutions(request):
     return render(request, 'diagrams/solutions.html')
+
 def block(request):
-    return  render(request, 'builder/block_diagrams.html')
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    return  render(request, 'builder/block_diagrams.html', context)
 def activity(request):
-    return  render(request, 'builder/activity.html')
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    return  render(request, 'builder/activity.html', context)
 def sipoc(request):
-    return  render(request, 'builder/SIPOC_diagram.html')
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    return  render(request, 'builder/SIPOC_diagram.html', context)
 def swim(request):
-    return  render(request, 'builder/Swim_lane_diagram.html')
-def my_diagrams(request):
-    diagrams = BPMNDiagrams.objects.all()  # Получаем все диаграммы из базы данных
-    return render(request, 'diagrams/my_diagrams.html', {'diagrams': diagrams})
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    return  render(request, 'builder/Swim_lane_diagram.html', context)
+
 def templates(request):
-    diagrams = BPMNFile.objects.all().order_by('-created_at')  # Получаем все диаграммы, сортируем по дате создания
-    return render(request, 'diagrams/templates.html', {'diagrams': diagrams})
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    # Получаем все диаграммы из таблицы BPMNDiagrams, сортируем по дате создания
+    diagrams = BPMNDiagram.objects.filter(username='админ').order_by('-created_at')
+
+    return render(request, 'diagrams/templates.html', {'diagrams': diagrams, **context})
 
 def view_diagram(request, id):
-    diagram = get_object_or_404(BPMNFile, id=id)
-    return render(request, 'builder/use_templates.html', {'diagram': diagram})
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    diagram = get_object_or_404(BPMNDiagram, id=id)  # Получаем диаграмму по id
+    return render(request, 'builder/use_templates.html', {'diagram': diagram, **context})
+
 
 def view_diagram1(request, id):
-    diagram = get_object_or_404(BPMNDiagrams, id=id)
-    return render(request, 'builder/use_templates.html', {'diagram': diagram})
+    username = request.session.get('username')
+    context = {
+        'username': username,
+    }
+    diagram = get_object_or_404(BPMNDiagram, id=id)
+    return render(request, 'builder/use_templates.html', {'diagram': diagram, **context})
 
 def account_modal(request):
     username = request.session.get('username', None)
@@ -100,7 +146,6 @@ def get_bpmn_xml(request, pk):
     bpmn_file = get_object_or_404(BPMNFile, pk=pk)
     return JsonResponse({'xml_data': bpmn_file.xml_data})
 
-
 @csrf_exempt  # Отключает проверку CSRF для тестирования (лучше использовать CSRF-токен)
 def save_bpmn_xml(request):
     if request.method == 'POST':
@@ -108,7 +153,6 @@ def save_bpmn_xml(request):
             data = json.loads(request.body)
             name = data.get('name', 'Новая диаграмма')
             xml = data.get('bpmn', '')
-
             bpmn_file = BPMNFile.objects.create(name=name, xml_data=xml)
             return JsonResponse({'status': 'success', 'id': bpmn_file.id})
         except Exception as e:
@@ -125,29 +169,4 @@ def bpmn_editor(request, pk=None):
     else:
         diagram = BPMNFile.objects.create(name="Новая диаграмма")  # Создаём новую, если pk нет
         return redirect('bpmn_editor', pk=diagram.pk)  # Перенаправляем на редактирование с pk
-
     return render(request, 'diagrams/editor.html', {'diagram': diagram})
-
-@csrf_exempt
-def save_diagram(request):
-    if request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            diagram_id = data.get("id")  # ID диаграммы (если передан)
-            name = data.get("name", "Новая диаграмма")  # Название диаграммы
-            xml = data.get("bpmn")  # XML-данные
-
-            if diagram_id:
-                # Обновляем существующую диаграмму
-                diagram = get_object_or_404(BPMNDiagrams, id=diagram_id)
-                diagram.name = name
-                diagram.xml_data = xml
-            else:
-                # Создаём новую диаграмму
-                diagram = BPMNDiagrams(name=name, xml_data=xml)
-
-            diagram.save()  # Сохраняем изменения
-            return JsonResponse({"status": "success", "id": diagram.id})
-
-        except Exception as e:
-            return JsonResponse({"status": "error", "message": str(e)}, status=400)

@@ -59,18 +59,19 @@
     </style>
 </head>
 <body>
-       <!-- Форма входа с добавленным восстановлением пароля -->
+       <!-- Форма входа -->
         <div class="form-container" id="loginForm">
             <h2>Login</h2>
             <form id="login" action="{% url 'login' %}" method="POST">
                 {% csrf_token %}
-                <input type="text" name="username" placeholder="Username" required>
-                <input type="password" name="password" placeholder="Password" required>
+                <input type="text" name="username" placeholder="Username" required autocomplete="off">
+                <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
                 <button type="submit">Login</button>
             </form>
             <div class="switch-form">
                 <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a></p>
                 <p><a href="#" onclick="showPasswordResetForm()">Forgot password?</a></p>
+                <p><a href="#" onclick="showAdminLoginForm()">Login as Admin</a></p>
             </div>
         </div>
 
@@ -79,9 +80,9 @@
         <h2>Register</h2>
         <form id="register" action="{% url 'register' %}" method="POST">
             {% csrf_token %}
-            <input type="text" name="username" placeholder="Username" required>
+            <input type="text" name="username" placeholder="Username" required autocomplete="off">
             <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
+            <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
             <button type="submit">Register</button>
         </form>
         <div class="switch-form">
@@ -135,7 +136,94 @@
             <button type="submit">Reset Password</button>
         </form>
     </div>
+
+    <div class="form-container" id="adminLoginForm" style="display: none;">
+        <h2>Admin Login</h2>
+        <form id="adminLogin">
+            <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+            <input type="email" name="email" placeholder="Email" required>
+            <button type="submit">Login as Admin</button>
+        </form>
+        <div class="switch-form">
+            <p><a href="#" onclick="showLoginForm()">Back to Login</a></p>
+        </div>
+    </div>
     <script>
+        // Функция для показа формы входа администратора
+        function showAdminLoginForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
+            document.getElementById('otpLoginForm').style.display = 'none';
+            document.getElementById('otpVerificationForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'block';
+        }
+
+        // Обработка отправки формы администратора
+        document.getElementById('adminLogin').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const formData = {
+                username: this.querySelector('input[name="username"]').value,
+                password: this.querySelector('input[name="password"]').value,
+                email: this.querySelector('input[name="email"]').value,
+            };
+
+            // Отправка данных на сервер для проверки
+            const result = await sendForm('admin-login/', formData);
+            if (result.success) {
+                alert('OTP sent to your email!');
+                showOtpVerificationForm();  // Показать форму для ввода OTP
+            } else {
+                alert(result.error);
+            }
+        });
+
+        // Обработка отправки формы для проверки OTP
+        document.getElementById('otpVerification').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const otp = this.querySelector('input[type="text"]').value;
+
+            // Определяем, какой URL использовать для проверки OTP
+            const isAdminLogin = document.getElementById('adminLoginForm').style.display === 'block';
+            const verifyUrl = isAdminLogin ? '/verify-admin-otp/' : '/verify-otp/';
+
+            // Отправка OTP на сервер для проверки
+            const result = await sendForm(verifyUrl, { otp: otp });
+            if (result.success) {
+                alert(result.message);  // Показываем сообщение об успешной проверке
+                window.location.href = result.redirect_url;  // Перенаправление в панель администратора
+            } else {
+                alert(result.error || 'Invalid OTP or error occurred.');  // Показываем ошибку
+            }
+        });
+
+    // Функция для показа формы ввода OTP
+    function showOtpVerificationForm() {
+        document.getElementById('loginForm').style.display = 'none';
+        document.getElementById('registerForm').style.display = 'none';
+        document.getElementById('otpLoginForm').style.display = 'none';
+        document.getElementById('adminLoginForm').style.display = 'none';
+        document.getElementById('otpVerificationForm').style.display = 'block';
+    }
+
+    // Функция для отправки данных на сервер
+    async function sendForm(url, data) {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(data)
+            });
+            return await response.json();
+        } catch (error) {
+            console.error('Error:', error);
+            return { error: 'An error occurred.' };
+        }
+    }
+
         // Переключение между формами
         function showRegisterForm() {
             document.getElementById('loginForm').style.display = 'none';
@@ -184,15 +272,23 @@
         document.getElementById('register').addEventListener('submit', async function(event) {
             event.preventDefault();
             const formData = {
-                username: this.querySelector('input[type="text"]').value,
-                email: this.querySelector('input[type="email"]').value,
-                password: this.querySelector('input[type="password"]').value,
+                username: this.querySelector('input[name="username"]').value,
+                email: this.querySelector('input[name="email"]').value,
+                password: this.querySelector('input[name="password"]').value,
             };
 
-            // Отправка данных на сервер для регистрации
+            /// Отправка данных на сервер для регистрации
             const result = await sendForm('/register/', formData);
             if (result.success) {
-                showOtpLoginForm();  // Показать форму для ввода email
+                alert(result.message); // "User registered successfully. OTP sent to your email!"
+
+                // Скрываем ВСЕ формы, затем показываем только форму OTP
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('registerForm').style.display = 'none';
+                document.getElementById('otpLoginForm').style.display = 'none';
+                document.getElementById('adminLoginForm').style.display = 'none';
+                document.getElementById('otpVerificationForm').style.display = 'block';
+
             } else {
                 alert(result.error);
             }

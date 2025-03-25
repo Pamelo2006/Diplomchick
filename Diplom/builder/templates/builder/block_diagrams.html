@@ -17,6 +17,7 @@
 <body>
 
 <h1>BPMN Редактор</h1>
+<h2>{{ username }}</h2>
 <div id="top-panel">
     <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
     <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
@@ -30,23 +31,91 @@
     const modeler = new BpmnJS({ container });
 
     const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
-    <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL"
-                      xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
-                      xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
-                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                      id="Definitions_1"
-                      targetNamespace="http://bpmn.io/schema/bpmn">
-      <bpmn:process id="Process_1" isExecutable="false">
-        <bpmn:startEvent id="StartEvent_1"/>
-      </bpmn:process>
-      <bpmndi:BPMNDiagram id="BPMNDiagram_1">
-        <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
-          <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
-            <dc:Bounds x="100" y="100" width="36" height="36"/>
-          </bpmndi:BPMNShape>
-        </bpmndi:BPMNPlane>
-      </bpmndi:BPMNDiagram>
-    </bpmn:definitions>`;
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1njeaep</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="Activity_1f34r67">
+      <bpmn:incoming>Flow_1njeaep</bpmn:incoming>
+      <bpmn:outgoing>Flow_0dav32j</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1njeaep" sourceRef="StartEvent_1" targetRef="Activity_1f34r67" />
+    <bpmn:exclusiveGateway id="Gateway_12lufs0">
+      <bpmn:incoming>Flow_0dav32j</bpmn:incoming>
+      <bpmn:incoming>Flow_1uwkt9p</bpmn:incoming>
+      <bpmn:outgoing>Flow_1rderyx</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1khs6ti</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_0dav32j" sourceRef="Activity_1f34r67" targetRef="Gateway_12lufs0" />
+    <bpmn:task id="Activity_1a81vl9">
+      <bpmn:incoming>Flow_1rderyx</bpmn:incoming>
+      <bpmn:outgoing>Flow_0a8wsv1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1rderyx" sourceRef="Gateway_12lufs0" targetRef="Activity_1a81vl9" />
+    <bpmn:endEvent id="Event_1hglcpn">
+      <bpmn:incoming>Flow_0a8wsv1</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0a8wsv1" sourceRef="Activity_1a81vl9" targetRef="Event_1hglcpn" />
+    <bpmn:task id="Activity_02i1ibo">
+      <bpmn:incoming>Flow_1khs6ti</bpmn:incoming>
+      <bpmn:outgoing>Flow_1uwkt9p</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_1khs6ti" sourceRef="Gateway_12lufs0" targetRef="Activity_02i1ibo" />
+    <bpmn:sequenceFlow id="Flow_1uwkt9p" sourceRef="Activity_02i1ibo" targetRef="Gateway_12lufs0" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
+      <bpmndi:BPMNShape id="StartEvent_1_di" bpmnElement="StartEvent_1">
+        <dc:Bounds x="332" y="192" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_12lufs0_di" bpmnElement="Gateway_12lufs0" isMarkerVisible="true">
+        <dc:Bounds x="575" y="295" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1a81vl9_di" bpmnElement="Activity_1a81vl9">
+        <dc:Bounds x="680" y="280" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1hglcpn_di" bpmnElement="Event_1hglcpn">
+        <dc:Bounds x="842" y="302" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1f34r67_di" bpmnElement="Activity_1f34r67">
+        <dc:Bounds x="430" y="170" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_02i1ibo_di" bpmnElement="Activity_02i1ibo">
+        <dc:Bounds x="720" y="390" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_1njeaep_di" bpmnElement="Flow_1njeaep">
+        <di:waypoint x="368" y="210" />
+        <di:waypoint x="430" y="210" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0dav32j_di" bpmnElement="Flow_0dav32j">
+        <di:waypoint x="530" y="210" />
+        <di:waypoint x="600" y="210" />
+        <di:waypoint x="600" y="295" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1rderyx_di" bpmnElement="Flow_1rderyx">
+        <di:waypoint x="625" y="320" />
+        <di:waypoint x="680" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0a8wsv1_di" bpmnElement="Flow_0a8wsv1">
+        <di:waypoint x="780" y="320" />
+        <di:waypoint x="842" y="320" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1khs6ti_di" bpmnElement="Flow_1khs6ti">
+        <di:waypoint x="600" y="345" />
+        <di:waypoint x="600" y="430" />
+        <di:waypoint x="720" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1uwkt9p_di" bpmnElement="Flow_1uwkt9p">
+        <di:waypoint x="820" y="430" />
+        <di:waypoint x="860" y="430" />
+        <di:waypoint x="860" y="510" />
+        <di:waypoint x="600" y="510" />
+        <di:waypoint x="600" y="345" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>`;
 
     async function createDiagram() {
         try {
@@ -73,7 +142,8 @@
                 },
                 body: JSON.stringify({
                     name: name,
-                    bpmn: xml
+                    bpmn: xml,
+                    username: '{{ username }}'  // Добавляем имя пользователя
                 })
             });
 

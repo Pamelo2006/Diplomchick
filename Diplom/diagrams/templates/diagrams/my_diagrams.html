@@ -94,6 +94,13 @@
             cursor: pointer;
             border-radius: 10px;
         }
+        #searchInput {
+            padding: 8px;
+            margin-left: 500px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -108,9 +115,10 @@
             <a href="{% url 'my_diagrams' %}">Мои диаграммы</a>
         </nav>
     </div>
+    <input type="text" id="searchInput" placeholder="Поиск диаграмм..." oninput="filterDiagrams()">
 </header>
 <main>
-    <h2>Мои диаграммы</h2>
+    <h2 style="text-align: center;">Ваши диаграммы {{ username }}</h2>
     <div class="diagram-list">
         {% for diagram in diagrams %}
             <div class="diagram-item">
@@ -137,6 +145,19 @@
 <script>
     function viewDiagram1(id) {
         window.location.href = `{% url 'view_diagram1' id=0 %}`.replace('0', id);
+    }
+    function filterDiagrams() {
+        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        const diagramItems = document.querySelectorAll('.diagram-item');
+
+        diagramItems.forEach(item => {
+            const diagramName = item.querySelector('h3').textContent.toLowerCase();
+            if (diagramName.includes(searchQuery)) {
+                item.style.display = '';
+            } else {
+                item.style.display = 'none';
+            }
+        });
     }
 </script>
 </body>

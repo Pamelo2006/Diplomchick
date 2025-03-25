@@ -57,7 +57,7 @@
             height: 2px;
             bottom: 0;
             left: 0;
-            background-color: #4CAF50;
+            background-color: #66a5ad;
             transition: width 0.3s ease;
         }
         .nav-links a:hover::after {
@@ -75,14 +75,11 @@
         main {
             padding-top: 70px;
         }
-        .content {
-            padding: 20px;
-        }
         .block1, .block2, .block3, .block4, .block {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
-            margin-bottom: 20px;
+
         }
         .block2 {
             text-align: right;
@@ -203,27 +200,6 @@
             text-decoration: none;
             cursor: pointer;
         }
-        /* Стили для темной темы */
-        body.dark-theme .modal-content {
-            background-color: #444;
-            color: #FFF;
-            border-color: #555;
-        }
-        body.dark-theme .close {
-            color: #FFF;
-        }
-        body.dark-theme .close:hover,
-        body.dark-theme .close:focus {
-            color: #CCC;
-        }
-        body.dark-theme select {
-            background-color: #555;
-            color: #FFF;
-            border-color: #666;
-        }
-        body.dark-theme select:hover {
-            background-color: #666;
-        }
         .auth-buttons {
             display: flex;
             justify-content: center;
@@ -270,7 +246,7 @@
         }
 
         #supportButton {
-            background-color: #4CAF50;
+            background-color: #07575b;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -305,7 +281,7 @@
         /* Стили для чата внутри панели */
         #chat {
             padding: 20px;
-            height: 100%;
+            height: 90%;
             display: flex;
             flex-direction: column;
         }
@@ -319,7 +295,7 @@
         }
 
         #chat-message-input {
-            width: 100%;
+            width: 90%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
@@ -327,7 +303,7 @@
         }
 
         #chat-message-submit {
-            background-color: #4CAF50;
+            background-color: #07575b;
             color: white;
             padding: 10px;
             border: none;
@@ -335,29 +311,149 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+        #chat-message-submit2 {
+            background-color: #07575b;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
 
         #chat-message-submit:hover {
             background-color: #45a049;
         }
-
-        /* Адаптация для темной темы */
-        body.dark-theme #chat-sidebar {
-            background-color: #444;
-            color: #FFF;
+        .block1{
+            background-color: #c4dfe6;
+            padding: 20px; /* Отступы внутри блока */
+            text-align: center; /* Выравнивание текста по центру */
+        }
+        .block2{
+            background-color: #FFFFFF;
+        }
+        .block3{
+            background-color: #c4dfe6;
+        }
+        img {
+            mix-blend-mode: multiply;
         }
 
-        body.dark-theme #chat-log {
-            border-color: #555;
+        .doc, .temp, .ise {
+            flex: 0 0 20%; /* Ширина каждого блока 30% */
+            display: flex; /* Используем Flexbox внутри каждого блока */
+            flex-direction: column; /* Элементы внутри колонки */
+            align-items: center; /* Выравнивание по центру */
+            justify-content: center; /* Центрирование по вертикали */
+            background-color: #c4dfe6;
+            padding: 15px; /* Отступы внутри мини-блока */
+            border-radius: 10px; /* Скругление углов */
         }
 
-        body.dark-theme #chat-message-input {
-            background-color: #555;
-            color: #FFF;
-            border-color: #666;
+        img {
+            margin-bottom: 10px; /* Отступ снизу у изображений */
         }
 
-        body.dark-theme #chat-message-submit {
-            background-color: #666;
+        h2 {
+            font-size: 18px; /* Размер текста */
+            color: #333; /* Цвет текста */
+            margin: 0; /* Убираем отступы у заголовков */
+        }
+        #fir{
+             margin-bottom: 20px; /* Отступ снизу для заголовка */
+        }
+        .cont{
+            display: flex;
+            justify-content: space-between; /* Распределяем пространство между блоками */
+            gap: 20px; /* Расстояние между блоками */
+            padding: 20px; /* Отступы внутри блока */
+            text-align: center; /* Выравнивание текста по центру */
+        }
+        .blockys{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 35px;
+        }
+
+
+        .block2 {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+            background-color: #f4f4f4;
+            height: 400px; /* Фиксированная высота для блока */
+            align-items: center; /* Центрируем содержимое по вертикали */
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%; /* Занимаем всю высоту родителя */
+            align-items: center; /* Центрируем содержимое по вертикали */
+        }
+
+        .left-text, .right-squares {
+            width: 48%;
+            height: 100%;
+            display: flex;
+            align-items: center; /* Центрируем содержимое по вертикали */
+            justify-content: center; /* Центрируем содержимое по горизонтали */
+            position: relative; /* Для позиционирования элементов */
+        }
+
+        .text-item, .square-item {
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            position: absolute; /* Абсолютное позиционирование для анимации */
+            top: 50%; /* Начальная позиция по вертикали */
+            left: 50%; /* Начальная позиция по горизонтали */
+            transform: translate(-50%, -50%); /* Центрирование */
+        }
+
+        .text-item {
+            text-align: center; /* Центрируем текст */
+            width: 80%; /* Ширина текстового блока */
+            transform: translate(-50%, 20px); /* Начальное смещение для анимации */
+        }
+
+        .square-item {
+            width: 200px; /* Ширина квадрата */
+            height: 200px; /* Высота квадрата */
+            display: flex;
+            align-items: center; /* Центрируем гифку по вертикали */
+            justify-content: center; /* Центрируем гифку по горизонтали */
+            transform: translate(20px, -50%); /* Начальное смещение для анимации */
+        }
+
+        .square-item img {
+            max-width: 100%; /* Ограничиваем размер гифки */
+            max-height: 100%; /* Ограничиваем размер гифки */
+        }
+
+        .text-item.active, .square-item.active {
+            opacity: 1;
+            transform: translate(-50%, -50%); /* Конечная позиция для анимации */
+        }
+        .pos, .red, .sec {
+            display: flex;
+            align-items: center; /* Выравниваем элементы по центру по вертикали */
+            justify-content: center; /* Выравниваем элементы по центру по горизонтали */
+        }
+
+        .pos_img, .red_img, .sec_img {
+            display: flex;
+            align-items: center; /* Выравниваем картинку по центру по вертикали */
+            justify-content: center; /* Выравниваем картинку по центру по горизонтали */
+        }
+
+        .pos_text, .red_text, .sec_text {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Выравниваем текст по центру по вертикали */
+            align-items: flex-start; /* Выравниваем текст по левому краю */
+            margin-left: 20px; /* Добавляем отступ между картинкой и текстом */
         }
     </style>
 </head>
@@ -375,74 +471,135 @@
         </div>
         <div class="right">
             <button id="supportButton" onclick="toggleChat()">Тех. поддержка</button>
+
         </div>
     </header>
     <main>
         <div class="content">
-            <div class="block">
-                <h2 id="createDiagramText">Попробуйте создать свою диаграмму</h2>
-                <button class="create-button" id="createButton">Создать</button>
+            <div id="accountInfo" data-username="{{ username }}"></div>
+                <div class="account-info">
+                    <h2>Добро пожаловать {{ username }}</h2>
+                </div>
+
+            <div class="blockys">
+                <div class="poh">
+                    <h1>Добро пожаловать!</h1>
+                    <p>Мы рады предложить вам наши услуги по созданию диаграмм бизнес-процессов</p>
+                    <p>Здесь вы сможете легко и наглядно проектировать, анализировать и оптимизировать свои бизнес-процессы</p>
+                    <p>Начните прямо сейчас — создайте свою первую диаграмму или изучите готовые шаблоны для вдохновения</p>
+                </div>
+                {% load static %}
+                <img src="{% static 'images/процесс.gif' %}" alt="Your GIF"  height="350">
             </div>
-                    <div id="accountInfo" data-username="{{ username }}"></div>
-                        <div class="account-info">
-                            <h2>Добро пожаловать, {{ username }}</h2>
-                        </div>
 
             <div class="block1">
-                <h2 id="createProcessText">Создавайте бизнес-процессы легко и быстро!</h2>
-                <p id="startNowText">Профессиональные диаграммы для вашего бизнеса в несколько кликов. Начните прямо сейчас!</p>
-            </div>
-            <div class="block2">
-                <div class="block2_text">
-                    <h2 id="whyChooseUsText">Почему выбирают нас?</h2>
-                    <p id="intuitiveInterfaceText">Интуитивный интерфейс: Простое создание диаграмм без сложного обучения</p>
-                    <p id="templatesText">Шаблоны и примеры: Готовые решения для различных отраслей</p>
-                    <p id="freeText">Доступность: Работайте над своими диаграммами совершенно БЕСПЛАТНО</p>
+                <h1 id="fir">Преимущества использования нашего сайта</h1>
+                {% load static %}
+                <div class="cont">
+                    <div class="doc">
+                        <img src="{% static 'images/документация.gif' %}" alt="Your GIF" width="100" height="100">
+                        <h2>Обширная документация</h2>
+                        <p>- Точная документация</p>
+                        <p>- Документация на двух языках</p>
+                        <p>- Новейшая версии документации</p>
+                    </div>
+                    <div class="temp">
+                        <img src="{% static 'images/шаблоны.gif' %}" alt="Your GIF" width="100" height="100">
+                        <h2>Много шаблонов</h2>
+                        <p>- Большое разнообразие шаблонов</p>
+                        <p>- Решение для любой задачи</p>
+                        <p>- Используй готовые решения</p>
+                    </div>
+                    <div class="ise">
+                        <img src="{% static 'images/простота.gif' %}" alt="Your GIF" width="100" height="100">
+                        <h2>Простота приложения</h2>
+                        <p>- Интуитивный интерфейс</p>
+                        <p>- Легкое восприятие</p>
+                        <p>- Удобная навигация</p>
+                    </div>
                 </div>
             </div>
+
+            <div class="block2">
+                <div class="container">
+                    <div class="left-text">
+                        <div class="text-item active">
+                            <h1>Шаблоны для любых бизнес-процессов</h1>
+                            <p>Мы предоставляем большое разнообразие шаблонов для решения любых задач.</p>
+                        </div>
+                        <div class="text-item">
+                            <h1>Готовые решения</h1>
+                            <p>Используйте готовые решения для оптимизации ваших бизнес-процессов.</p>
+                        </div>
+                        <div class="text-item">
+                            <h1>Бесплатные шаблоны</h1>
+                            <p>Все шаблоны доступны абсолютно бесплатно.</p>
+                        </div>
+                    </div>
+                    <div class="right-squares">
+                        {% load static %}
+                        <div class="square-item active">
+                            <img src="{% static 'images/документация.gif' %}" alt="Your GIF" width="200" height="200">
+                        </div>
+                        <div class="square-item">
+                            <img src="{% static 'images/готовые.gif' %}" alt="Your GIF" width="200" height="200">
+                        </div>
+                        <div class="square-item">
+                            <img src="{% static 'images/ноумани.gif' %}" alt="Your GIF" width="200" height="200">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="block3">
-                <h2 id="stepsText">3 простых шага к идеальной диаграмме</h2>
-                <p id="step1Text">Выберите шаблон или начните с чистого листа</p>
-                <p id="step2Text">Добавьте элементы и настройте процессы под свои задачи</p>
-                <p id="step3Text">Экспортируйте или сохраните результат на свой рабочий стол</p>
+                <h1 id="stepsText">Простой подход для работы с диаграммами</h1>
+                {% load static %}
+                <div class="pos">
+                    <div class="pos_img">
+                        <img src="{% static 'images/возможности.png' %}" alt="Your GIF"  height="350">
+                    </div>
+                    <div class="pos_text">
+                        <h2>Приложение BPMN предлагает много возможностей для пользователей:</h2>
+                        <p>- создание новых диаграмм</p>
+                        <p>- редактирование уже существующих диаграмм</p>
+                        <p>- возможность использовать готовые шаблоны</p>
+                    </div>
+                </div>
+                <div class="red">
+                    <div class="red_text">
+                        <h2>Удобный редактор для создания диаграмм</h2>
+                        <p>прост в освоении</p>
+                        <p>редактор не нагружен всеразличными элементами</p>
+                        <p>используем только самое нужное</p>
+                    </div>
+                    <div class="red_img">
+                        <img src="{% static 'images/редактор.png' %}" alt="Your GIF"  height="350">
+                    </div>
+                </div>
+                <div class="sec">
+                    <div class="sec_img">
+                        <img src="{% static 'images/защита.png' %}" alt="Your GIF"  height="350">
+                    </div>
+                    <div class="sec_text">
+                        <h2>Данные пользователей под защитой:</h2>
+                        <p>ваши данные не поподут в чьи-либо руки</p>
+                        <p>мы заботимся о безопастности ваших данных</p>
+                        <p>ваши данные - нашь приоритет</p>
+                    </div>
+                </div>
             </div>
-            <div class="block4">
-                <h2 id="templatesForTasksText">Возможность просмотра большого количества шаблонов под любую задачу</h2>
-                <ul>
-                    <li><a href="#" id="websiteTemplatesText">✅ Шаблоны для сайтов</a></li>
-                    <li><a href="#" id="presentationTemplatesText">✅ Шаблоны для презентаций</a></li>
-                    <li><a href="#" id="documentTemplatesText">✅ Шаблоны для документов</a></li>
-                </ul>
-            </div>
+
         </div>
     </main>
-    <!-- Модальное окно настроек -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2 id="settingsText">Настройки</h2>
-            <label for="language" id="languageLabel">Язык:</label>
-            <select id="language" name="language" onchange="changeLanguage(this.value)">
-                <option value="ru">Русский</option>
-                <option value="en">English</option>
-            </select>
-            <br><br>
-            <label for="theme" id="themeLabel">Тема:</label>
-            <select id="theme" name="theme" onchange="changeTheme(this.value)">
-                <option value="light">Светлая</option>
-                <option value="dark">Темная</option>
-            </select>
+        <div id="chat-sidebar">
+            <div id="chat">
+                <div id="chat-log"></div>
+                <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+                <button id="chat-message-submit">Отправить</button>
+                <button id="chat-message-submit2">Закрыть</button>
+            </div>
         </div>
-    </div>
 
-    <!-- чатик -->
-     <div id="chat-sidebar">
-        <div id="chat">
-            <div id="chat-log"></div>
-            <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
-            <button id="chat-message-submit">Отправить</button>
-        </div>
-    </div>
 <script>
     // Функция для открытия/закрытия чата
     function toggleChat() {
@@ -500,6 +657,11 @@
                 messageInputDom.value = '';
             }
         };
+
+        // Закрытие/открытие чата при нажатии на кнопку "Закрыть"
+        document.querySelector('#chat-message-submit2').onclick = function (e) {
+            toggleChat();  // Используем ту же функцию для закрытия/открытия чата
+        };
     });
 
     // Загрузка истории сообщений
@@ -513,6 +675,24 @@
     }
 
     document.addEventListener("DOMContentLoaded", loadChatHistory);
+
+    //слайдер
+    let currentIndex = 0;
+    const textItems = document.querySelectorAll('.text-item');
+    const squareItems = document.querySelectorAll('.square-item');
+
+    function showNextItem() {
+        textItems[currentIndex].classList.remove('active');
+        squareItems[currentIndex].classList.remove('active');
+
+        currentIndex = (currentIndex + 1) % textItems.length;
+
+        textItems[currentIndex].classList.add('active');
+        squareItems[currentIndex].classList.add('active');
+    }
+
+    setInterval(showNextItem, 3000); // Меняем элементы каждые 3 секунды
 </script>
+
 </body>
 </html>
