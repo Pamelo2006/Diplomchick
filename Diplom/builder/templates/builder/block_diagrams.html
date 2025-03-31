@@ -21,7 +21,18 @@
 <div id="top-panel">
     <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
     <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+    <!-- Селектор экспорта -->
+    <div style="display: inline-block; margin-left: 10px;">
+        <select id="export-format" class="btn" style="padding: 10px; height: 40px;">
+            <option value="" selected disabled>Экспорт в...</option>
+            <option value="png">PNG</option>
+            <option value="jpg">JPG</option>
+            <option value="pdf">PDF</option>
+        </select>
+        <button class="btn" onclick="exportDiagram()" style="margin-left: 5px;">Экспортировать</button>
+    </div>
 </div>
+
 
 <div id="bpmn-container"></div>
 
@@ -170,6 +181,92 @@
             console.error('Ошибка загрузки:', error);
         }
     }
+
+    async function exportDiagram() {
+    const formatSelect = document.getElementById('export-format');
+    const format = formatSelect.value;
+
+    if (!format) {
+        alert('Пожалуйста, выберите формат экспорта');
+        return;
+    }
+
+    try {
+        if (format === 'svg') {
+            const { svg } = await modeler.saveSVG();
+            downloadFile(svg, 'diagram.svg', 'image/svg+xml');
+            return;
+        }
+
+        // Для PDF используем отдельный подход
+        if (format === 'pdf') {
+            const { svg } = await modeler.saveSVG();
+            const response = await fetch('/builder/export/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    svg: svg,
+                    format: 'pdf',
+                    filename: 'diagram'
+                })
+            });
+
+            if (response.ok) {
+                const blob = await response.blob();
+                downloadFile(blob, 'diagram.pdf', 'application/pdf');
+            } else {
+                throw new Error(await response.text());
+            }
+            return;
+        }
+
+        // Для PNG/JPG используем canvas
+        const { svg } = await modeler.saveSVG();
+        const img = new Image();
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+
+            // Заливаем белым фоном для JPG
+            if (format === 'jpg') {
+                ctx.fillStyle = 'white';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            ctx.drawImage(img, 0, 0);
+
+            let mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
+            canvas.toBlob(blob => {
+                downloadFile(blob, `diagram.${format}`, mimeType);
+            }, mimeType, 1.0);
+        };
+
+        img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+    } catch(error) {
+        console.error('Ошибка экспорта:', error);
+        alert('Ошибка при экспорте: ' + error.message);
+    }
+}
+
+function downloadFile(content, filename, mimeType) {
+    const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+
 </script>
 
 </body>

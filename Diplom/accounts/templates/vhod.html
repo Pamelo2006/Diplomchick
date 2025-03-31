@@ -117,6 +117,9 @@
             <input type="email" placeholder="Email" id="reset_email" required>
             <button type="submit">Send Code</button>
         </form>
+        <div class="switch-form">
+            <p><a href="#" onclick="showLoginForm()">Back to Login</a></p>
+        </div>
     </div>
 
     <!-- Форма для ввода кода -->
@@ -151,11 +154,14 @@
     </div>
     <script>
         // Функция для показа формы входа администратора
-        function showAdminLoginForm() {
+       function showAdminLoginForm() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('otpLoginForm').style.display = 'none';
             document.getElementById('otpVerificationForm').style.display = 'none';
+            document.getElementById('requestResetForm').style.display = 'none';
+            document.getElementById('verifyCodeForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'none';
             document.getElementById('adminLoginForm').style.display = 'block';
         }
 
@@ -230,13 +236,21 @@
             document.getElementById('registerForm').style.display = 'block';
             document.getElementById('otpLoginForm').style.display = 'none';
             document.getElementById('otpVerificationForm').style.display = 'none';
+            document.getElementById('requestResetForm').style.display = 'none';
+            document.getElementById('verifyCodeForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'none';
         }
 
         function showLoginForm() {
-            document.getElementById('registerForm').style.display = 'none';
-            document.getElementById('loginForm').style.display = 'block';
-            document.getElementById('otpLoginForm').style.display = 'none';
-            document.getElementById('otpVerificationForm').style.display = 'none';
+             document.getElementById('registerForm').style.display = 'none';
+             document.getElementById('loginForm').style.display = 'block';
+             document.getElementById('otpLoginForm').style.display = 'none';
+             document.getElementById('otpVerificationForm').style.display = 'none';
+             document.getElementById('requestResetForm').style.display = 'none';
+             document.getElementById('verifyCodeForm').style.display = 'none';
+             document.getElementById('resetPasswordForm').style.display = 'none';
+             document.getElementById('adminLoginForm').style.display = 'none';
         }
 
         function showOtpLoginForm() {
@@ -244,11 +258,21 @@
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('otpLoginForm').style.display = 'block';
             document.getElementById('otpVerificationForm').style.display = 'none';
+            document.getElementById('requestResetForm').style.display = 'none';
+            document.getElementById('verifyCodeForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'none';
         }
 
         function showOtpVerificationForm() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('registerForm').style.display = 'none';
             document.getElementById('otpLoginForm').style.display = 'none';
             document.getElementById('otpVerificationForm').style.display = 'block';
+            document.getElementById('requestResetForm').style.display = 'none';
+            document.getElementById('verifyCodeForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'none';
         }
 
         // Обработка отправки формы входа
@@ -352,10 +376,12 @@
             document.getElementById('registerForm').style.display = 'none';
             document.getElementById('otpLoginForm').style.display = 'none';
             document.getElementById('otpVerificationForm').style.display = 'none';
-
-            // Показываем форму запроса на сброс пароля
             document.getElementById('requestResetForm').style.display = 'block';
+            document.getElementById('verifyCodeForm').style.display = 'none';
+            document.getElementById('resetPasswordForm').style.display = 'none';
+            document.getElementById('adminLoginForm').style.display = 'none';
         }
+
 
         // Показ формы для запроса сброса пароля
         function showRequestResetForm() {

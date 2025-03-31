@@ -22,8 +22,19 @@
 <div id="top-panel">
     <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
     <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+    <button class="btn" onclick="exportDiagram()">📤 Экспорт</button>
 </div>
     <div id="bpmn-container"></div>
+
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExportModal()">&times;</span>
+            <h3>Выберите формат экспорта</h3>
+            <button class="format-option" onclick="exportDiagram('png')">PNG (изображение)</button>
+            <button class="format-option" onclick="exportDiagram('jpg')">JPG (изображение)</button>
+            <button class="format-option" onclick="exportDiagram('svg')">SVG (векторный)</button>
+        </div>
+    </div>
 
     <!-- Подключаем BPMN.js через CDN -->
     <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
@@ -206,6 +217,74 @@
             console.error('Ошибка загрузки:', error);
         }
     }
+        async function exportDiagram() {
+    // Создаем меню выбора формата
+    const format = prompt("Выберите формат экспорта (введите png, jpg или svg):", "png");
+
+    if (!format || !['png', 'jpg', 'svg'].includes(format.toLowerCase())) {
+        alert("Пожалуйста, выберите один из поддерживаемых форматов: png, jpg, svg");
+        return;
+    }
+
+    try {
+        if (format.toLowerCase() === 'svg') {
+            // Экспорт в SVG
+            const { svg } = await modeler.saveSVG();
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            downloadFile(blob, `diagram.${format}`);
+        } else {
+            // Экспорт в PNG/JPG
+            const { svg } = await modeler.saveSVG();
+            const canvas = await svgToCanvas(svg);
+            canvas.toBlob((blob) => {
+                downloadFile(blob, `diagram.${format}`);
+            }, `image/${format}`, 1.0);
+        }
+    } catch (err) {
+        console.error('Ошибка экспорта:', err);
+        alert('Произошла ошибка при экспорте');
+    }
+}
+
+// Вспомогательная функция для конвертации SVG в Canvas
+function svgToCanvas(svg) {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const img = new Image();
+
+        img.onload = function() {
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas);
+        };
+
+        img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+    });
+}
+
+// Вспомогательная функция для скачивания файла
+function downloadFile(blob, filename) {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+        // Функции для работы с модальным окном экспорта
+        function showExportModal() {
+            document.getElementById('exportModal').style.display = 'block';
+        }
+
+        function closeExportModal() {
+            document.getElementById('exportModal').style.display = 'none';
+        }
+
     </script>
 </body>
 </html>
