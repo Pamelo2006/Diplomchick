@@ -8,13 +8,9 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #FFF;
+            background-color: #c4dfe6;
             color: #000;
             transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        body.dark-theme {
-            background-color: #333;
-            color: #FFF;
         }
         header {
             position: fixed;
@@ -49,81 +45,549 @@
         .nav-links a:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        .icon {
-            display: flex;
-            gap: 10px;
+        .nav-links a::after {
+            content: "";
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: #66a5ad;
+            transition: width 0.3s ease;
         }
-        .small-image {
-            width: 50px;
-            height: auto;
-            cursor: pointer;
+        .nav-links a:hover::after {
+            width: 100%;
         }
         main {
-            padding-top: 70px;
+            padding-top: 80px;
+        }
+        .page-title {
+            text-align: center;
+            font-family: 'Georgia', serif;
+            color: #333;
+            margin: 30px 0;
+            font-size: 28px;
         }
         .diagram-list {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 15px;
-            padding: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            padding: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
         .diagram-item {
-            background: #f9f9f9;
-            padding: 15px;
+            background: white;
+            padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .diagram-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        .diagram-item h3 {
+            font-family: 'Georgia', serif;
+            color: #333;
+            margin: 0 0 15px 0;
+            text-align: center;
+            font-size: 18px;
+        }
+        .diagram-date {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 15px;
         }
         .diagram-container {
             width: 100%;
-            max-width: 300px;
             height: 200px;
             background-color: white;
-            border: 1px solid #ccc;
+            border: 1px solid #e0e0e0;
+            border-radius: 5px;
             position: relative;
             overflow: hidden;
+            margin-bottom: 15px;
         }
-        .diagram-item button {
-            margin-top: 10px;
-            padding: 8px 12px;
-            background: #4CAF50;
+        .diagram-actions {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        .diagram-btn {
+            padding: 8px 20px;
+            background: #66a5ad;
             color: white;
             border: none;
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .diagram-btn:hover {
+            background: #4d8b94;
         }
         #searchInput {
-            padding: 8px;
-            margin-left: 500px;
-            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 14px;
+            width: 250px;
+            transition: border-color 0.3s ease;
+            margin-left: 500px;
+        }
+        #searchInput:focus {
+            outline: none;
+            border-color: #66a5ad;
+        }
+        .empty-message {
+            text-align: center;
+            grid-column: 1 / -1;
+            color: #666;
+            font-size: 18px;
+            padding: 50px 0;
+        }
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 10px;
+            }
+            header h1 {
+                padding-right: 0;
+                margin-bottom: 10px;
+            }
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            #searchInput {
+                margin-top: 10px;
+                margin-left: 0;
+                width: 100%;
+                margin-left: 500px;
+            }
+            .diagram-list {
+                grid-template-columns: 1fr;
+                padding: 15px;
+            }
+        }
+        /* Стили для выпадающего меню аккаунта */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .account-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            margin-left: 200px;
+        }
+
+        .account-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .account-icon {
+            margin-right: 8px;
             font-size: 16px;
         }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .account-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .account-header {
+            padding: 8px 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 8px 0;
+        }
+
+        .dropdown-section {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-section select {
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .logout-btn {
+            color: #e74c3c !important;
+        }
+
+        .account-header .username {
+            color: #333;
+            /* Основной цвет текста */
+            font-size: 16px;
+            display: block;
+        }
+
+        /* Общий стиль текста в выпадающем меню */
+        .dropdown-content {
+            color: #333;
+            /* Цвет текста по умолчанию */
+        }
+
+        /* Стиль для ссылок в меню */
+        .dropdown-content a {
+            color: #333;
+            /* Цвет текста ссылок */
+        }
+
+        /* Стиль для текста в секциях (Язык, Тема) */
+        .dropdown-section span {
+            color: #333;
+            /* Цвет текста меток */
+        }
+
+        /* Стиль для выпадающих списков */
+        .dropdown-section select {
+            color: #333;
+            /* Цвет текста в select */
+        }
+
+        /* Стиль для кнопки выхода */
+        .logout-btn {
+            color: #e74c3c !important;
+            /* Красный цвет для кнопки выхода */
+        }
+        #supportButton {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+            margin-left: 400px;
+        }
+
+        #supportButton:hover {
+            background-color: #07575b;
+        }
+
+        /* Стили для боковой панели с чатом */
+        #chat-sidebar {
+            position: fixed;
+            top: 0;
+            right: -20%;
+            /* Скрываем панель за пределами экрана */
+            width: 20%;
+            height: 100%;
+            background-color: #f4f4f4;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+
+        #chat-sidebar.active {
+            right: 0;
+            /* Показываем панель */
+        }
+
+        /* Стили для чата внутри панели */
+        #chat {
+            padding: 20px;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        #chat-message-input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #chat-message-submit {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #chat-message-submit2 {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        #chat-message-submit:hover {
+            background-color: #07575b;
+        }
+
+
+
+        .search-container {
+    display: flex;
+    margin: 20px 0;
+    max-width: 500px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 16px;
+}
+
+.search-btn {
+    padding: 10px 15px;
+    background-color:  #66a5ad;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-btn:hover {
+    background-color: #07575b;
+}
+
+.diagram-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.diagram-item {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    transition: transform 0.3s;
+}
+
+.diagram-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+  /* Общие стили для светлой темы */
+  body {
+        margin: 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #c4dfe6;
+        color: #000;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    /* Стили для темной темы */
+    body.dark-theme {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme header {
+        background-color: #1a1a1a;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    }
+    
+    body.dark-theme .nav-links a {
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme .nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    
+    body.dark-theme .page-title {
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme .diagram-item {
+        background: #1e1e1e;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme .diagram-item h3 {
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme .diagram-container {
+        background-color: #2d2d2d;
+        border: 1px solid #444;
+    }
+    
+    body.dark-theme .empty-message {
+        color: #aaa;
+    }
+    
+    body.dark-theme .dropdown-content {
+        background-color: #2d2d2d;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+    
+    body.dark-theme .dropdown-content a {
+        color: #e0e0e0;
+    }
+    
+    body.dark-theme .dropdown-content a:hover {
+        background-color: #3d3d3d;
+    }
+    
+    body.dark-theme .dropdown-section select {
+        background-color: #3d3d3d;
+        color: #e0e0e0;
+        border: 1px solid #555;
+    }
+    
+    body.dark-theme #chat-sidebar {
+        background-color: #2d2d2d;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.4);
+    }
+    
+    body.dark-theme #chat-log {
+        border-bottom: 1px solid #444;
+    }
+    
+    body.dark-theme #chat-message-input {
+        background-color: #3d3d3d;
+        color: #e0e0e0;
+        border: 1px solid #555;
+    }
     </style>
 </head>
 <body>
-<header>
-    <h1>BPMN</h1>
-    <div class="left">
-        <nav class="nav-links">
-            <a href="{% url 'main_menu' %}">Главная</a>
-            <a href="{% url 'peculiarities' %}">Особенности</a>
-            <a href="{% url 'templates' %}">Шаблоны</a>
-            <a href="{% url 'solutions' %}">Решения</a>
-            <a href="{% url 'my_diagrams' %}">Мои диаграммы</a>
-        </nav>
-    </div>
-    <input type="text" id="searchInput" placeholder="Поиск диаграмм..." oninput="filterDiagrams()">
-</header>
+    <header>
+        <h1>BPMN</h1>
+        <div class="left">
+            <nav class="nav-links">
+                <a href="{% url 'main_menu' %}" id="mainMenuLink">Главная</a>
+                <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
+                <a href="{% url 'templates' %}">Шаблоны</a>
+                <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
+                <a href="{% url 'my_diagrams' %}" id="myDiagramsLink">Мои диаграммы</a>
+            </nav>
+        </div>
+        <div class="right">
+            <div class="account-dropdown">
+                <button id="accountButton" class="account-btn">
+                    <span class="account-text">Аккаунт</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="account-header">
+                        <span class="username">{{ username }}</span>
+                    </div>
+                    <a href="{% url 'my_diagrams' %}">Мои диаграммы</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-section">
+                        <span>"Язык:"</span>
+                        <select class="language-select">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-section">
+                        <span>Тема:</span>
+                        <select class="theme-select">
+                            <option value="light">Светлая</option>
+                            <option value="dark">Темная</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="" class="logout-btn">Выйти</a>
+                </div>
+            </div>
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    placeholder="Поиск диаграмм..." 
+                    onkeyup="filterDiagrams()"
+                    class="search-input"
+                >
+                <button class="search-btn" onclick="filterDiagrams()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                </button>
+            </div>
+            <button id="supportButton" onclick="toggleChat()">Тех. поддержка</button>
+        </div>
+    </header>
 <main>
-    <h2 style="text-align: center;">Ваши диаграммы {{ username }}</h2>
+    <h2 class="page-title">Ваши диаграммы {{ username }}</h2>
     <div class="diagram-list">
         {% for diagram in diagrams %}
             <div class="diagram-item">
-                <h3>{{ diagram.name }} (Создана: {{ diagram.created_at }})</h3>
+                <h3>{{ diagram.name }}</h3>
+                <div class="diagram-date">Создана: {{ diagram.created_at }}</div>
                 <div id="diagram-{{ diagram.id }}" class="diagram-container"></div>
+                <div class="diagram-actions">
+                    <button class="diagram-btn" onclick="viewDiagram1({{ diagram.id }})">Открыть</button>
+                </div>
                 <script>
                     (async function() {
                         const viewer = new BpmnJS({ container: "#diagram-{{ diagram.id }}" });
@@ -135,14 +599,97 @@
                         }
                     })();
                 </script>
-                <button onclick="viewDiagram1({{ diagram.id }})">🔍 Открыть (BPMNDiagrams)</button>
             </div>
         {% empty %}
-            <p>Диаграммы отсутствуют.</p>
+            <p class="empty-message">Диаграммы отсутствуют.</p>
         {% endfor %}
     </div>
 </main>
+<!--чат-->
+<div id="chat-sidebar">
+    <div id="chat">
+        <div id="chat-log"></div>
+        <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+        <button id="chat-message-submit">Отправить</button>
+        <button id="chat-message-submit2">Закрыть</button>
+    </div>
+</div>
 <script>
+    // Функция для открытия/закрытия чата
+    function toggleChat() {
+            const chatSidebar = document.getElementById('chat-sidebar');
+            chatSidebar.classList.toggle('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Получаем имя пользователя из data-атрибута
+            const accountInfo = document.getElementById('accountInfo');
+            const username = accountInfo.getAttribute('data-username') || 'Гость'; // Если нет имени, будет "Гость"
+
+            // Создаем WebSocket
+            const chatSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/chat/'
+            );
+
+            // Обработка входящих сообщений
+            chatSocket.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                const chatLog = document.querySelector('#chat-log');
+
+                // Создаем элемент сообщения и добавляем его в чат
+                const messageElement = document.createElement('div');
+                messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+                chatLog.appendChild(messageElement);
+
+                // Прокручиваем чат вниз
+                chatLog.scrollTop = chatLog.scrollHeight;
+            };
+
+            // Обработка закрытия соединения
+            chatSocket.onclose = function (e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+
+            // Отправка сообщения при нажатии Enter
+            document.querySelector('#chat-message-input').onkeyup = function (e) {
+                if (e.keyCode === 13) {  // Enter key
+                    document.querySelector('#chat-message-submit').click();
+                }
+            };
+
+            // Отправка сообщения при нажатии кнопки
+            document.querySelector('#chat-message-submit').onclick = function (e) {
+                const messageInputDom = document.querySelector('#chat-message-input');
+                const message = messageInputDom.value.trim();
+
+                if (message) {
+                    // Отправляем сообщение с именем пользователя
+                    chatSocket.send(JSON.stringify({
+                        'username': username,  // Используем имя пользователя из data-username
+                        'message': message
+                    }));
+                    messageInputDom.value = '';
+                }
+            };
+
+            // Закрытие/открытие чата при нажатии на кнопку "Закрыть"
+            document.querySelector('#chat-message-submit2').onclick = function (e) {
+                toggleChat(e);  // Используем ту же функцию для закрытия/открытия чата
+            };
+        });
+
+        // Загрузка истории сообщений
+        async function loadChatHistory() {
+            const response = await fetch('/diagrams/chat/history/');  // API для получения истории
+            const messages = await response.json();
+            messages.reverse().forEach(msg => {  // Переворачиваем, чтобы новые сообщения были внизу
+                document.querySelector('#chat-log').innerHTML +=
+                    `<div><strong>${msg.username}:</strong> ${msg.message}</div>`;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadChatHistory);
+
     function viewDiagram1(id) {
         window.location.href = `{% url 'view_diagram1' id=0 %}`.replace('0', id);
     }
@@ -153,12 +700,245 @@
         diagramItems.forEach(item => {
             const diagramName = item.querySelector('h3').textContent.toLowerCase();
             if (diagramName.includes(searchQuery)) {
-                item.style.display = '';
+                item.style.display = 'flex';
             } else {
                 item.style.display = 'none';
             }
         });
     }
+
+    // Локализация для страницы
+const translations = {
+    'ru': {
+        // Header
+        'mainMenuLink': 'Главная',
+        'peculiaritiesLink': 'Особенности',
+        'templatesLink': 'Шаблоны',
+        'solutionsLink': 'Решения',
+        'myDiagramsLink': 'Мои диаграммы',
+        'accountText': 'Аккаунт',
+        'supportButton': 'Тех. поддержка',
+        
+        // Account dropdown
+        'myDiagrams': 'Мои диаграммы',
+        'language': 'Язык:',
+        'theme': 'Тема:',
+        'logout': 'Выйти',
+        
+        // Main content
+        'pageTitle': 'Ваши диаграммы',
+        'createdAt': 'Создана:',
+        'openDiagram': 'Открыть',
+        'noDiagrams': 'Диаграммы отсутствуют',
+        'searchPlaceholder': 'Поиск диаграмм...',
+        
+        // Chat
+        'chatPlaceholder': 'Введите сообщение...',
+        'chatSend': 'Отправить',
+        'chatClose': 'Закрыть'
+    },
+    'en': {
+        // Header
+        'mainMenuLink': 'Home',
+        'peculiaritiesLink': 'Features',
+        'templatesLink': 'Templates',
+        'solutionsLink': 'Solutions',
+        'myDiagramsLink': 'My Diagrams',
+        'accountText': 'Account',
+        'supportButton': 'Support',
+        
+        // Account dropdown
+        'myDiagrams': 'My Diagrams',
+        'language': 'Language:',
+        'theme': 'Theme:',
+        'logout': 'Logout',
+        
+        // Main content
+        'pageTitle': 'Your Diagrams',
+        'createdAt': 'Created:',
+        'openDiagram': 'Open',
+        'noDiagrams': 'No diagrams available',
+        'searchPlaceholder': 'Search diagrams...',
+        
+        // Chat
+        'chatPlaceholder': 'Type a message...',
+        'chatSend': 'Send',
+        'chatClose': 'Close'
+    }
+};
+
+// Функция обновления языка на странице
+function updateLanguage(lang) {
+    const t = translations[lang];
+    const username = document.querySelector('.username').textContent;
+    
+    // Header
+    document.getElementById('mainMenuLink').textContent = t.mainMenuLink;
+    document.getElementById('peculiaritiesLink').textContent = t.peculiaritiesLink;
+    document.querySelector('[href="{% url 'templates' %}"]').textContent = t.templatesLink;
+    document.getElementById('solutionsLink').textContent = t.solutionsLink;
+    document.getElementById('myDiagramsLink').textContent = t.myDiagramsLink;
+    document.querySelector('.account-text').textContent = t.accountText;
+    document.getElementById('supportButton').textContent = t.supportButton;
+    
+    // Account dropdown
+    document.querySelector('.dropdown-content a[href="{% url 'my_diagrams' %}"]').textContent = t.myDiagrams;
+    document.querySelectorAll('.dropdown-section span')[0].textContent = t.language;
+    document.querySelectorAll('.dropdown-section span')[1].textContent = t.theme;
+    document.querySelector('.logout-btn').textContent = t.logout;
+    
+    // Main content
+    document.querySelector('.page-title').textContent = `${t.pageTitle} ${username}`;
+    document.querySelectorAll('.diagram-date').forEach(el => {
+        el.textContent = el.textContent.replace(/Создана:/, t.createdAt);
+    });
+    document.querySelectorAll('.diagram-btn').forEach(btn => {
+        btn.textContent = t.openDiagram;
+    });
+    const emptyMsg = document.querySelector('.empty-message');
+    if (emptyMsg) emptyMsg.textContent = t.noDiagrams;
+    
+    // Chat
+    document.getElementById('chat-message-input').placeholder = t.chatPlaceholder;
+    document.getElementById('chat-message-submit').textContent = t.chatSend;
+    document.getElementById('chat-message-submit2').textContent = t.chatClose;
+    
+    // Сохраняем выбор языка
+    localStorage.setItem('userLanguage', lang);
+    updateServerLanguage(lang);
+}
+
+// Отправка выбранного языка на сервер
+function updateServerLanguage(lang) {
+    fetch('/set_language/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({language: lang})
+    }).catch(err => console.error('Language update error:', err));
+}
+
+// Получение CSRF токена
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Инициализация при загрузке страницы
+document.addEventListener("DOMContentLoaded", function() {
+    const languageSelect = document.querySelector('.language-select');
+    if (languageSelect) {
+        // Установка сохраненного языка или языка по умолчанию
+        const savedLang = localStorage.getItem('userLanguage') || 'ru';
+        languageSelect.value = savedLang;
+        updateLanguage(savedLang);
+        
+        // Обработчик изменения языка
+        languageSelect.addEventListener('change', function() {
+            updateLanguage(this.value);
+        });
+    }
+});
+
+//тема
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для применения темы
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+    }
+
+    // Проверяем сохраненную тему в localStorage
+    const savedTheme = localStorage.getItem('userTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        // Устанавливаем выбранную тему в селекторе
+        document.querySelector('.theme-select').value = savedTheme;
+    }
+
+    // Проверяем тему в сессии (если пользователь авторизован)
+    const username = document.getElementById('accountInfo')?.dataset?.username;
+    if (username) {
+        fetch('/get_user_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({username: username})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.theme) {
+                applyTheme(data.theme);
+                document.querySelector('.theme-select').value = data.theme;
+                localStorage.setItem('userTheme', data.theme);
+            }
+        })
+        .catch(err => console.error('Theme fetch error:', err));
+    }
+
+    // Обработчик изменения темы
+    const themeSelect = document.querySelector('.theme-select');
+    if (themeSelect) {
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            applyTheme(selectedTheme);
+            localStorage.setItem('userTheme', selectedTheme);
+
+            // Если пользователь авторизован, сохраняем тему на сервере
+            if (username) {
+                updateServerTheme(selectedTheme, username);
+            }
+        });
+    }
+
+    // Отправка выбранной темы на сервер
+    function updateServerTheme(theme, username) {
+        fetch('/update_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                theme: theme,
+                username: username
+            })
+        }).catch(err => console.error('Theme update error:', err));
+    }
+
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
 </script>
 </body>
 </html>

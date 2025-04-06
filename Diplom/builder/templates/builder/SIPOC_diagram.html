@@ -2,36 +2,307 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BPMN Builder</title>
-    <!-- Подключаем BPMN.js -->
+    <title>BPMN Builder - SIPOC</title>
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/diagram-js.css" />
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-js.css" />
     <link rel="stylesheet" href="https://unpkg.com/bpmn-js@14.0.0/dist/assets/bpmn-font/css/bpmn.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
-        /* Основные стили */
-        #top-panel { background: #f1f1f1; padding: 10px; display: flex; }
-        .btn { padding: 10px; margin-right: 10px; background: #4CAF50; color: white; border: none; cursor: pointer; }
-        .btn:hover { background: #45a049; }
-        #bpmn-container { width: 100%; height: 600px; border: 1px solid #ccc; background: #f9f9f9; margin-top: 10px; }
+        :root {
+            --primary-color: #66a5ad;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-gray: #f5f7fa;
+            --dark-gray: #333;
+            --white: #fff;
+            --success-color: #4CAF50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --suppliers-color: #FFD54F;
+            --input-color: #81C784;
+            --process-color: #64B5F6;
+            --output-color: #BA68C8;
+            --customers-color: #FF8A65;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--dark-gray);
+            background-color: var(--light-gray);
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            margin: 0;
+            color: var(--white);
+        }
+
+        h2 {
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: var(--white);
+            opacity: 0.9;
+            margin: 5px 0 0 0;
+        }
+
+        #top-panel {
+            background: var(--white);
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        #bpmn-container {
+            width: 100%;
+            height: 700px;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background: var(--white);
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        select {
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: var(--white);
+            cursor: pointer;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent-color);
+        }
+
+        .export-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            #top-panel {
+                flex-direction: column;
+            }
+            
+            .btn, select {
+                width: 100%;
+            }
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        #bpmn-container {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* Уведомления */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            color: white;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .notification.success {
+            background: var(--success-color);
+        }
+
+        .notification.error {
+            background: var(--error-color);
+        }
+
+        .notification.warning {
+            background: var(--warning-color);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Стили для лейблов дорожек */
+        .djs-label {
+            font-weight: bold !important;
+            font-size: 14px !important;
+        }
+        /* Добавляем стили для темной темы */
+    body.dark-theme {
+        --light-gray: #121212;
+        --dark-gray: #e0e0e0;
+        --white: #1e1e1e;
+        background-color: var(--light-gray);
+        color: var(--dark-gray);
+    }
+
+    body.dark-theme header {
+        background-color: #1a1a1a;
+        
+    }
+
+    body.dark-h1{
+        color: #e0e0e0;;
+    }
+
+    body.dark-theme #top-panel {
+        background: #2d2d2d;
+        color: var(--dark-gray);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    body.dark-theme select {
+        background-color: #3d3d3d;
+        color: var(--dark-gray);
+        border-color: #444;
+    }
+
+    body.dark-theme .btn {
+        background-color: #2d2d2d;
+        color: var(--dark-gray);
+    }
+
+    body.dark-theme .btn:hover {
+        background-color: #3d3d3d;
+    }
+
+    body.dark-theme #bpmn-container {
+        background: #2d2d2d;
+        border-color: #444;
+    }
+
+    body.dark-theme .export-wrapper label {
+        color: var(--dark-gray);
+    }
     </style>
 </head>
 <body>
-    <h1>Диаграмма SIPOC</h1>
-    <h2>{{ username }}</h2>
-    <div id="top-panel">
-        <button class="btn" onclick="saveDiagram()">💾 Сохранить</button>
-        <button class="btn" onclick="loadDiagram()">📂 Загрузить</button>
+  <header>
+    <div class="container header-content">
+        <div>
+            <h1 id="diagramTitle">SIPOC-диаграмма</h1>
+            <h2>{{ username }}</h2>
+        </div>
     </div>
-    <!-- Контейнер для диаграммы -->
-    <div id="bpmn-container"></div>
+</header>
 
-    <!-- Подключаем BPMN.js через CDN -->
+<div class="container">
+    <div id="top-panel">
+        <button class="btn" id="saveButton" onclick="saveDiagram()">
+            <i>💾</i> Сохранить
+        </button>
+        <button class="btn" id="loadButton" onclick="loadDiagram()">
+            <i>📂</i> Загрузить
+        </button>
+        <form action="{% url 'back_to_diagrams' %}" method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn" id="exitButton">
+                <i>🚪</i> Выйти
+            </button>
+        </form>
+        
+        <div class="export-wrapper">
+            <select id="export-format" class="btn" onchange="exportDiagram()">
+                <option value="" selected disabled id="exportOption">Экспорт...</option>
+                <option value="png">PNG</option>
+                <option value="jpg">JPG</option>
+                <option value="pdf">PDF</option>
+            </select>
+        </div>
+
+        <div class="dropdown-section">
+            <span id="languageLabel">Язык: </span>
+            <select class="language-select" id="languageSelect">
+                <option value="ru">Русский</option>
+                <option value="en">English</option>
+            </select>
+        </div>
+        <div class="dropdown-section_1">
+          <span id="temLabel">Тема: </span>
+          <select class="language-select" id="themeSelect">
+              <option value="light">Светлая</option>
+              <option value="dark">Темная</option>
+          </select>
+      </div>
+    </div>
+    <div id="bpmn-container"></div>
+</div>
+
     <script src="https://unpkg.com/bpmn-js@14.0.0/dist/bpmn-modeler.development.js"></script>
     <script>
         const container = document.getElementById('bpmn-container');
-    const modeler = new BpmnJS({ container });
+        const modeler = new BpmnJS({ container });
 
-    const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
+        const emptyDiagram = `<?xml version="1.0" encoding="UTF-8"?>
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
   <bpmn:collaboration id="Collaboration_1t5qubl">
     <bpmn:participant id="Participant_0nm4jpf" processRef="Process_1" />
@@ -279,59 +550,363 @@
   </bpmndi:BPMNDiagram>
 </bpmn:definitions>`;
 
-    async function createDiagram() {
-        try {
-            await modeler.importXML(emptyDiagram);
-            console.log("Диаграмма загружена");
-        } catch (err) {
-            console.error("Ошибка загрузки диаграммы:", err);
+        async function createDiagram() {
+            try {
+                await modeler.importXML(emptyDiagram);
+                
+                // Настройка цветов дорожек после загрузки
+                setTimeout(() => {
+                    const modeling = modeler.get('modeling');
+                    const elementRegistry = modeler.get('elementRegistry');
+                    
+                    // Устанавливаем цвета для дорожек
+                    const setLaneColor = (id, color) => {
+                        const element = elementRegistry.get(id);
+                        if (element) {
+                            modeling.setColor(element, {
+                                fill: color + '40', // Добавляем прозрачность
+                                stroke: color
+                            });
+                        }
+                    };
+                    
+                    setLaneColor('Lane_0ifx770', 'var(--suppliers-color)');
+                    setLaneColor('Lane_1s7r6kg', 'var(--input-color)');
+                    setLaneColor('Lane_0a5ctwl', 'var(--process-color)');
+                    setLaneColor('Lane_12gxorv', 'var(--output-color)');
+                    setLaneColor('Lane_0qqbz6y', 'var(--customers-color)');
+                    
+                }, 500);
+                
+                //showNotification('Шаблон SIPOC загружен', 'success');
+                console.log("Диаграмма загружена");
+            } catch (err) {
+                console.error("Ошибка загрузки диаграммы:", err);
+                showNotification('Ошибка загрузки шаблона SIPOC', 'error');
+            }
+        }
+
+        createDiagram();
+
+        async function saveDiagram() {
+            const name = prompt("Введите название диаграммы:", "SIPOC диаграмма");
+
+            if (!name) return;
+
+            try {
+                const { xml } = await modeler.saveXML({ format: true });
+
+                const response = await fetch('/builder/save/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        bpmn: xml,
+                        username: '{{ username }}'
+                    })
+                });
+
+                if(response.ok) {
+                    showNotification('Диаграмма успешно сохранена', 'success');
+                } else {
+                    throw new Error(await response.text());
+                }
+            } catch(error) {
+                console.error('Ошибка:', error);
+                showNotification('Ошибка сохранения: ' + error.message, 'error');
+            }
+        }
+
+        async function loadDiagram() {
+            const diagramId = prompt("Введите ID диаграммы:");
+
+            if (!diagramId) return;
+
+            try {
+                const response = await fetch(`/builder/load/${diagramId}/`);
+                const { xml } = await response.json();
+
+                await modeler.importXML(xml);
+                modeler.get('canvas').zoom('fit-viewport');
+                showNotification('Диаграмма успешно загружена', 'success');
+            } catch(error) {
+                console.error('Ошибка загрузки:', error);
+                showNotification('Ошибка загрузки диаграммы', 'error');
+            }
+        }
+
+        async function exportDiagram() {
+            const formatSelect = document.getElementById('export-format');
+            const format = formatSelect.value;
+
+            if (!format) return;
+
+            try {
+                if (format === 'svg') {
+                    const { svg } = await modeler.saveSVG();
+                    downloadFile(svg, 'diagram.svg', 'image/svg+xml');
+                    showNotification('SVG успешно экспортирован', 'success');
+                    return;
+                }
+
+                if (format === 'pdf') {
+                    const { svg } = await modeler.saveSVG();
+                    const response = await fetch('/builder/export/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            svg: svg,
+                            format: 'pdf',
+                            filename: 'diagram'
+                        })
+                    });
+
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        downloadFile(blob, 'diagram.pdf', 'application/pdf');
+                        showNotification('PDF успешно экспортирован', 'success');
+                    } else {
+                        throw new Error(await response.text());
+                    }
+                    return;
+                }
+
+                const { svg } = await modeler.saveSVG();
+                const img = new Image();
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                img.onload = function() {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+
+                    if (format === 'jpg') {
+                        ctx.fillStyle = 'white';
+                        ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    }
+
+                    ctx.drawImage(img, 0, 0);
+
+                    let mimeType = format === 'jpg' ? 'image/jpeg' : 'image/png';
+                    canvas.toBlob(blob => {
+                        downloadFile(blob, `diagram.${format}`, mimeType);
+                        showNotification(`Файл ${format.toUpperCase()} успешно экспортирован`, 'success');
+                    }, mimeType, 1.0);
+                };
+
+                img.src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svg)));
+                formatSelect.value = '';
+            } catch(error) {
+                console.error('Ошибка экспорта:', error);
+                showNotification('Ошибка при экспорте: ' + error.message, 'error');
+            }
+        }
+
+        function downloadFile(content, filename, mimeType) {
+            const blob = content instanceof Blob ? content : new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        }
+
+        // Объект с переводами для всех элементов страницы
+    const translations = {
+        'ru': {
+            'diagramTitle': 'SIPOC-диаграмма',
+            'saveButton': 'Сохранить',
+            'loadButton': 'Загрузить',
+            'exitButton': 'Выйти',
+            'exportOption': 'Экспорт...',
+            'languageLabel': 'Язык:'
+        },
+        'en': {
+            'diagramTitle': 'SIPOC-diagram',
+            'saveButton': 'Save',
+            'loadButton': 'Load',
+            'exitButton': 'Exit',
+            'exportOption': 'Export...',
+            'languageLabel': 'Language:'
+        }
+    };
+
+    // Функция для перевода страницы
+    function translatePage(lang) {
+        // Получаем переводы для выбранного языка
+        const t = translations[lang];
+        
+        // Обновляем текст элементов на странице
+        document.querySelector('h1').textContent = t.diagramTitle;
+        document.getElementById('saveButton').innerHTML = `<i>💾</i> ${t.saveButton}`;
+        document.getElementById('loadButton').innerHTML = `<i>📂</i> ${t.loadButton}`;
+        document.getElementById('exitButton').innerHTML = `<i>🚪</i> ${t.exitButton}`;
+        document.getElementById('exportOption').textContent = t.exportOption;
+        document.getElementById('languageLabel').textContent = t.languageLabel;
+        
+        // Сохраняем выбранный язык в localStorage
+        localStorage.setItem('userLanguage', lang);
+        
+        // Отправляем выбранный язык на сервер (если нужно)
+        updateLanguageOnServer(lang);
+    }
+
+    // Функция для обновления языка на сервере
+    function updateLanguageOnServer(lang) {
+        fetch('/update_language/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                language: lang,
+                username: '{{ username }}'
+            })
+        }).catch(err => console.error('Language update error:', err));
+    }
+
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener("DOMContentLoaded", function() {
+        const languageSelect = document.getElementById('languageSelect');
+        
+        // Определяем язык по умолчанию (русский)
+        const defaultLanguage = 'ru';
+        
+        // Пытаемся получить сохраненный язык из localStorage
+        const savedLanguage = localStorage.getItem('userLanguage');
+        
+        // Устанавливаем язык: сначала из localStorage, потом по умолчанию
+        const currentLanguage = savedLanguage || defaultLanguage;
+        
+        // Устанавливаем выбранный язык в селекторе
+        languageSelect.value = currentLanguage;
+        
+        // Применяем перевод
+        translatePage(currentLanguage);
+        
+        // Обработчик изменения языка
+        languageSelect.addEventListener('change', function() {
+            const selectedLanguage = this.value;
+            translatePage(selectedLanguage);
+        });
+    });
+
+    //тема
+    // Функция для применения темы
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
         }
     }
 
-    createDiagram();
-
-    async function saveDiagram() {
-        const name = prompt("Введите название диаграммы:", "Новая диаграмма");
-
+    // Функция для сохранения темы на сервере
+    async function updateTheme(theme) {
         try {
-            const { xml } = await modeler.saveXML({ format: true });
-
-            const response = await fetch('/builder/save/', {
+            const response = await fetch('/update_theme/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': '{{ csrf_token }}'
                 },
                 body: JSON.stringify({
-                    name: name,
-                    bpmn: xml,
-                    username: '{{ username }}'  // Добавляем имя пользователя
+                    theme: theme,
+                    username: '{{ username }}'
                 })
             });
 
-            if(response.ok) {
-                alert('Успешно сохранено!');
+            const data = await response.json();
+            if (data.status !== 'success') {
+                console.error('Failed to update theme');
             }
-        } catch(error) {
-            console.error('Ошибка:', error);
+        } catch (error) {
+            console.error('Error updating theme:', error);
         }
     }
 
-    async function loadDiagram() {
-        const diagramId = prompt("Введите ID диаграммы:");
-
-        if (!diagramId) return;
-
+    // Функция для получения текущей темы с сервера
+    async function getUserTheme() {
         try {
-            const response = await fetch(`/builder/load/${diagramId}/`);
-            const { xml } = await response.json();
+            const response = await fetch('/get_user_theme/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    username: '{{ username }}'
+                })
+            });
 
-            await modeler.importXML(xml);
-            modeler.get('canvas').zoom('fit-viewport');
-        } catch(error) {
-            console.error('Ошибка загрузки:', error);
+            const data = await response.json();
+            return data.theme || 'light';
+        } catch (error) {
+            console.error('Error getting user theme:', error);
+            return 'light';
         }
     }
+
+    // Инициализация темы при загрузке страницы
+    document.addEventListener('DOMContentLoaded', async function() {
+        // Получаем текущую тему
+        const currentTheme = await getUserTheme();
+        applyTheme(currentTheme);
+        
+        // Устанавливаем правильное значение в селекторе
+        const themeSelect = document.getElementById('themeSelect');
+        if (themeSelect) {
+            themeSelect.value = currentTheme;
+        }
+        
+        // Обработчик изменения темы
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            applyTheme(selectedTheme);
+            updateTheme(selectedTheme);
+        });
+    });
     </script>
 </body>
 </html>

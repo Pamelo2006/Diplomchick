@@ -49,56 +49,360 @@
             height: 2px;
             bottom: 0;
             left: 0;
-            background-color: #4CAF50;
+            background-color: #66a5ad;
             transition: width 0.3s ease;
         }
         nav a:hover::after {
             width: 100%;
         }
         main {
-            padding-top: 70px;
+            padding-top: 80px;
         }
         .content {
-            padding: 20px;
+            padding: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
         .block1, .block2, .block3, .block4 {
             width: 100%;
-            padding: 10px;
+            padding: 25px;
             box-sizing: border-box;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        .block1:hover, .block2:hover, .block3:hover, .block4:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
         .block2, .block4 {
-            text-align: right;
+            background-color: #c4dfe6;
         }
         .block2_text {
-            display: inline-block;
-            text-align: left;
-            max-width: 600px;
+            flex: 1;
+            padding: 0 30px;
         }
         h2 {
             font-family: 'Georgia', serif;
             color: #333;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 24px;
         }
         p {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #555;
-            line-height: 1.6;
+            line-height: 1.7;
+            margin-bottom: 0;
         }
-        .right{
-            margin-left: 600px;
+        .foto, .foto1, .foto2, .foto3 {
+            flex: 1;
+            text-align: center;
         }
-        .icon {
-            display: flex;
-            gap: 10px;
-        }
-        .small-image {
-            width: 50px;
+        .foto img, .foto1 img, .foto2 img, .foto3 img {
+            max-width: 100%;
             height: auto;
+            border-radius: 5px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 900px) {
+            .block1, .block2, .block3, .block4 {
+                flex-direction: column;
+                text-align: center;
+            }
+            .block2, .block4 {
+                flex-direction: column-reverse;
+            }
+            .block2_text {
+                padding: 20px 0 0 0;
+            }
+            .foto, .foto1, .foto2, .foto3 {
+                margin-top: 20px;
+            }
+        }
+        /* Стили для выпадающего меню аккаунта */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
         }
 
-</style>
+        .account-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            margin-left: 200px;
+        }
+
+        .account-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .account-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .account-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .account-header {
+            padding: 8px 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 8px 0;
+        }
+
+        .dropdown-section {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-section select {
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .logout-btn {
+            color: #e74c3c !important;
+        }
+
+        .account-header .username {
+            color: #333;
+            /* Основной цвет текста */
+            font-size: 16px;
+            display: block;
+        }
+
+        /* Общий стиль текста в выпадающем меню */
+        .dropdown-content {
+            color: #333;
+            /* Цвет текста по умолчанию */
+        }
+
+        /* Стиль для ссылок в меню */
+        .dropdown-content a {
+            color: #333;
+            /* Цвет текста ссылок */
+        }
+
+        /* Стиль для текста в секциях (Язык, Тема) */
+        .dropdown-section span {
+            color: #333;
+            /* Цвет текста меток */
+        }
+
+        /* Стиль для выпадающих списков */
+        .dropdown-section select {
+            color: #333;
+            /* Цвет текста в select */
+        }
+
+        /* Стиль для кнопки выхода */
+        .logout-btn {
+            color: #e74c3c !important;
+            /* Красный цвет для кнопки выхода */
+        }
+        #supportButton {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+            margin-left: 400px;
+        }
+
+        #supportButton:hover {
+            background-color: #07575b;
+        }
+
+        /* Стили для боковой панели с чатом */
+        #chat-sidebar {
+            position: fixed;
+            top: 0;
+            right: -20%;
+            /* Скрываем панель за пределами экрана */
+            width: 20%;
+            height: 100%;
+            background-color: #f4f4f4;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+
+        #chat-sidebar.active {
+            right: 0;
+            /* Показываем панель */
+        }
+
+        /* Стили для чата внутри панели */
+        #chat {
+            padding: 20px;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        #chat-message-input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #chat-message-submit {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #chat-message-submit2 {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        #chat-message-submit:hover {
+            background-color: #07575b;
+        }
+
+        /* Темная тема */
+    body.dark-theme {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+
+    body.dark-theme header {
+        background-color: #1e1e1e;
+    }
+
+    body.dark-theme .block1,
+    body.dark-theme .block3 {
+        background-color: #1e1e1e;
+        color: #e0e0e0;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-theme .block2,
+    body.dark-theme .block4 {
+        background-color: #2d2d2d;
+        color: #e0e0e0;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    body.dark-theme h2 {
+        color: #e0e0e0;
+    }
+
+    body.dark-theme p {
+        color: #b0b0b0;
+    }
+
+    body.dark-theme #chat-sidebar {
+        background-color: #1e1e1e;
+    }
+
+    body.dark-theme #chat-message-input {
+        background-color: #2d2d2d;
+        color: #e0e0e0;
+        border-color: #444;
+    }
+
+    body.dark-theme .dropdown-content {
+        background-color: #2d2d2d;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+
+    body.dark-theme .dropdown-content a {
+        color: #e0e0e0;
+    }
+
+    body.dark-theme .dropdown-content a:hover {
+        background-color: #3d3d3d;
+    }
+
+    body.dark-theme .dropdown-divider {
+        background-color: #444;
+    }
+
+    body.dark-theme .dropdown-section select {
+        background-color: #2d2d2d;
+        color: #e0e0e0;
+        border-color: #444;
+    }
+
+    body.dark-theme .account-header .username {
+        color: #e0e0e0;
+    }
+    </style>
+</head>
 <body>
     <header>
         <h1>BPMN</h1>
@@ -108,60 +412,417 @@
                 <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
                 <a href="{% url 'templates' %}">Шаблоны</a>
                 <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
-                <a href="{% url 'my_diagrams' %}"id="myDiagramsLink">Мои диаграммы</a>
+                <a href="{% url 'my_diagrams' %}" id="myDiagramsLink">Мои диаграммы</a>
             </nav>
         </div>
         <div class="right">
+            <div class="account-dropdown">
+                <button id="accountButton" class="account-btn">
+                    <span class="account-text">Аккаунт</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="account-header">
+                        <span class="username">{{ username }}</span>
+                    </div>
+                    <a href="{% url 'my_diagrams' %}">Мои диаграммы</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-section">
+                        <span>"Язык:" </span>
+                        <select class="language-select">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-section">
+                        <span>Тема:</span>
+                        <select class="theme-select">
+                            <option value="light">Светлая</option>
+                            <option value="dark">Темная</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="" class="logout-btn">Выйти</a>
+                </div>
+            </div>
+            <button id="supportButton" onclick="toggleChat()">Тех. поддержка</button>
         </div>
     </header>
     <main>
         <div class="content">
             <a href="{% url 'block' %}">
                 <div class="block1">
-                    <h2>Блок-схема</h2>
                     <div class="block2_text">
+                        <h2>Блок-схема</h2>
                         <p>Блок-схема — распространённый тип схем (графических моделей), описывающих алгоритмы или процессы, в которых отдельные шаги изображаются в виде блоков различной формы, соединённых между собой линиями, указывающими направление последовательности.</p>
                     </div>
                     <div class="foto">
                         {% load static %}
-                        <img src="{% static 'images/блок-схема.png' %}" alt="">
+                        <img src="{% static 'images/блок-схемка.png' %}" alt="Блок-схема" height="350">
                     </div>
                 </div>
             </a>
             <a href="{% url 'sipoc' %}">
                 <div class="block2">
+                    <div class="foto1">
+                        {% load static %}
+                        <img src="{% static 'images/сипок.png' %}" alt="SIPOC-диаграмма" height="350">
+                    </div>
                     <div class="block2_text">
                         <h2>SIPOC-диаграмма</h2>
                         <p>SIPOC — один из инструментов описания бизнес-процессов. SIPOC позволяет проследить бизнес-логику процесса, с высоким, но управляемым уровнем абстракции. Во многих случаях SIPOC может быть использован для описания всех бизнес-процессов компании, обзора процессов «с высоты». Этот инструмент может служить поставщиком материала для формализации бизнес-процессов в общепринятых нотациях, например, BPMN.</p>
-                    </div>
-                    <div class="foto1">
-                        <img src="Diplom/diagrams/images/SIPOC-диаграмма.png" alt="">
                     </div>
                 </div>
             </a>
             <a href="{% url 'swim' %}">
                 <div class="block3">
-                    <h2>Диаграмма плавательных дорожек</h2>
                     <div class="block2_text">
+                        <h2>Диаграмма плавательных дорожек</h2>
                         <p>Swimlane — это визуально разделенные линии внутри диаграммы процесса, которые группируют действия по ролям, ресурсам, элементам организации или местоположению. Swimlane визуализирует действия, которые выполняются особыми типами ресурсов, ролей или элементами организации, или которые связаны с особым местом. Кроме того, на swimlane-диаграммах можно указать роли исполнителей работ и таким образом более качественно задокументировать ответственность исполнителей.</p>
                     </div>
                     <div class="foto2">
-                        <img src="Diplom/diagrams/images/Диаграмма плавательных дорожек.png" alt="">
+                        {% load static %}
+                        <img src="{% static 'images/плав_дорожки.png' %}" alt="Диаграмма плавательных дорожек" height="350">
                     </div>
                 </div>
             </a>
             <a href="{% url 'activity' %}">
                 <div class="block4">
+                    <div class="foto3">
+                        {% load static %}
+                        <img src="{% static 'images/Диаграмма_деятельности.png' %}" alt="Диаграмма деятельности" height="350">
+                    </div>
                     <div class="block2_text">
                         <h2>Диаграмма деятельности</h2>
                         <p>Диагра́мма де́ятельности — UML-диаграмма, на которой показаны действия, состояния которых описаны на диаграммах состояний. Под деятельностью (англ. activity) понимается спецификация исполняемого поведения в виде координированного последовательного и параллельного выполнения подчинённых элементов — вложенных видов деятельности и отдельных действий англ. action, соединённых между собой потоками, которые идут от выходов одного узла ко входам другого.</p>
-                    </div>
-                    <div class="foto3">
-                        <img src="Diplom/diagrams/images/Диаграмма деятельности.png" alt="">
                     </div>
                 </div>
             </a>
         </div>
     </main>
+    <!--чат-->
+    <div id="chat-sidebar">
+        <div id="chat">
+            <div id="chat-log"></div>
+            <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+            <button id="chat-message-submit">Отправить</button>
+            <button id="chat-message-submit2">Закрыть</button>
+        </div>
+    </div>
+    <script>// Функция для открытия/закрытия чата
+        function toggleChat() {
+            const chatSidebar = document.getElementById('chat-sidebar');
+            chatSidebar.classList.toggle('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Получаем имя пользователя из data-атрибута
+            const accountInfo = document.getElementById('accountInfo');
+            const username = accountInfo.getAttribute('data-username') || 'Гость'; // Если нет имени, будет "Гость"
+
+            // Создаем WebSocket
+            const chatSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/chat/'
+            );
+
+            // Обработка входящих сообщений
+            chatSocket.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                const chatLog = document.querySelector('#chat-log');
+
+                // Создаем элемент сообщения и добавляем его в чат
+                const messageElement = document.createElement('div');
+                messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+                chatLog.appendChild(messageElement);
+
+                // Прокручиваем чат вниз
+                chatLog.scrollTop = chatLog.scrollHeight;
+            };
+
+            // Обработка закрытия соединения
+            chatSocket.onclose = function (e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+
+            // Отправка сообщения при нажатии Enter
+            document.querySelector('#chat-message-input').onkeyup = function (e) {
+                if (e.keyCode === 13) {  // Enter key
+                    document.querySelector('#chat-message-submit').click();
+                }
+            };
+
+            // Отправка сообщения при нажатии кнопки
+            document.querySelector('#chat-message-submit').onclick = function (e) {
+                const messageInputDom = document.querySelector('#chat-message-input');
+                const message = messageInputDom.value.trim();
+
+                if (message) {
+                    // Отправляем сообщение с именем пользователя
+                    chatSocket.send(JSON.stringify({
+                        'username': username,  // Используем имя пользователя из data-username
+                        'message': message
+                    }));
+                    messageInputDom.value = '';
+                }
+            };
+
+            // Закрытие/открытие чата при нажатии на кнопку "Закрыть"
+            document.querySelector('#chat-message-submit2').onclick = function (e) {
+                toggleChat(e);  // Используем ту же функцию для закрытия/открытия чата
+            };
+        });
+
+        // Загрузка истории сообщений
+        async function loadChatHistory() {
+            const response = await fetch('/diagrams/chat/history/');  // API для получения истории
+            const messages = await response.json();
+            messages.reverse().forEach(msg => {  // Переворачиваем, чтобы новые сообщения были внизу
+                document.querySelector('#chat-log').innerHTML +=
+                    `<div><strong>${msg.username}:</strong> ${msg.message}</div>`;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadChatHistory);
+        
+        // Добавьте этот код в ваш существующий script-блок
+document.addEventListener("DOMContentLoaded", function() {
+    // Объект с переводами для всех элементов страницы
+    const translations = {
+        'ru': {
+            // Header
+            'mainMenuLink': 'Главная',
+            'peculiaritiesLink': 'Особенности',
+            'templatesLink': 'Шаблоны',
+            'solutionsLink': 'Решения',
+            'myDiagramsLink': 'Мои диаграммы',
+            'accountText': 'Аккаунт',
+            'supportButton': 'Тех. поддержка',
+            
+            // Account dropdown
+            'myDiagrams': 'Мои диаграммы',
+            'language': 'Язык:',
+            'theme': 'Тема:',
+            'logout': 'Выйти',
+            
+            // Main content
+            'block1Title': 'Блок-схема',
+            'block1Desc': 'Блок-схема — распространённый тип схем (графических моделей), описывающих алгоритмы или процессы, в которых отдельные шаги изображаются в виде блоков различной формы, соединённых между собой линиями, указывающими направление последовательности.',
+            'block2Title': 'SIPOC-диаграмма',
+            'block2Desc': 'SIPOC — один из инструментов описания бизнес-процессов. SIPOC позволяет проследить бизнес-логику процесса, с высоким, но управляемым уровнем абстракции. Во многих случаях SIPOC может быть использован для описания всех бизнес-процессов компании, обзора процессов «с высоты». Этот инструмент может служить поставщиком материала для формализации бизнес-процессов в общепринятых нотациях, например, BPMN.',
+            'block3Title': 'Диаграмма плавательных дорожек',
+            'block3Desc': 'Swimlane — это визуально разделенные линии внутри диаграммы процесса, которые группируют действия по ролям, ресурсам, элементам организации или местоположению. Swimlane визуализирует действия, которые выполняются особыми типами ресурсов, ролей или элементами организации, или которые связаны с особым местом. Кроме того, на swimlane-диаграммах можно указать роли исполнителей работ и таким образом более качественно задокументировать ответственность исполнителей.',
+            'block4Title': 'Диаграмма деятельности',
+            'block4Desc': 'Диагра́мма де́ятельности — UML-диаграмма, на которой показаны действия, состояния которых описаны на диаграммах состояний. Под деятельностью (англ. activity) понимается спецификация исполняемого поведения в виде координированного последовательного и параллельного выполнения подчинённых элементов — вложенных видов деятельности и отдельных действий англ. action, соединённых между собой потоками, которые идут от выходов одного узла ко входам другого.',
+            
+            // Chat
+            'chatPlaceholder': 'Введите сообщение...',
+            'chatSend': 'Отправить',
+            'chatClose': 'Закрыть'
+        },
+        'en': {
+            // Header
+            'mainMenuLink': 'Home',
+            'peculiaritiesLink': 'Features',
+            'templatesLink': 'Templates',
+            'solutionsLink': 'Solutions',
+            'myDiagramsLink': 'My Diagrams',
+            'accountText': 'Account',
+            'supportButton': 'Support',
+            
+            // Account dropdown
+            'myDiagrams': 'My Diagrams',
+            'language': 'Language:',
+            'theme': 'Theme:',
+            'logout': 'Logout',
+            
+            // Main content
+            'block1Title': 'Flowchart',
+            'block1Desc': 'A flowchart is a common type of diagram (graphical model) describing algorithms or processes in which individual steps are depicted as blocks of various shapes, connected by lines indicating the direction of the sequence.',
+            'block2Title': 'SIPOC Diagram',
+            'block2Desc': 'SIPOC is one of the tools for describing business processes. SIPOC allows you to trace the business logic of a process, with a high but manageable level of abstraction. In many cases, SIPOC can be used to describe all business processes of a company, an overview of processes "from above". This tool can serve as a supplier of material for formalizing business processes in generally accepted notations, for example, BPMN.',
+            'block3Title': 'Swimlane Diagram',
+            'block3Desc': 'Swimlanes are visually separated lines within a process diagram that group activities by role, resource, organizational unit, or location. Swimlanes visualize activities that are performed by specific types of resources, roles, or organizational units, or that are associated with a specific location. Swimlanes can also be used to indicate the roles of those performing the work, thereby better documenting the responsibilities of those performing the work.',
+            'block4Title': 'Activity Diagram',
+            'block4Desc': 'An activity diagram is a UML diagram that shows actions whose states are described in state diagrams. An activity is a specification of executable behavior in the form of coordinated sequential and parallel execution of subordinate elements - nested activities and individual actions, connected by flows that go from the outputs of one node to the inputs of another.',
+            
+            // Chat
+            'chatPlaceholder': 'Type a message...',
+            'chatSend': 'Send',
+            'chatClose': 'Close'
+        }
+    };
+
+    // Функция для обновления текста на странице
+    function updateLanguage(lang) {
+        const t = translations[lang];
+        
+        // Header
+        document.getElementById('mainMenuLink').textContent = t.mainMenuLink;
+        document.getElementById('peculiaritiesLink').textContent = t.peculiaritiesLink;
+        document.querySelector('[href="{% url 'templates' %}"]').textContent = t.templatesLink;
+        document.getElementById('solutionsLink').textContent = t.solutionsLink;
+        document.getElementById('myDiagramsLink').textContent = t.myDiagramsLink;
+        document.querySelector('.account-text').textContent = t.accountText;
+        document.getElementById('supportButton').textContent = t.supportButton;
+        
+        // Account dropdown
+        document.querySelector('.dropdown-content a[href="{% url 'my_diagrams' %}"]').textContent = t.myDiagrams;
+        document.querySelectorAll('.dropdown-section span')[0].textContent = t.language;
+        document.querySelectorAll('.dropdown-section span')[1].textContent = t.theme;
+        document.querySelector('.logout-btn').textContent = t.logout;
+        
+        // Main content
+        document.querySelectorAll('.block2_text h2')[0].textContent = t.block1Title;
+        document.querySelectorAll('.block2_text p')[0].textContent = t.block1Desc;
+        document.querySelectorAll('.block2_text h2')[1].textContent = t.block2Title;
+        document.querySelectorAll('.block2_text p')[1].textContent = t.block2Desc;
+        document.querySelectorAll('.block2_text h2')[2].textContent = t.block3Title;
+        document.querySelectorAll('.block2_text p')[2].textContent = t.block3Desc;
+        document.querySelectorAll('.block2_text h2')[3].textContent = t.block4Title;
+        document.querySelectorAll('.block2_text p')[3].textContent = t.block4Desc;
+        
+        // Chat
+        document.getElementById('chat-message-input').placeholder = t.chatPlaceholder;
+        document.getElementById('chat-message-submit').textContent = t.chatSend;
+        document.getElementById('chat-message-submit2').textContent = t.chatClose;
+        
+        // Сохраняем выбор языка
+        localStorage.setItem('userLanguage', lang);
+        
+        // Отправляем на сервер (если нужно)
+        updateServerLanguage(lang);
+    }
+
+    // Функция для обновления языка на сервере
+    function updateServerLanguage(lang) {
+        fetch('/set_language/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({language: lang})
+        }).catch(err => console.error('Language update error:', err));
+    }
+
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Обработчик изменения языка
+    const languageSelect = document.querySelector('.language-select');
+    if (languageSelect) {
+        // Устанавливаем сохраненный язык или язык по умолчанию
+        const savedLang = localStorage.getItem('userLanguage') || 'ru';
+        languageSelect.value = savedLang;
+        updateLanguage(savedLang);
+        
+        // Обработчик изменения языка
+        languageSelect.addEventListener('change', function() {
+            const lang = this.value;
+            updateLanguage(lang);
+        });
+    }
+});
+
+//тема
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для применения темы
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+    }
+
+    // Проверяем сохраненную тему в localStorage
+    const savedTheme = localStorage.getItem('userTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        // Устанавливаем выбранную тему в селекторе
+        document.querySelector('.theme-select').value = savedTheme;
+    }
+
+    // Проверяем тему в сессии (если пользователь авторизован)
+    const username = document.getElementById('accountInfo')?.dataset?.username;
+    if (username) {
+        fetch('/get_user_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({username: username})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.theme) {
+                applyTheme(data.theme);
+                document.querySelector('.theme-select').value = data.theme;
+                localStorage.setItem('userTheme', data.theme);
+            }
+        })
+        .catch(err => console.error('Theme fetch error:', err));
+    }
+
+    // Обработчик изменения темы
+    const themeSelect = document.querySelector('.theme-select');
+    if (themeSelect) {
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            applyTheme(selectedTheme);
+            localStorage.setItem('userTheme', selectedTheme);
+
+            // Если пользователь авторизован, сохраняем тему на сервере
+            if (username) {
+                updateServerTheme(selectedTheme, username);
+            }
+        });
+    }
+
+    // Отправка выбранной темы на сервер
+    function updateServerTheme(theme, username) {
+        fetch('/update_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                theme: theme,
+                username: username
+            })
+        }).catch(err => console.error('Theme update error:', err));
+    }
+
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+}); 
+    </script>
 </body>
 </html>

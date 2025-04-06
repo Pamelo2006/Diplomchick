@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru" id="htmlLang">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Главная</title>
+    {% load i18n %}
     <style>
         /* Существующие стили */
         body {
@@ -13,10 +15,12 @@
             color: #000;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         body.dark-theme {
             background-color: #333;
             color: #FFF;
         }
+
         header {
             position: fixed;
             top: 0;
@@ -29,16 +33,25 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             display: flex;
             align-items: center;
+            justify-content: space-between;
+            /* Равномерное распределение пространства */
+            align-items: center;
+            /* Выравнивание по центру по вертикали */
         }
+
         header h1 {
             margin: 0;
             padding-right: 20px;
             font-family: 'Georgia', serif;
+            flex-shrink: 0;
+            /* Запрещаем сжатие */
         }
+
         .nav-links {
             display: flex;
             gap: 10px;
         }
+
         .nav-links a {
             color: white;
             text-decoration: none;
@@ -47,9 +60,11 @@
             transition: all 0.3s ease;
             position: relative;
         }
+
         .nav-links a:hover {
             background-color: rgba(255, 255, 255, 0.1);
         }
+
         .nav-links a::after {
             content: "";
             position: absolute;
@@ -60,193 +75,257 @@
             background-color: #66a5ad;
             transition: width 0.3s ease;
         }
+
         .nav-links a:hover::after {
             width: 100%;
         }
-        .icon {
+
+        .right {
             display: flex;
-            gap: 10px;
+            align-items: center;
+            flex-shrink: 0;
+            /* Запрещаем сжатие */
         }
-        .small-image {
-            width: 50px;
-            height: auto;
+
+        .welcome-section {
+            background: linear-gradient(to bottom, #ffffff 0%, #f1f5f9 100%);
+            padding: 5rem 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .welcome-content {
+            display: flex;
+            align-items: center;
+            gap: 4rem;
+        }
+
+        .welcome-text {
+            flex: 1;
+            min-width: 50%;
+        }
+
+        .welcome-title {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            color: var(--secondary);
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+
+        .highlight {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .highlight::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(37, 99, 235, 0.2);
+            z-index: -1;
+            border-radius: 2px;
+        }
+
+        .welcome-description {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .description-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icon-circle {
+            width: 32px;
+            height: 32px;
+            background-color: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .welcome-description p {
+            color: var(--dark-gray);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .welcome-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .cta-button {
+            padding: 0.8rem 1.8rem;
+            border-radius: 6px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: none;
+            font-size: 1rem;
         }
+
+        .primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+        }
+
+        .primary:hover {
+            background-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+        }
+
+        .secondary {
+            background-color: transparent;
+            color: var(--primary);
+            border: 1px solid var(--gray);
+        }
+
+        .secondary:hover {
+            background-color: rgba(37, 99, 235, 0.05);
+            border-color: var(--primary);
+        }
+
+        .welcome-visual {
+            flex: 1;
+            position: relative;
+        }
+
+        .visual-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+        }
+
+        .process-image {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
+        }
+
+        .visual-overlay {
+            position: absolute;
+            top: -20px;
+            right: -20px;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary);
+            opacity: 0.1;
+            border-radius: 16px;
+            z-index: 1;
+        }
+
+        @media (max-width: 1024px) {
+            .welcome-content {
+                flex-direction: column;
+                gap: 3rem;
+            }
+
+            .welcome-text {
+                text-align: center;
+            }
+
+            .welcome-description {
+                align-items: center;
+            }
+
+            .description-item {
+                justify-content: center;
+            }
+
+            .visual-container {
+                margin: 0 auto;
+            }
+
+            .welcome-cta {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .welcome-title {
+                font-size: 2rem;
+            }
+
+            .welcome-section {
+                padding: 3rem 1rem;
+            }
+        }
+
         main {
             padding-top: 70px;
         }
-        .block1, .block2, .block3, .block4, .block {
+
+        .block1,
+        .block2,
+        .block3,
+        .block4,
+        .block {
             width: 100%;
             padding: 10px;
             box-sizing: border-box;
 
         }
+
         .block2 {
             text-align: right;
         }
+
         .block2_text {
             display: inline-block;
             text-align: left;
             max-width: 600px;
         }
+
         h2 {
             font-family: 'Georgia', serif;
             color: inherit;
             margin-bottom: 10px;
         }
+
         p {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: inherit;
             line-height: 1.6;
         }
-        .block4, .block {
+
+        .block4,
+        .block {
             text-align: center;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
-        .block4 ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
-        .block4 li {
-            display: inline;
-            position: relative;
-        }
-        .block4 li a {
-            color: inherit;
-            text-decoration: none;
-            padding: 8px 12px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-        .block4 li a:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-        .block4 li a::after {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 2px;
-            bottom: 0;
-            left: 0;
-            background-color: #4CAF50;
-            transition: width 0.3s ease;
-        }
-        .block4 li a:hover::after {
-            width: 100%;
-        }
-        .create-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .create-button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-        .create-button:active {
-            background-color: #3d8b40;
-            transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .right {
-            margin-left: 600px;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1001;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            border-radius: 8px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .auth-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .auth-button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-
-        .auth-button:hover {
-            background-color: #45a049;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .auth-button:active {
-            background-color: #3d8b40;
-            transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .account-info {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #f4f4f4;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .account-info h2 {
-            font-size: 24px;
-        }
-        .account-info p {
-            font-size: 18px;
-        }
 
         #supportButton {
-            background-color: #07575b;
+            background-color: #66a5ad;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -255,17 +334,19 @@
             font-size: 14px;
             margin-left: 10px;
             transition: background-color 0.3s ease;
+            margin-left: 400px;
         }
 
         #supportButton:hover {
-            background-color: #45a049;
+            background-color: #07575b;
         }
 
         /* Стили для боковой панели с чатом */
         #chat-sidebar {
             position: fixed;
             top: 0;
-            right: -20%; /* Скрываем панель за пределами экрана */
+            right: -20%;
+            /* Скрываем панель за пределами экрана */
             width: 20%;
             height: 100%;
             background-color: #f4f4f4;
@@ -275,7 +356,8 @@
         }
 
         #chat-sidebar.active {
-            right: 0; /* Показываем панель */
+            right: 0;
+            /* Показываем панель */
         }
 
         /* Стили для чата внутри панели */
@@ -303,7 +385,7 @@
         }
 
         #chat-message-submit {
-            background-color: #07575b;
+            background-color: #66a5ad;
             color: white;
             padding: 10px;
             border: none;
@@ -311,8 +393,9 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
         }
+
         #chat-message-submit2 {
-            background-color: #07575b;
+            background-color: #66a5ad;
             color: white;
             padding: 10px;
             border: none;
@@ -323,140 +406,832 @@
         }
 
         #chat-message-submit:hover {
-            background-color: #45a049;
+            background-color: #07575b;
         }
-        .block1{
+
+        .features-section {
             background-color: #c4dfe6;
-            padding: 20px; /* Отступы внутри блока */
-            text-align: center; /* Выравнивание текста по центру */
+            padding: 40px 20px;
+            text-align: center;
         }
-        .block2{
+
+        .section-title {
+            font-size: 2.2rem;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            margin: 10px auto 0;
+        }
+
+        .features-container {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .feature-card {
+            flex: 1;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            mix-blend-mode: multiply;
+        }
+
+        .feature-card h2 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .feature-list li {
+            margin-bottom: 12px;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+        }
+
+        .feature-list li::before {
+            content: "✓";
+            color: #2ecc71;
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+
+        @media (max-width: 768px) {
+            .features-container {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .feature-card {
+                width: 100%;
+                max-width: 400px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+        }
+
+        .block2 {
             background-color: #FFFFFF;
         }
-        .block3{
-            background-color: #c4dfe6;
-        }
+
         img {
             mix-blend-mode: multiply;
         }
 
-        .doc, .temp, .ise {
-            flex: 0 0 20%; /* Ширина каждого блока 30% */
-            display: flex; /* Используем Flexbox внутри каждого блока */
-            flex-direction: column; /* Элементы внутри колонки */
-            align-items: center; /* Выравнивание по центру */
-            justify-content: center; /* Центрирование по вертикали */
-            background-color: #c4dfe6;
-            padding: 15px; /* Отступы внутри мини-блока */
-            border-radius: 10px; /* Скругление углов */
-        }
-
         img {
-            margin-bottom: 10px; /* Отступ снизу у изображений */
+            margin-bottom: 10px;
+            /* Отступ снизу у изображений */
         }
 
         h2 {
-            font-size: 18px; /* Размер текста */
-            color: #333; /* Цвет текста */
-            margin: 0; /* Убираем отступы у заголовков */
-        }
-        #fir{
-             margin-bottom: 20px; /* Отступ снизу для заголовка */
-        }
-        .cont{
-            display: flex;
-            justify-content: space-between; /* Распределяем пространство между блоками */
-            gap: 20px; /* Расстояние между блоками */
-            padding: 20px; /* Отступы внутри блока */
-            text-align: center; /* Выравнивание текста по центру */
-        }
-        .blockys{
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 35px;
+            font-size: 18px;
+            /* Размер текста */
+            color: #333;
+            /* Цвет текста */
+            margin: 0;
+            /* Убираем отступы у заголовков */
         }
 
+        #fir {
+            margin-bottom: 20px;
+            /* Отступ снизу для заголовка */
+        }
 
-        .block2 {
+        .cont {
             display: flex;
             justify-content: space-between;
+            /* Распределяем пространство между блоками */
+            gap: 20px;
+            /* Расстояние между блоками */
             padding: 20px;
-            background-color: #f4f4f4;
-            height: 400px; /* Фиксированная высота для блока */
-            align-items: center; /* Центрируем содержимое по вертикали */
+            /* Отступы внутри блока */
+            text-align: center;
+            /* Выравнивание текста по центру */
         }
 
-        .container {
+        .slider-section {
+            background: #FFF;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slider-container {
             display: flex;
-            width: 100%;
-            height: 100%; /* Занимаем всю высоту родителя */
-            align-items: center; /* Центрируем содержимое по вертикали */
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 40px;
+            height: 500px;
         }
 
-        .left-text, .right-squares {
-            width: 48%;
+        .slider-content,
+        .slider-visual {
+            flex: 1;
+            position: relative;
             height: 100%;
-            display: flex;
-            align-items: center; /* Центрируем содержимое по вертикали */
-            justify-content: center; /* Центрируем содержимое по горизонтали */
-            position: relative; /* Для позиционирования элементов */
         }
 
-        .text-item, .square-item {
+        .slider-text {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100%;
             opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            position: absolute; /* Абсолютное позиционирование для анимации */
-            top: 50%; /* Начальная позиция по вертикали */
-            left: 50%; /* Начальная позиция по горизонтали */
-            transform: translate(-50%, -50%); /* Центрирование */
+            transition: var(--transition);
+            padding-right: 40px;
         }
 
-        .text-item {
-            text-align: center; /* Центрируем текст */
-            width: 80%; /* Ширина текстового блока */
-            transform: translate(-50%, 20px); /* Начальное смещение для анимации */
-        }
-
-        .square-item {
-            width: 200px; /* Ширина квадрата */
-            height: 200px; /* Высота квадрата */
-            display: flex;
-            align-items: center; /* Центрируем гифку по вертикали */
-            justify-content: center; /* Центрируем гифку по горизонтали */
-            transform: translate(20px, -50%); /* Начальное смещение для анимации */
-        }
-
-        .square-item img {
-            max-width: 100%; /* Ограничиваем размер гифки */
-            max-height: 100%; /* Ограничиваем размер гифки */
-        }
-
-        .text-item.active, .square-item.active {
+        .slider-text.active {
             opacity: 1;
-            transform: translate(-50%, -50%); /* Конечная позиция для анимации */
-        }
-        .pos, .red, .sec {
-            display: flex;
-            align-items: center; /* Выравниваем элементы по центру по вертикали */
-            justify-content: center; /* Выравниваем элементы по центру по горизонтали */
+            transform: translateY(-50%) translateX(0);
         }
 
-        .pos_img, .red_img, .sec_img {
-            display: flex;
-            align-items: center; /* Выравниваем картинку по центру по вертикали */
-            justify-content: center; /* Выравниваем картинку по центру по горизонтали */
+        .slider-text h1 {
+            font-size: 2.5rem;
+            color: var(--dark-text);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            transform: translateX(-30px);
+            transition: var(--transition);
+            transition-delay: 0.2s;
         }
 
-        .pos_text, .red_text, .sec_text {
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Выравниваем текст по центру по вертикали */
-            align-items: flex-start; /* Выравниваем текст по левому краю */
-            margin-left: 20px; /* Добавляем отступ между картинкой и текстом */
+        .slider-text.active h1 {
+            transform: translateX(0);
         }
+
+        .slider-text p {
+            font-size: 1.2rem;
+            color: var(--light-text);
+            margin-bottom: 30px;
+            max-width: 80%;
+            transform: translateX(-30px);
+            transition: var(--transition);
+            transition-delay: 0.3s;
+        }
+
+        .slider-text.active p {
+            transform: translateX(0);
+        }
+
+        .slider-button {
+            display: inline-block;
+            padding: 12px 30px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            transform: translateX(-30px);
+            opacity: 0;
+            transition-delay: 0.4s;
+            box-shadow: 0 4px 15px rgba(44, 131, 182, 0.3);
+        }
+
+        .slider-text.active .slider-button {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .slider-button:hover {
+            background-color: #236a9b;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(44, 131, 182, 0.4);
+        }
+
+        .slider-visual {
+            perspective: 1000px;
+        }
+
+        .slider-image {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotateY(90deg);
+            width: 350px;
+            height: 350px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .slider-image.active {
+            transform: translate(-50%, -50%) rotateY(0deg);
+            opacity: 1;
+        }
+
+        .slider-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            position: relative;
+            z-index: 2;
+        }
+
+        .image-border {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border: 3px solid var(--primary-color);
+            border-radius: 20px;
+            z-index: 1;
+            opacity: 0.3;
+            transform: scale(0.9);
+            transition: var(--transition);
+        }
+
+        .slider-image.active .image-border {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .slider-controls {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+
+        .slider-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: rgba(44, 131, 182, 0.3);
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            padding: 0;
+        }
+
+        .slider-dot.active {
+            background-color: var(--primary-color);
+            transform: scale(1.3);
+        }
+
+        @media (max-width: 992px) {
+            .slider-container {
+                flex-direction: column;
+                height: auto;
+                padding: 40px 20px;
+            }
+
+            .slider-content,
+            .slider-visual {
+                width: 100%;
+                height: auto;
+                min-height: 300px;
+            }
+
+            .slider-text {
+                position: relative;
+                top: auto;
+                transform: none;
+                text-align: center;
+                padding: 0 0 40px;
+            }
+
+            .slider-text p {
+                max-width: 100%;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .slider-image {
+                position: relative;
+                top: auto;
+                left: auto;
+                transform: none;
+                margin: 0 auto;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .slider-text h1 {
+                font-size: 2rem;
+            }
+
+            .slider-image {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        .features-section {
+            background: linear-gradient(to bottom, #c4dfe6 0%, #e8f4fc 100%);
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            color: var(--dark-text);
+            margin-bottom: 60px;
+            position: relative;
+            font-weight: 600;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--primary-color);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        .feature-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .feature-card {
+            display: flex;
+            align-items: center;
+            background-color: #FFF;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 40px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-card.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .feature-visual {
+            flex: 1;
+            background-color: #FFF;
+            position: relative;
+            padding: 40px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+
+        .feature-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
+            filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.1));
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-image {
+            transform: scale(1.05);
+        }
+
+        .feature-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 10px rgba(44, 131, 182, 0.3);
+        }
+
+        .feature-content {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .feature-heading {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            margin-bottom: 15px;
+            padding-left: 30px;
+            position: relative;
+            color: var(--light-text);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        .feature-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 16px;
+            height: 16px;
+            background-color: var(--accent-color);
+            border-radius: 4px;
+            transform: rotate(45deg);
+        }
+
+        @media (max-width: 992px) {
+
+            .feature-card,
+            .feature-card.reverse {
+                flex-direction: column;
+            }
+
+            .feature-visual {
+                min-height: 200px;
+                width: 100%;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .feature-heading {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .features-section {
+                padding: 50px 0;
+            }
+
+            .feature-content,
+            .feature-visual {
+                padding: 25px;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+                margin-bottom: 40px;
+            }
+        }
+
+        /* Стили для выпадающего меню аккаунта */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .account-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            margin-left: 200px;
+        }
+
+        .account-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .account-icon {
+            margin-right: 8px;
+            font-size: 16px;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            padding: 10px 0;
+        }
+
+        .account-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .account-header {
+            padding: 8px 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 8px 0;
+        }
+
+        .dropdown-section {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-section select {
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .logout-btn {
+            color: #e74c3c !important;
+        }
+
+        .account-header .username {
+            color: #333;
+            /* Основной цвет текста */
+            font-size: 16px;
+            display: block;
+        }
+
+        /* Общий стиль текста в выпадающем меню */
+        .dropdown-content {
+            color: #333;
+            /* Цвет текста по умолчанию */
+        }
+
+        /* Стиль для ссылок в меню */
+        .dropdown-content a {
+            color: #333;
+            /* Цвет текста ссылок */
+        }
+
+        /* Стиль для текста в секциях (Язык, Тема) */
+        .dropdown-section span {
+            color: #333;
+            /* Цвет текста меток */
+        }
+
+        /* Стиль для выпадающих списков */
+        .dropdown-section select {
+            color: #333;
+            /* Цвет текста в select */
+        }
+
+        /* Стиль для кнопки выхода */
+        .logout-btn {
+            color: #e74c3c !important;
+            /* Красный цвет для кнопки выхода */
+        }
+
+        /*темная тема*/
+        /* Dark Theme Styles */
+body.dark-theme {
+    background-color: #1a1a1a;
+    color: #f0f0f0;
+}
+
+/* Header stays dark in both themes */
+body.dark-theme header {
+    background-color: #222;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+}
+
+/* Welcome section */
+body.dark-theme .welcome-section {
+    background: linear-gradient(to bottom, #222 0%, #333 100%);
+}
+
+body.dark-theme .welcome-title {
+    color: #f0f0f0;
+}
+
+body.dark-theme .welcome-description p {
+    color: #ccc;
+}
+
+body.dark-theme .icon-circle {
+    background-color: #66a5ad;
+}
+
+/* Features section */
+body.dark-theme .features-section {
+    background: linear-gradient(to bottom, #2c3e50 0%, #1a1a1a 100%);
+}
+
+body.dark-theme .section-title {
+    color: #f0f0f0;
+}
+
+body.dark-theme .feature-card {
+    background: #2c2c2c;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme .feature-card h2 {
+    color: #66a5ad;
+}
+
+body.dark-theme .feature-list li {
+    color: #ccc;
+}
+
+body.dark-theme .feature-list li::before {
+    color: #66a5ad;
+}
+
+/* Slider section */
+body.dark-theme .slider-section {
+    background: #222;
+}
+
+body.dark-theme .slider-text h1 {
+    color: #f0f0f0;
+}
+
+body.dark-theme .slider-text p {
+    color: #ccc;
+}
+
+body.dark-theme .slider-dot {
+    background-color: rgba(102, 165, 173, 0.3);
+}
+
+body.dark-theme .slider-dot.active {
+    background-color: #66a5ad;
+}
+
+body.dark-theme .image-border {
+    border-color: #66a5ad;
+}
+
+/* Feature cards in the bottom section */
+body.dark-theme .feature-visual {
+    background-color: #2c2c2c;
+}
+
+body.dark-theme .feature-badge {
+    background-color: #66a5ad;
+}
+
+body.dark-theme .feature-heading {
+    color: #66a5ad;
+}
+
+body.dark-theme .feature-card:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+}
+
+/* Chat sidebar */
+body.dark-theme #chat-sidebar {
+    background-color: #2c2c2c;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-theme #chat-log {
+    border-bottom: 1px solid #444;
+}
+
+body.dark-theme #chat-message-input {
+    background-color: #333;
+    color: #f0f0f0;
+    border: 1px solid #444;
+}
+
+body.dark-theme #chat-message-submit,
+body.dark-theme #chat-message-submit2 {
+    background-color: #66a5ad;
+}
+
+body.dark-theme #chat-message-submit:hover,
+body.dark-theme #chat-message-submit2:hover {
+    background-color: #07575b;
+}
+
+/* Account dropdown */
+body.dark-theme .dropdown-content {
+    background-color: #2c2c2c;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-theme .account-header {
+    border-bottom: 1px solid #444;
+}
+
+body.dark-theme .account-header .username {
+    color: #f0f0f0;
+}
+
+body.dark-theme .dropdown-content a {
+    color: #f0f0f0;
+}
+
+body.dark-theme .dropdown-content a:hover {
+    background-color: #3a3a3a;
+}
+
+body.dark-theme .dropdown-divider {
+    background-color: #444;
+}
+
+body.dark-theme .dropdown-section span {
+    color: #f0f0f0;
+}
+
+body.dark-theme .dropdown-section select {
+    background-color: #333;
+    color: #f0f0f0;
+    border: 1px solid #444;
+}
+
+/* Support button */
+body.dark-theme #supportButton {
+    background-color: #66a5ad;
+}
+
+body.dark-theme #supportButton:hover {
+    background-color: #07575b;
+}
+
+/* Images in dark mode */
+body.dark-theme img {
+    filter: brightness(0.9);
+}
+
     </style>
 </head>
+
 <body>
     <header>
         <h1>BPMN</h1>
@@ -466,233 +1241,747 @@
                 <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
                 <a href="{% url 'templates' %}">Шаблоны</a>
                 <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
-                <a href="{% url 'my_diagrams' %}"id="myDiagramsLink">Мои диаграммы</a>
+                <a href="{% url 'my_diagrams' %}" id="myDiagramsLink">Мои диаграммы</a>
             </nav>
         </div>
         <div class="right">
+            <div class="account-dropdown">
+                <button id="accountButton" class="account-btn">
+                    <span class="account-text">Аккаунт</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="account-header">
+                        <span class="username">{{ username }}</span>
+                    </div>
+                    <a href="{% url 'my_diagrams' %}">Мои диаграммы</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-section">
+                        <span>{% trans "Язык:" %}</span>
+                        <select class="language-select">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-section">
+                        <span>Тема:</span>
+                        <select class="theme-select">
+                            <option value="light">Светлая</option>
+                            <option value="dark">Темная</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="" class="logout-btn">Выйти</a>
+                </div>
+            </div>
             <button id="supportButton" onclick="toggleChat()">Тех. поддержка</button>
-
         </div>
     </header>
     <main>
         <div class="content">
             <div id="accountInfo" data-username="{{ username }}"></div>
-                <div class="account-info">
-                    <h2>Добро пожаловать {{ username }}</h2>
-                </div>
-
-            <div class="blockys">
-                <div class="poh">
-                    <h1>Добро пожаловать!</h1>
-                    <p>Мы рады предложить вам наши услуги по созданию диаграмм бизнес-процессов</p>
-                    <p>Здесь вы сможете легко и наглядно проектировать, анализировать и оптимизировать свои бизнес-процессы</p>
-                    <p>Начните прямо сейчас — создайте свою первую диаграмму или изучите готовые шаблоны для вдохновения</p>
-                </div>
-                {% load static %}
-                <img src="{% static 'images/процесс.gif' %}" alt="Your GIF"  height="350">
+            <div class="account-info">
+                <h2>Добро пожаловать {{ username }}</h2>
             </div>
 
-            <div class="block1">
-                <h1 id="fir">Преимущества использования нашего сайта</h1>
-                {% load static %}
-                <div class="cont">
-                    <div class="doc">
-                        <img src="{% static 'images/документация.gif' %}" alt="Your GIF" width="100" height="100">
+            <section class="welcome-section">
+                <div class="welcome-container">
+                    <div class="welcome-content">
+                        <div class="welcome-text">
+                            <h1 class="welcome-title">Оптимизируйте бизнес-процессы профессионально</h1>
+
+                            <div class="welcome-description">
+                                <div class="description-item">
+                                    <div class="icon-circle"></div>
+                                    <p>Создавайте понятные диаграммы бизнес-процессов</p>
+                                </div>
+                                <div class="description-item">
+                                    <div class="icon-circle"></div>
+                                    <p>Анализируйте и улучшайте workflow компании</p>
+                                </div>
+                                <div class="description-item">
+                                    <div class="icon-circle"></div>
+                                    <p>Используйте готовые шаблоны для быстрого старта</p>
+                                </div>
+                            </div>
+
+                            <div class="welcome-cta">
+                            </div>
+                        </div>
+
+                        <div class="welcome-visual">
+                            {% load static %}
+                            <div class="visual-container">
+                                <img src="{% static 'images/процесс.gif' %}" alt="BPMN диаграмма" class="process-image">
+                                <div class="visual-overlay"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="features-section">
+                <h1 class="section-title">Преимущества использования нашего сайта</h1>
+                <div class="features-container">
+                    <div class="feature-card">
+                        <img src="{% static 'images/документация.gif' %}" alt="Документация" class="feature-icon">
                         <h2>Обширная документация</h2>
-                        <p>- Точная документация</p>
-                        <p>- Документация на двух языках</p>
-                        <p>- Новейшая версии документации</p>
+                        <ul class="feature-list">
+                            <li>Точная документация</li>
+                            <li>Документация на двух языках</li>
+                            <li>Новейшая версия документации</li>
+                        </ul>
                     </div>
-                    <div class="temp">
-                        <img src="{% static 'images/шаблоны.gif' %}" alt="Your GIF" width="100" height="100">
+
+                    <div class="feature-card">
+                        <img src="{% static 'images/шаблоны.gif' %}" alt="Шаблоны" class="feature-icon">
                         <h2>Много шаблонов</h2>
-                        <p>- Большое разнообразие шаблонов</p>
-                        <p>- Решение для любой задачи</p>
-                        <p>- Используй готовые решения</p>
+                        <ul class="feature-list">
+                            <li>Большое разнообразие шаблонов</li>
+                            <li>Решение для любой задачи</li>
+                            <li>Используй готовые решения</li>
+                        </ul>
                     </div>
-                    <div class="ise">
-                        <img src="{% static 'images/простота.gif' %}" alt="Your GIF" width="100" height="100">
+
+                    <div class="feature-card">
+                        <img src="{% static 'images/простота.gif' %}" alt="Простота" class="feature-icon">
                         <h2>Простота приложения</h2>
-                        <p>- Интуитивный интерфейс</p>
-                        <p>- Легкое восприятие</p>
-                        <p>- Удобная навигация</p>
+                        <ul class="feature-list">
+                            <li>Интуитивный интерфейс</li>
+                            <li>Легкое восприятие</li>
+                            <li>Удобная навигация</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <div class="block2">
-                <div class="container">
-                    <div class="left-text">
-                        <div class="text-item active">
+            <div class="slider-section">
+                <div class="slider-container">
+                    <div class="slider-content">
+                        <div class="slider-text active">
                             <h1>Шаблоны для любых бизнес-процессов</h1>
                             <p>Мы предоставляем большое разнообразие шаблонов для решения любых задач.</p>
                         </div>
-                        <div class="text-item">
+                        <div class="slider-text">
                             <h1>Готовые решения</h1>
                             <p>Используйте готовые решения для оптимизации ваших бизнес-процессов.</p>
                         </div>
-                        <div class="text-item">
+                        <div class="slider-text">
                             <h1>Бесплатные шаблоны</h1>
                             <p>Все шаблоны доступны абсолютно бесплатно.</p>
                         </div>
                     </div>
-                    <div class="right-squares">
-                        {% load static %}
-                        <div class="square-item active">
-                            <img src="{% static 'images/документация.gif' %}" alt="Your GIF" width="200" height="200">
+                    <div class="slider-visual">
+                        <div class="slider-image active">
+                            <img src="{% static 'images/документация.gif' %}" alt="Шаблоны процессов">
+                            <div class="image-border"></div>
                         </div>
-                        <div class="square-item">
-                            <img src="{% static 'images/готовые.gif' %}" alt="Your GIF" width="200" height="200">
+                        <div class="slider-image">
+                            <img src="{% static 'images/готовые.gif' %}" alt="Готовые решения">
+                            <div class="image-border"></div>
                         </div>
-                        <div class="square-item">
-                            <img src="{% static 'images/ноумани.gif' %}" alt="Your GIF" width="200" height="200">
+                        <div class="slider-image">
+                            <img src="{% static 'images/ноумани.gif' %}" alt="Бесплатные шаблоны">
+                            <div class="image-border"></div>
                         </div>
                     </div>
+                </div>
+                <div class="slider-controls">
+                    <button class="slider-dot active" data-index="0"></button>
+                    <button class="slider-dot" data-index="1"></button>
+                    <button class="slider-dot" data-index="2"></button>
                 </div>
             </div>
 
-            <div class="block3">
-                <h1 id="stepsText">Простой подход для работы с диаграммами</h1>
-                {% load static %}
-                <div class="pos">
-                    <div class="pos_img">
-                        <img src="{% static 'images/возможности.png' %}" alt="Your GIF"  height="350">
+            <div class="features-section">
+                <h1 class="section-title">Простой подход для работы с диаграммами</h1>
+
+                <div class="feature-container">
+                    <div class="feature-card">
+                        <div class="feature-visual">
+                            <img src="{% static 'images/возмож.gif' %}" alt="Возможности BPMN" class="feature-image">
+                            <div class="feature-badge">1</div>
+                        </div>
+                        <div class="feature-content">
+                            <h2 class="feature-heading">Приложение BPMN предлагает много возможностей</h2>
+                            <ul class="feature-list">
+                                <li>Создание новых диаграмм с нуля</li>
+                                <li>Редактирование существующих диаграмм</li>
+                                <li>Использование готовых шаблонов</li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="pos_text">
-                        <h2>Приложение BPMN предлагает много возможностей для пользователей:</h2>
-                        <p>- создание новых диаграмм</p>
-                        <p>- редактирование уже существующих диаграмм</p>
-                        <p>- возможность использовать готовые шаблоны</p>
+
+                    <div class="feature-card reverse">
+                        <div class="feature-visual">
+                            <img src="{% static 'images/удоб.gif' %}" alt="Удобный редактор" class="feature-image">
+                            <div class="feature-badge">2</div>
+                        </div>
+                        <div class="feature-content">
+                            <h2 class="feature-heading">Удобный редактор для создания диаграмм</h2>
+                            <ul class="feature-list">
+                                <li>Интуитивно понятный интерфейс</li>
+                                <li>Минималистичный дизайн без лишних элементов</li>
+                                <li>Только необходимые инструменты под рукой</li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="red">
-                    <div class="red_text">
-                        <h2>Удобный редактор для создания диаграмм</h2>
-                        <p>прост в освоении</p>
-                        <p>редактор не нагружен всеразличными элементами</p>
-                        <p>используем только самое нужное</p>
-                    </div>
-                    <div class="red_img">
-                        <img src="{% static 'images/редактор.png' %}" alt="Your GIF"  height="350">
-                    </div>
-                </div>
-                <div class="sec">
-                    <div class="sec_img">
-                        <img src="{% static 'images/защита.png' %}" alt="Your GIF"  height="350">
-                    </div>
-                    <div class="sec_text">
-                        <h2>Данные пользователей под защитой:</h2>
-                        <p>ваши данные не поподут в чьи-либо руки</p>
-                        <p>мы заботимся о безопастности ваших данных</p>
-                        <p>ваши данные - нашь приоритет</p>
+
+                    <div class="feature-card">
+                        <div class="feature-visual">
+                            <img src="{% static 'images/защ.gif' %}" alt="Защита данных" class="feature-image">
+                            <div class="feature-badge">3</div>
+                        </div>
+                        <div class="feature-content">
+                            <h2 class="feature-heading">Данные пользователей под защитой</h2>
+                            <ul class="feature-list">
+                                <li>Конфиденциальность гарантирована</li>
+                                <li>Современные методы шифрования</li>
+                                <li>Безопасность данных - наш приоритет</li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
 
         </div>
     </main>
-        <div id="chat-sidebar">
-            <div id="chat">
-                <div id="chat-log"></div>
-                <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
-                <button id="chat-message-submit">Отправить</button>
-                <button id="chat-message-submit2">Закрыть</button>
-            </div>
+    <!--чат-->
+    <div id="chat-sidebar">
+        <div id="chat">
+            <div id="chat-log"></div>
+            <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+            <button id="chat-message-submit">Отправить</button>
+            <button id="chat-message-submit2">Закрыть</button>
         </div>
+    </div>
 
-<script>
-    // Функция для открытия/закрытия чата
-    function toggleChat() {
-        const chatSidebar = document.getElementById('chat-sidebar');
-        chatSidebar.classList.toggle('active');
+    <script>
+        // Функция для открытия/закрытия чата
+        function toggleChat() {
+            const chatSidebar = document.getElementById('chat-sidebar');
+            chatSidebar.classList.toggle('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Получаем имя пользователя из data-атрибута
+            const accountInfo = document.getElementById('accountInfo');
+            const username = accountInfo.getAttribute('data-username') || 'Гость'; // Если нет имени, будет "Гость"
+
+            // Создаем WebSocket
+            const chatSocket = new WebSocket(
+                'ws://' + window.location.host + '/ws/chat/'
+            );
+
+            // Обработка входящих сообщений
+            chatSocket.onmessage = function (e) {
+                const data = JSON.parse(e.data);
+                const chatLog = document.querySelector('#chat-log');
+
+                // Создаем элемент сообщения и добавляем его в чат
+                const messageElement = document.createElement('div');
+                messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
+                chatLog.appendChild(messageElement);
+
+                // Прокручиваем чат вниз
+                chatLog.scrollTop = chatLog.scrollHeight;
+            };
+
+            // Обработка закрытия соединения
+            chatSocket.onclose = function (e) {
+                console.error('Chat socket closed unexpectedly');
+            };
+
+            // Отправка сообщения при нажатии Enter
+            document.querySelector('#chat-message-input').onkeyup = function (e) {
+                if (e.keyCode === 13) {  // Enter key
+                    document.querySelector('#chat-message-submit').click();
+                }
+            };
+
+            // Отправка сообщения при нажатии кнопки
+            document.querySelector('#chat-message-submit').onclick = function (e) {
+                const messageInputDom = document.querySelector('#chat-message-input');
+                const message = messageInputDom.value.trim();
+
+                if (message) {
+                    // Отправляем сообщение с именем пользователя
+                    chatSocket.send(JSON.stringify({
+                        'username': username,  // Используем имя пользователя из data-username
+                        'message': message
+                    }));
+                    messageInputDom.value = '';
+                }
+            };
+
+            // Закрытие/открытие чата при нажатии на кнопку "Закрыть"
+            document.querySelector('#chat-message-submit2').onclick = function (e) {
+                toggleChat(e);  // Используем ту же функцию для закрытия/открытия чата
+            };
+        });
+
+        // Загрузка истории сообщений
+        async function loadChatHistory() {
+            const response = await fetch('/diagrams/chat/history/');  // API для получения истории
+            const messages = await response.json();
+            messages.reverse().forEach(msg => {  // Переворачиваем, чтобы новые сообщения были внизу
+                document.querySelector('#chat-log').innerHTML +=
+                    `<div><strong>${msg.username}:</strong> ${msg.message}</div>`;
+            });
+        }
+
+        document.addEventListener("DOMContentLoaded", loadChatHistory);
+
+        //слайдер
+        document.addEventListener('DOMContentLoaded', function () {
+            const texts = document.querySelectorAll('.slider-text');
+            const images = document.querySelectorAll('.slider-image');
+            const dots = document.querySelectorAll('.slider-dot');
+            let currentIndex = 0;
+            let interval;
+
+            function showSlide(index) {
+                // Hide all slides
+                texts.forEach(text => text.classList.remove('active'));
+                images.forEach(image => image.classList.remove('active'));
+                dots.forEach(dot => dot.classList.remove('active'));
+
+                // Show current slide
+                texts[index].classList.add('active');
+                images[index].classList.add('active');
+                dots[index].classList.add('active');
+                currentIndex = index;
+
+                // Reset timer
+                resetInterval();
+            }
+
+            function resetInterval() {
+                clearInterval(interval);
+                interval = setInterval(() => {
+                    const nextIndex = (currentIndex + 1) % texts.length;
+                    showSlide(nextIndex);
+                }, 5000);
+            }
+
+            // Add click events to dots
+            dots.forEach(dot => {
+                dot.addEventListener('click', function () {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    showSlide(index);
+                });
+            });
+
+            // Start auto slide
+            resetInterval();
+
+            // Pause on hover
+            const slider = document.querySelector('.slider-section');
+            slider.addEventListener('mouseenter', () => clearInterval(interval));
+            slider.addEventListener('mouseleave', resetInterval);
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            // Получаем имя пользователя
+            const accountInfo = document.getElementById('accountInfo');
+            const username = accountInfo ? accountInfo.getAttribute('data-username') : 'Гость';
+
+            // Удаляем старый блок с именем пользователя
+            const accountInfoBlock = document.querySelector('.account-info');
+            if (accountInfoBlock) {
+                accountInfoBlock.remove();
+            }
+
+            // Устанавливаем имя пользователя в выпадающем меню
+            const usernameElement = document.querySelector('.account-header .username');
+            if (usernameElement) {
+                usernameElement.textContent = username;
+            }
+
+            // Обработчик для выбора языка
+            const languageSelect = document.querySelector('.language-select');
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function () {
+                    // Здесь можно добавить логику смены языка
+                    console.log('Выбран язык:', this.value);
+                });
+            }
+
+            // Обработчик для выбора темы
+            const themeSelect = document.querySelector('.theme-select');
+            if (themeSelect) {
+                themeSelect.addEventListener('change', function () {
+                    // Здесь можно добавить логику смены темы
+                    console.log('Выбрана тема:', this.value);
+                    document.body.classList.toggle('dark-theme', this.value === 'dark');
+                });
+            }
+
+            // Закрытие выпадающего меню при клике вне его
+            document.addEventListener('click', function (event) {
+                const dropdown = document.querySelector('.account-dropdown');
+                if (!dropdown.contains(event.target)) {
+                    const content = dropdown.querySelector('.dropdown-content');
+                    content.style.display = 'none';
+                }
+            });
+        });
+        //смена языка
+        document.addEventListener("DOMContentLoaded", function () {
+            // Обработчик для выбора языка
+            const languageSelect = document.querySelector('.language-select');
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function () {
+                    const lang = this.value;
+                    changeLanguage(lang);
+                });
+            }
+
+            // Функция смены языка
+            function changeLanguage(lang) {
+                // Сохраняем выбор языка в localStorage
+                localStorage.setItem('userLanguage', lang);
+
+                // Здесь можно добавить AJAX-запрос для сохранения языка на сервере
+                fetch('/set_language/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({ language: lang })
+                });
+
+                // Обновляем текст на странице
+                updatePageLanguage(lang);
+            }
+
+            // Полный объект переводов
+            const translations = {
+                'ru': {
+                    // Header
+                    'mainMenuLink': 'Главная',
+                    'peculiaritiesLink': 'Особенности',
+                    'templatesLink': 'Шаблоны',
+                    'solutionsLink': 'Решения',
+                    'myDiagramsLink': 'Мои диаграммы',
+                    'accountText': 'Аккаунт',
+                    'supportButton': 'Тех. поддержка',
+
+                    // Account dropdown
+                    'myDiagrams': 'Мои диаграммы',
+                    'language': 'Язык:',
+                    'theme': 'Тема:',
+                    'logout': 'Выйти',
+
+                    // Welcome section
+                    'welcomeTitle': 'Оптимизируйте бизнес-процессы профессионально',
+                    'feature1': 'Создавайте понятные диаграммы бизнес-процессов',
+                    'feature2': 'Анализируйте и улучшайте workflow компании',
+                    'feature3': 'Используйте готовые шаблоны для быстрого старта',
+
+                    // Features
+                    'featuresTitle': 'Преимущества использования нашего сайта',
+                    'docTitle': 'Обширная документация',
+                    'doc1': 'Точная документация',
+                    'doc2': 'Документация на двух языках',
+                    'doc3': 'Новейшая версия документации',
+                    'templatesTitle': 'Много шаблонов',
+                    'templates1': 'Большое разнообразие шаблонов',
+                    'templates2': 'Решение для любой задачи',
+                    'templates3': 'Используй готовые решения',
+                    'simplicityTitle': 'Простота приложения',
+                    'simplicity1': 'Интуитивный интерфейс',
+                    'simplicity2': 'Легкое восприятие',
+                    'simplicity3': 'Удобная навигация',
+
+                    // Slider
+                    'slider1': 'Шаблоны для любых бизнес-процессов',
+                    'slider1desc': 'Мы предоставляем большое разнообразие шаблонов для решения любых задач.',
+                    'slider2': 'Готовые решения',
+                    'slider2desc': 'Используйте готовые решения для оптимизации ваших бизнес-процессов.',
+                    'slider3': 'Бесплатные шаблоны',
+                    'slider3desc': 'Все шаблоны доступны абсолютно бесплатно.',
+
+                    // Security features
+                    'securityTitle': 'Простой подход для работы с диаграммами',
+                    'bpmnTitle': 'Приложение BPMN предлагает много возможностей',
+                    'bpmn1': 'Создание новых диаграмм с нуля',
+                    'bpmn2': 'Редактирование существующих диаграмм',
+                    'bpmn3': 'Использование готовых шаблонов',
+                    'editorTitle': 'Удобный редактор для создания диаграмм',
+                    'editor1': 'Интуитивно понятный интерфейс',
+                    'editor2': 'Минималистичный дизайн без лишних элементов',
+                    'editor3': 'Только необходимые инструменты под рукой',
+                    'dataTitle': 'Данные пользователей под защитой',
+                    'data1': 'Конфиденциальность гарантирована',
+                    'data2': 'Современные методы шифрования',
+                    'data3': 'Безопасность данных - наш приоритет',
+
+                    // Chat
+                    'chatPlaceholder': 'Введите сообщение...',
+                    'chatSend': 'Отправить',
+                    'chatClose': 'Закрыть'
+                },
+                'en': {
+                    // Header
+                    'mainMenuLink': 'Home',
+                    'peculiaritiesLink': 'Features',
+                    'templatesLink': 'Templates',
+                    'solutionsLink': 'Solutions',
+                    'myDiagramsLink': 'My Diagrams',
+                    'accountText': 'Account',
+                    'supportButton': 'Support',
+
+                    // Account dropdown
+                    'myDiagrams': 'My Diagrams',
+                    'language': 'Language:',
+                    'theme': 'Theme:',
+                    'logout': 'Logout',
+
+                    // Welcome section
+                    'welcomeTitle': 'Optimize business processes professionally',
+                    'feature1': 'Create clear business process diagrams',
+                    'feature2': 'Analyze and improve company workflow',
+                    'feature3': 'Use ready-made templates for quick start',
+
+                    // Features
+                    'featuresTitle': 'Advantages of using our site',
+                    'docTitle': 'Comprehensive documentation',
+                    'doc1': 'Accurate documentation',
+                    'doc2': 'Documentation in two languages',
+                    'doc3': 'Latest version of documentation',
+                    'templatesTitle': 'Multiple templates',
+                    'templates1': 'Wide variety of templates',
+                    'templates2': 'Solution for any task',
+                    'templates3': 'Use ready-made solutions',
+                    'simplicityTitle': 'Application simplicity',
+                    'simplicity1': 'Intuitive interface',
+                    'simplicity2': 'Easy perception',
+                    'simplicity3': 'Convenient navigation',
+
+                    // Slider
+                    'slider1': 'Templates for any business processes',
+                    'slider1desc': 'We provide a wide variety of templates to solve any problems.',
+                    'slider2': 'Ready solutions',
+                    'slider2desc': 'Use ready-made solutions to optimize your business processes.',
+                    'slider3': 'Free templates',
+                    'slider3desc': 'All templates are available absolutely free.',
+
+                    // Security features
+                    'securityTitle': 'Simple approach to working with diagrams',
+                    'bpmnTitle': 'BPMN application offers many features',
+                    'bpmn1': 'Create new diagrams from scratch',
+                    'bpmn2': 'Edit existing diagrams',
+                    'bpmn3': 'Use ready-made templates',
+                    'editorTitle': 'Convenient editor for creating diagrams',
+                    'editor1': 'Intuitive interface',
+                    'editor2': 'Minimalist design without unnecessary elements',
+                    'editor3': 'Only necessary tools at hand',
+                    'dataTitle': 'User data is protected',
+                    'data1': 'Confidentiality guaranteed',
+                    'data2': 'Modern encryption methods',
+                    'data3': 'Data security is our priority',
+
+                    // Chat
+                    'chatPlaceholder': 'Type a message...',
+                    'chatSend': 'Send',
+                    'chatClose': 'Close'
+                }
+            };
+
+            // Функция обновления языка на странице
+            function updatePageLanguage(lang) {
+                const t = translations[lang];
+
+                // Header
+                document.getElementById('mainMenuLink').textContent = t.mainMenuLink;
+                document.getElementById('peculiaritiesLink').textContent = t.peculiaritiesLink;
+                document.querySelector('[href="{% url 'templates' %}"]').textContent = t.templatesLink;
+                document.getElementById('solutionsLink').textContent = t.solutionsLink;
+                document.getElementById('myDiagramsLink').textContent = t.myDiagramsLink;
+                document.querySelector('.account-text').textContent = t.accountText;
+                document.getElementById('supportButton').textContent = t.supportButton;
+
+                // Account dropdown
+                document.querySelector('.dropdown-content a[href="{% url 'my_diagrams' %}"]').textContent = t.myDiagrams;
+                document.querySelector('.dropdown-section span').textContent = t.language;
+                document.querySelectorAll('.dropdown-section span')[1].textContent = t.theme;
+                document.querySelector('.logout-btn').textContent = t.logout;
+
+                // Welcome section
+                document.querySelector('.welcome-title').innerHTML = t.welcomeTitle;
+                document.querySelectorAll('.description-item p')[0].textContent = t.feature1;
+                document.querySelectorAll('.description-item p')[1].textContent = t.feature2;
+                document.querySelectorAll('.description-item p')[2].textContent = t.feature3;
+
+                // Features section
+                document.querySelector('.section-title').textContent = t.featuresTitle;
+                document.querySelectorAll('.feature-card h2')[0].textContent = t.docTitle;
+                document.querySelectorAll('.feature-list li')[0].textContent = t.doc1;
+                document.querySelectorAll('.feature-list li')[1].textContent = t.doc2;
+                document.querySelectorAll('.feature-list li')[2].textContent = t.doc3;
+                document.querySelectorAll('.feature-card h2')[1].textContent = t.templatesTitle;
+                document.querySelectorAll('.feature-list li')[3].textContent = t.templates1;
+                document.querySelectorAll('.feature-list li')[4].textContent = t.templates2;
+                document.querySelectorAll('.feature-list li')[5].textContent = t.templates3;
+                document.querySelectorAll('.feature-card h2')[2].textContent = t.simplicityTitle;
+                document.querySelectorAll('.feature-list li')[6].textContent = t.simplicity1;
+                document.querySelectorAll('.feature-list li')[7].textContent = t.simplicity2;
+                document.querySelectorAll('.feature-list li')[8].textContent = t.simplicity3;
+
+                // Slider
+                document.querySelectorAll('.slider-text h1')[0].textContent = t.slider1;
+                document.querySelectorAll('.slider-text p')[0].textContent = t.slider1desc;
+                document.querySelectorAll('.slider-text h1')[1].textContent = t.slider2;
+                document.querySelectorAll('.slider-text p')[1].textContent = t.slider2desc;
+                document.querySelectorAll('.slider-text h1')[2].textContent = t.slider3;
+                document.querySelectorAll('.slider-text p')[2].textContent = t.slider3desc;
+
+                // Security features
+                document.querySelectorAll('.section-title')[1].textContent = t.securityTitle;
+                document.querySelectorAll('.feature-heading')[0].textContent = t.bpmnTitle;
+                document.querySelectorAll('.feature-list li')[9].textContent = t.bpmn1;
+                document.querySelectorAll('.feature-list li')[10].textContent = t.bpmn2;
+                document.querySelectorAll('.feature-list li')[11].textContent = t.bpmn3;
+                document.querySelectorAll('.feature-heading')[1].textContent = t.editorTitle;
+                document.querySelectorAll('.feature-list li')[12].textContent = t.editor1;
+                document.querySelectorAll('.feature-list li')[13].textContent = t.editor2;
+                document.querySelectorAll('.feature-list li')[14].textContent = t.editor3;
+                document.querySelectorAll('.feature-heading')[2].textContent = t.dataTitle;
+                document.querySelectorAll('.feature-list li')[15].textContent = t.data1;
+                document.querySelectorAll('.feature-list li')[16].textContent = t.data2;
+                document.querySelectorAll('.feature-list li')[17].textContent = t.data3;
+
+                // Chat
+                document.getElementById('chat-message-input').placeholder = t.chatPlaceholder;
+                document.getElementById('chat-message-submit').textContent = t.chatSend;
+                document.getElementById('chat-message-submit2').textContent = t.chatClose;
+
+
+                // Обновляем текст элементов
+                document.getElementById('mainMenuLink').textContent = translations[lang]['mainMenuLink'];
+                document.getElementById('peculiaritiesLink').textContent = translations[lang]['peculiaritiesLink'];
+                document.querySelector('[href="{% url 'templates' %}"]').textContent = translations[lang]['templatesLink'];
+                document.getElementById('solutionsLink').textContent = translations[lang]['solutionsLink'];
+                document.getElementById('myDiagramsLink').textContent = translations[lang]['myDiagramsLink'];
+                document.querySelector('.account-text').textContent = translations[lang]['accountText'];
+                document.querySelector('.welcome-title').textContent = translations[lang]['welcomeTitle'];
+                document.querySelectorAll('.feature-card h2')[0].textContent = translations[lang]['feature1'];
+                document.querySelectorAll('.feature-card h2')[1].textContent = translations[lang]['feature2'];
+                document.querySelectorAll('.feature-card h2')[2].textContent = translations[lang]['feature3'];
+                document.getElementById('supportButton').textContent = translations[lang]['supportButton'];
+            }
+
+            // Функция для получения CSRF токена
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // При загрузке страницы проверяем сохраненный язык
+            const savedLang = localStorage.getItem('userLanguage') || 'ru';
+            document.querySelector('.language-select').value = savedLang;
+            updatePageLanguage(savedLang);
+        });
+
+        //тема
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для применения темы
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // Получаем имя пользователя из data-атрибута
-        const accountInfo = document.getElementById('accountInfo');
-        const username = accountInfo.getAttribute('data-username') || 'Гость'; // Если нет имени, будет "Гость"
+    // Проверяем сохраненную тему в localStorage
+    const savedTheme = localStorage.getItem('userTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        // Устанавливаем выбранную тему в селекторе
+        document.querySelector('.theme-select').value = savedTheme;
+    }
 
-        // Создаем WebSocket
-        const chatSocket = new WebSocket(
-            'ws://' + window.location.host + '/ws/chat/'
-        );
-
-        // Обработка входящих сообщений
-        chatSocket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            const chatLog = document.querySelector('#chat-log');
-
-            // Создаем элемент сообщения и добавляем его в чат
-            const messageElement = document.createElement('div');
-            messageElement.innerHTML = `<strong>${data.username}:</strong> ${data.message}`;
-            chatLog.appendChild(messageElement);
-
-            // Прокручиваем чат вниз
-            chatLog.scrollTop = chatLog.scrollHeight;
-        };
-
-        // Обработка закрытия соединения
-        chatSocket.onclose = function (e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        // Отправка сообщения при нажатии Enter
-        document.querySelector('#chat-message-input').onkeyup = function (e) {
-            if (e.keyCode === 13) {  // Enter key
-                document.querySelector('#chat-message-submit').click();
+    // Проверяем тему в сессии (если пользователь авторизован)
+    const username = document.getElementById('accountInfo')?.dataset?.username;
+    if (username) {
+        fetch('/get_user_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({username: username})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.theme) {
+                applyTheme(data.theme);
+                document.querySelector('.theme-select').value = data.theme;
+                localStorage.setItem('userTheme', data.theme);
             }
-        };
+        })
+        .catch(err => console.error('Theme fetch error:', err));
+    }
 
-        // Отправка сообщения при нажатии кнопки
-        document.querySelector('#chat-message-submit').onclick = function (e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value.trim();
+    // Обработчик изменения темы
+    const themeSelect = document.querySelector('.theme-select');
+    if (themeSelect) {
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            applyTheme(selectedTheme);
+            localStorage.setItem('userTheme', selectedTheme);
 
-            if (message) {
-                // Отправляем сообщение с именем пользователя
-                chatSocket.send(JSON.stringify({
-                    'username': username,  // Используем имя пользователя из data-username
-                    'message': message
-                }));
-                messageInputDom.value = '';
+            // Если пользователь авторизован, сохраняем тему на сервере
+            if (username) {
+                updateServerTheme(selectedTheme, username);
             }
-        };
-
-        // Закрытие/открытие чата при нажатии на кнопку "Закрыть"
-        document.querySelector('#chat-message-submit2').onclick = function (e) {
-            toggleChat();  // Используем ту же функцию для закрытия/открытия чата
-        };
-    });
-
-    // Загрузка истории сообщений
-    async function loadChatHistory() {
-        const response = await fetch('/diagrams/chat/history/');  // API для получения истории
-        const messages = await response.json();
-        messages.reverse().forEach(msg => {  // Переворачиваем, чтобы новые сообщения были внизу
-            document.querySelector('#chat-log').innerHTML +=
-                `<div><strong>${msg.username}:</strong> ${msg.message}</div>`;
         });
     }
 
-    document.addEventListener("DOMContentLoaded", loadChatHistory);
-
-    //слайдер
-    let currentIndex = 0;
-    const textItems = document.querySelectorAll('.text-item');
-    const squareItems = document.querySelectorAll('.square-item');
-
-    function showNextItem() {
-        textItems[currentIndex].classList.remove('active');
-        squareItems[currentIndex].classList.remove('active');
-
-        currentIndex = (currentIndex + 1) % textItems.length;
-
-        textItems[currentIndex].classList.add('active');
-        squareItems[currentIndex].classList.add('active');
+    // Отправка выбранной темы на сервер
+    function updateServerTheme(theme, username) {
+        fetch('/update_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                theme: theme,
+                username: username
+            })
+        }).catch(err => console.error('Theme update error:', err));
     }
 
-    setInterval(showNextItem, 3000); // Меняем элементы каждые 3 секунды
-</script>
-
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
+    </script>
 </body>
+
 </html>

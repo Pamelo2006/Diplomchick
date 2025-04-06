@@ -7,7 +7,7 @@
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #FFF;
+            background-color: #c4dfe6;
             color: #000;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
@@ -67,7 +67,7 @@
             height: 2px;
             bottom: 0;
             left: 0;
-            background-color: #4CAF50;
+            background-color: #66a5ad;
             transition: width 0.3s ease;
         }
         nav a:hover::after {
@@ -99,12 +99,13 @@
             padding: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
+            border-radius: 10px;
         }
         .list li:hover {
             background-color: #f1f1f1;
         }
         .list li.active {
-            background-color: #4CAF50;
+            background-color: #66a5ad;
             color: white;
         }
         .content {
@@ -115,7 +116,7 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             box-sizing: border-box;
             overflow-y: auto;
-            height: 600px;
+            height: 700px;
         }
         .content div {
             display: none;
@@ -160,27 +161,267 @@
             text-decoration: none;
             cursor: pointer;
         }
-        /* Стили для темной темы */
-        body.dark-theme .modal-content {
-            background-color: #444;
-            color: #FFF;
-            border-color: #555;
+        /* Стили для выпадающего меню аккаунта */
+        .account-dropdown {
+            position: relative;
+            display: inline-block;
+            margin-right: 15px;
         }
-        body.dark-theme .close {
-            color: #FFF;
+
+        .account-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px 15px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+            margin-left: 200px;
         }
-        body.dark-theme .close:hover,
-        body.dark-theme .close:focus {
-            color: #CCC;
+
+        .account-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
         }
-        body.dark-theme select {
-            background-color: #555;
-            color: #FFF;
-            border-color: #666;
+
+        .account-icon {
+            margin-right: 8px;
+            font-size: 16px;
         }
-        body.dark-theme select:hover {
-            background-color: #666;
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #fff;
+            min-width: 120px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            padding: 10px 0;
         }
+
+        .account-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .account-header {
+            padding: 8px 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 8px;
+        }
+
+        .dropdown-content a {
+            display: block;
+            padding: 8px 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: background-color 0.3s;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f5f5f5;
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background-color: #eee;
+            margin: 8px 0;
+        }
+
+        .dropdown-section {
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .dropdown-section select {
+            padding: 4px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        .logout-btn {
+            color: #e74c3c !important;
+        }
+
+        .account-header .username {
+            color: #333;
+            /* Основной цвет текста */
+            font-size: 16px;
+            display: block;
+        }
+
+        /* Общий стиль текста в выпадающем меню */
+        .dropdown-content {
+            color: #333;
+            /* Цвет текста по умолчанию */
+        }
+
+        /* Стиль для ссылок в меню */
+        .dropdown-content a {
+            color: #333;
+            /* Цвет текста ссылок */
+        }
+
+        /* Стиль для текста в секциях (Язык, Тема) */
+        .dropdown-section span {
+            color: #333;
+            /* Цвет текста меток */
+        }
+
+        /* Стиль для выпадающих списков */
+        .dropdown-section select {
+            color: #333;
+            /* Цвет текста в select */
+        }
+
+        /* Стиль для кнопки выхода */
+        .logout-btn {
+            color: #e74c3c !important;
+            /* Красный цвет для кнопки выхода */
+        }
+        #supportButton {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+            margin-left: 400px;
+        }
+
+        #supportButton:hover {
+            background-color: #07575b;
+        }
+
+        /* Стили для боковой панели с чатом */
+        #chat-sidebar {
+            position: fixed;
+            top: 0;
+            right: -20%;
+            /* Скрываем панель за пределами экрана */
+            width: 20%;
+            height: 100%;
+            background-color: #f4f4f4;
+            box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+
+        #chat-sidebar.active {
+            right: 0;
+            /* Показываем панель */
+        }
+
+        /* Стили для чата внутри панели */
+        #chat {
+            padding: 20px;
+            height: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #chat-log {
+            flex-grow: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        #chat-message-input {
+            width: 90%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        #chat-message-submit {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #chat-message-submit2 {
+            background-color: #66a5ad;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 10px;
+        }
+
+        #chat-message-submit:hover {
+            background-color: #07575b;
+        }
+
+        /*для темной темы*/
+        /* Темная тема */
+body.dark-theme {
+    background-color: #333;
+    color: #FFF;
+}
+
+body.dark-theme .list,
+body.dark-theme .content {
+    background-color: #444;
+    color: #FFF;
+}
+
+body.dark-theme .list li:hover {
+    background-color: #555;
+}
+
+body.dark-theme .list li.active {
+    background-color: #66a5ad;
+}
+
+body.dark-theme .dropdown-content {
+    background-color: #444;
+    color: #FFF;
+}
+
+body.dark-theme .dropdown-content a {
+    color: #FFF;
+}
+
+body.dark-theme .dropdown-content a:hover {
+    background-color: #555;
+}
+
+body.dark-theme .dropdown-section span,
+body.dark-theme .account-header .username {
+    color: #FFF;
+}
+
+body.dark-theme .dropdown-section select {
+    background-color: #555;
+    color: #FFF;
+    border-color: #666;
+}
+
+body.dark-theme #chat-sidebar {
+    background-color: #444;
+}
+
+body.dark-theme #chat-message-input {
+    background-color: #555;
+    color: #FFF;
+    border-color: #666;
+}
     </style>
     <script src="https://cdn.localazy.com/localazy.js"></script>
 </head>
@@ -193,10 +434,39 @@
                 <a href="{% url 'peculiarities' %}" id="peculiaritiesLink">Особенности</a>
                 <a href="{% url 'templates' %}">Шаблоны</a>
                 <a href="{% url 'solutions' %}" id="solutionsLink">Решения</a>
-                <a href="{% url 'my_diagrams' %}"id="myDiagramsLink">Мои диаграммы</a>
+                <a href="{% url 'my_diagrams' %}" id="myDiagramsLink">Мои диаграммы</a>
             </nav>
         </div>
         <div class="right">
+            <div class="account-dropdown">
+                <button id="accountButton" class="account-btn">
+                    <span class="account-text">Аккаунт</span>
+                </button>
+                <div class="dropdown-content">
+                    <div class="account-header">
+                        <span class="username">{{ username }}</span>
+                    </div>
+                    <a href="{% url 'my_diagrams' %}">Мои диаграммы</a>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-section">
+                        <span> "Язык:" </span>
+                        <select class="language-select">
+                            <option value="ru">Русский</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-section">
+                        <span>Тема:</span>
+                        <select class="theme-select">
+                            <option value="light">Светлая</option>
+                            <option value="dark">Темная</option>
+                        </select>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <a href="" class="logout-btn">Выйти</a>
+                </div>
+            </div>
+            <button id="supportButton" onclick="toggleChat()">Тех. поддержка</button>
         </div>
     </header>
     <div class="container">
@@ -214,189 +484,249 @@
                 <p>{{ russian_text|linebreaks }}</p>
             </div>
         </div>
-        <div id="settingsModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeModal()">&times;</span>
-                <h2 id="settingsText">Настройки</h2>
-                <label for="language" id="languageLabel">Язык:</label>
-                <select id="language" name="language" onchange="changeLanguage(this.value)">
-                    <option value="ru">Русский</option>
-                    <option value="en">English</option>
-                </select>
-                <br><br>
-                <label for="theme" id="themeLabel">Тема:</label>
-                <select id="theme" name="theme" onchange="changeTheme(this.value)">
-                    <option value="light">Светлая</option>
-                    <option value="dark">Темная</option>
-                </select>
-            </div>
+    </div>
+    <!--чат-->
+    <div id="chat-sidebar">
+        <div id="chat">
+            <div id="chat-log"></div>
+            <input id="chat-message-input" type="text" placeholder="Введите сообщение...">
+            <button id="chat-message-submit">Отправить</button>
+            <button id="chat-message-submit2">Закрыть</button>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-    // Логика для переключения контента
+    // Объект с переводами для всех элементов страницы
+    const translations = {
+        'ru': {
+            // Header
+            'mainMenuLink': 'Главная',
+            'peculiaritiesLink': 'Особенности',
+            'templatesLink': 'Шаблоны',
+            'solutionsLink': 'Решения',
+            'myDiagramsLink': 'Мои диаграммы',
+            'accountText': 'Аккаунт',
+            'supportButton': 'Тех. поддержка',
+            
+            // Account dropdown
+            'myDiagrams': 'Мои диаграммы',
+            'language': 'Язык:',
+            'theme': 'Тема:',
+            'logout': 'Выйти',
+            
+            // Documentation tabs
+            'russianDoc': 'Русская версия документации',
+            'englishDoc': 'Английская версия документации',
+            
+            // Chat
+            'chatPlaceholder': 'Введите сообщение...',
+            'chatSend': 'Отправить',
+            'chatClose': 'Закрыть'
+        },
+        'en': {
+            // Header
+            'mainMenuLink': 'Home',
+            'peculiaritiesLink': 'Features',
+            'templatesLink': 'Templates',
+            'solutionsLink': 'Solutions',
+            'myDiagramsLink': 'My Diagrams',
+            'accountText': 'Account',
+            'supportButton': 'Support',
+            
+            // Account dropdown
+            'myDiagrams': 'My Diagrams',
+            'language': 'Language:',
+            'theme': 'Theme:',
+            'logout': 'Logout',
+            
+            // Documentation tabs
+            'russianDoc': 'Russian documentation',
+            'englishDoc': 'English documentation',
+            
+            // Chat
+            'chatPlaceholder': 'Type a message...',
+            'chatSend': 'Send',
+            'chatClose': 'Close'
+        }
+    };
+
+    // Функция для обновления текста на странице
+    function updateLanguage(lang) {
+        const t = translations[lang];
+        
+        // Header
+        document.getElementById('mainMenuLink').textContent = t.mainMenuLink;
+        document.getElementById('peculiaritiesLink').textContent = t.peculiaritiesLink;
+        document.querySelector('[href="{% url 'templates' %}"]').textContent = t.templatesLink;
+        document.getElementById('solutionsLink').textContent = t.solutionsLink;
+        document.getElementById('myDiagramsLink').textContent = t.myDiagramsLink;
+        document.querySelector('.account-text').textContent = t.accountText;
+        document.getElementById('supportButton').textContent = t.supportButton;
+        
+        // Account dropdown
+        document.querySelector('.dropdown-content a[href="{% url 'my_diagrams' %}"]').textContent = t.myDiagrams;
+        document.querySelectorAll('.dropdown-section span')[0].textContent = t.language;
+        document.querySelectorAll('.dropdown-section span')[1].textContent = t.theme;
+        document.querySelector('.logout-btn').textContent = t.logout;
+        
+        // Documentation tabs
+        document.getElementById('whatIsBPMN').textContent = t.russianDoc;
+        document.getElementById('elementsOfBPMN').textContent = t.englishDoc;
+        
+        // Chat
+        document.getElementById('chat-message-input').placeholder = t.chatPlaceholder;
+        document.getElementById('chat-message-submit').textContent = t.chatSend;
+        document.getElementById('chat-message-submit2').textContent = t.chatClose;
+        
+        // Сохраняем выбор языка
+        localStorage.setItem('userLanguage', lang);
+        updateServerLanguage(lang);
+    }
+
+    // Отправка выбранного языка на сервер
+    function updateServerLanguage(lang) {
+        fetch('/set_language/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({language: lang})
+        }).catch(err => console.error('Language update error:', err));
+    }
+
+    // Получение CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Обработчик изменения языка
+    const languageSelect = document.querySelector('.language-select');
+    if (languageSelect) {
+        // Устанавливаем сохраненный язык или язык по умолчанию
+        const savedLang = localStorage.getItem('userLanguage') || 'ru';
+        languageSelect.value = savedLang;
+        updateLanguage(savedLang);
+        
+        // Обработчик изменения языка
+        languageSelect.addEventListener('change', function() {
+            updateLanguage(this.value);
+        });
+    }
+
+    // Логика для переключения контента документации
     const listItems = document.querySelectorAll('.list li');
     const textElements = document.querySelectorAll('.content div');
 
     listItems.forEach(item => {
         item.addEventListener('click', () => {
-            // Убираем активный класс у всех элементов списка
             listItems.forEach(li => li.classList.remove('active'));
-            // Убираем активный класс у всех блоков контента
             textElements.forEach(div => div.classList.remove('active'));
 
-            // Добавляем активный класс к выбранному элементу списка
             item.classList.add('active');
-
-            // Получаем целевой блок контента
             const target = item.getAttribute('data-target');
-            const targetElement = document.getElementById(target);
-
-            // Добавляем активный класс к целевому блоку контента
-            if (targetElement) {
-                targetElement.classList.add('active');
-            }
+            document.getElementById(target).classList.add('active');
         });
     });
-
-    // Загрузка сохраненных настроек при загрузке страницы
-    function loadSettings() {
-        // Загружаем тему
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        changeTheme(savedTheme);
-        document.getElementById('theme').value = savedTheme;
-
-        // Загружаем язык
-        const savedLanguage = localStorage.getItem('language') || 'ru';
-        changeLanguage(savedLanguage);
-        document.getElementById('language').value = savedLanguage;
-    }
-
-    // Закрытие модального окна при клике вне его
-    window.onclick = function(event) {
-        let modal = document.getElementById("settingsModal");
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
-    }
-
-    // Загружаем настройки при загрузке страницы
-    loadSettings();
 });
-        localazy.init({
-            projectId: 'YOUR_PROJECT_ID', // Замените на ваш ID проекта
-            apiKey: 'YOUR_API_KEY', // Замените на ваш API ключ
-            defaultLang: 'ru', // Укажите язык по умолчанию
-        });
-        // Функция для открытия модального окна
-        function openModal() {
-            document.getElementById("settingsModal").style.display = "flex";
+//для темы
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для применения темы
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
         }
+    }
 
-        // Функция для закрытия модального окна
-        function closeModal() {
-            document.getElementById("settingsModal").style.display = "none";
-        }
+    // Проверяем сохраненную тему в localStorage
+    const savedTheme = localStorage.getItem('userTheme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        // Устанавливаем выбранную тему в селекторе
+        document.querySelector('.theme-select').value = savedTheme;
+    }
 
-        // Функция для смены темы
-        function changeTheme(theme) {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-theme');
-            } else {
-                document.body.classList.remove('dark-theme');
+    // Проверяем тему в сессии (если пользователь авторизован)
+    const username = document.getElementById('accountInfo')?.dataset?.username;
+    if (username) {
+        fetch('/get_user_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({username: username})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.theme) {
+                applyTheme(data.theme);
+                document.querySelector('.theme-select').value = data.theme;
+                localStorage.setItem('userTheme', data.theme);
             }
-            // Сохраняем выбранную тему в localStorage
-            localStorage.setItem('theme', theme);
-        }
+        })
+        .catch(err => console.error('Theme fetch error:', err));
+    }
 
-        // Функция для смены языка
-        function changeLanguage(lang) {
-            const htmlElement = document.getElementById('htmlLang');
-            htmlElement.setAttribute('lang', lang);
+    // Обработчик изменения темы
+    const themeSelect = document.querySelector('.theme-select');
+    if (themeSelect) {
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            applyTheme(selectedTheme);
+            localStorage.setItem('userTheme', selectedTheme);
 
-            // Применяем переводы
-            applyTranslations(lang);
+            // Если пользователь авторизован, сохраняем тему на сервере
+            if (username) {
+                updateServerTheme(selectedTheme, username);
+            }
+        });
+    }
 
-            // Сохраняем выбранный язык в localStorage
-            localStorage.setItem('language', lang);
-        }
+    // Отправка выбранной темы на сервер
+    function updateServerTheme(theme, username) {
+        fetch('/update_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({
+                theme: theme,
+                username: username
+            })
+        }).catch(err => console.error('Theme update error:', err));
+    }
 
-        // Функция для применения переводов
-        function applyTranslations(lang) {
-            const translations = {
-                ru: {
-                    mainMenuLink: "Главная",
-                    peculiaritiesLink: "Особенности",
-                    templatesLink: "Шаблоны",
-                    solutionsLink: "Решения",
-                    myDiagramsLink: "Мои диаграммы",
-                    whatIsBPMN: "Русская версия документации",
-                    elementsOfBPMN: "Английская версия документации",
-                    settingsText: "Настройки",
-                    languageLabel: "Язык:",
-                    themeLabel: "Тема:"
-                },
-                en: {
-                    mainMenuLink: "Main",
-                    peculiaritiesLink: "Features",
-                    templatesLink: "Templates",
-                    solutionsLink: "Solutions",
-                    myDiagramsLink: "My Diagrams",
-                    whatIsBPMN: "Russian version of documentation",
-                    elementsOfBPMN: "English version of documentation",
-                    settingsText: "Settings",
-                    languageLabel: "Language:",
-                    themeLabel: "Theme:"
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
                 }
-            };
-
-            Object.keys(translations[lang]).forEach(key => {
-                const element = document.getElementById(key);
-                if (element) {
-                    element.textContent = translations[lang][key];
-                }
-            });
-        }
-
-        // Загрузка сохраненных настроек при загрузке страницы
-        function loadSettings() {
-            // Загружаем тему
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            changeTheme(savedTheme);
-            document.getElementById('theme').value = savedTheme;
-
-            // Загружаем язык
-            const savedLanguage = localStorage.getItem('language') || 'ru';
-            changeLanguage(savedLanguage);
-            document.getElementById('language').value = savedLanguage;
-        }
-
-        // Закрытие модального окна при клике вне его
-        window.onclick = function(event) {
-            let modal = document.getElementById("settingsModal");
-            if (event.target === modal) {
-                modal.style.display = "none";
             }
         }
-
-        // Загружаем настройки при загрузке страницы
-        window.onload = loadSettings;
-
-        // Логика для переключения контента
-        const listItems = document.querySelectorAll('.list li');
-        const textElements = document.querySelectorAll('.content div');
-
-        listItems.forEach(item => {
-            item.addEventListener('click', () => {
-                listItems.forEach(li => li.classList.remove('active'));
-                textElements.forEach(div => div.classList.remove('active'));
-
-                item.classList.add('active');
-
-                const target = item.getAttribute('data-target');
-                document.getElementById(target).classList.add('active');
-            });
-        });
+        return cookieValue;
+    }
+});
     </script>
 </body>
 </html>

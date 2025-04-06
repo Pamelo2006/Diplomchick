@@ -3,155 +3,563 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration & Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --success-color: #4cc9f0;
+            --danger-color: #f72585;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
             margin: 0;
-            height: 100vh;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0;
-        }
-        .form-container {
-            width: 300px;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
         }
+
+        .form-container {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+            margin: 20px;
+        }
+
+        .form-container:hover {
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
         .form-container h2 {
-            margin-bottom: 20px;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-align: center;
+            font-weight: 600;
         }
+
         .form-container input {
             width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
         }
+
+        .form-container input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
         .form-container button {
             width: 100%;
-            padding: 10px;
-            background-color: #28a745;
+            padding: 15px;
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
+            transition: var(--transition);
             margin-top: 10px;
         }
+
         .form-container button:hover {
-            background-color: #218838;
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
+
+        .form-container button:active {
+            transform: translateY(0);
+        }
+
         .switch-form {
-            margin-top: 15px;
+            margin-top: 25px;
+            text-align: center;
+            font-size: 14px;
+            color: #6c757d;
         }
+
         .switch-form a {
-            color: #007bff;
+            color: var(--primary-color);
             text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
         }
+
         .switch-form a:hover {
+            color: var(--secondary-color);
             text-decoration: underline;
         }
+
+        .form-footer {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .form-footer a {
+            display: block;
+            text-align: center;
+            color: #6c757d;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .form-footer a:hover {
+            color: var(--primary-color);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 32px;
+            font-weight: 700;
+        }
+
+        .logo span {
+            color: var(--secondary-color);
+        }
+
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 30px 20px;
+            }
+            
+            .form-container h2 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+            
+            .form-container input,
+            .form-container button {
+                padding: 12px;
+            }
+        }
+
+        /* Стили для сообщений об ошибках */
+        .error-message {
+            color: var(--danger-color);
+            font-size: 14px;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .input-error {
+            border-color: var(--danger-color) !important;
+        }
+
+        .input-error:focus {
+            box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.2) !important;
+        }
+
+        /*темная тема*/
+        :root {
+    --primary-color: #6366f1;      /* Lighter indigo */
+    --secondary-color: #4f46e5;    /* Indigo */
+    --success-color: #06b6d4;      /* Cyan */
+    --danger-color: #ec4899;       /* Pink */
+    --light-color: #1e293b;        /* Slate 800 */
+    --dark-color: #0f172a;         /* Slate 900 */
+    --text-color: #e2e8f0;         /* Slate 200 */
+    --text-muted: #94a3b8;         /* Slate 400 */
+    --input-bg: #1e293b;           /* Slate 800 */
+    --input-border: #334155;       /* Slate 700 */
+    --border-radius: 8px;
+    --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    --transition: all 0.3s ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.form-container {
+    width: 100%;
+    max-width: 400px;
+    padding: 40px;
+    background-color: #0f172a;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    margin: 20px;
+    border: 1px solid #334155;
+}
+
+.form-container:hover {
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+}
+
+.form-container h2 {
+    color: var(--primary-color);
+    margin-bottom: 30px;
+    font-size: 28px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.form-container input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 2px solid var(--input-border);
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    transition: var(--transition);
+    background-color: var(--input-bg);
+    color: var(--text-color);
+}
+
+.form-container input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+.form-container button {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 10px;
+}
+
+.form-container button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.form-container button:active {
+    transform: translateY(0);
+}
+
+.switch-form {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+.switch-form a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: var(--transition);
+}
+
+.switch-form a:hover {
+    color: var(--success-color);
+    text-decoration: underline;
+}
+
+.form-footer {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-footer a {
+    display: block;
+    text-align: center;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+.form-footer a:hover {
+    color: var(--primary-color);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.logo h1 {
+    color: var(--primary-color);
+    font-size: 32px;
+    font-weight: 700;
+}
+
+.logo span {
+    color: var(--success-color);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-container {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Responsiveness */
+@media (max-width: 480px) {
+    .form-container {
+        padding: 30px 20px;
+    }
+    
+    .form-container h2 {
+        font-size: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .form-container input,
+    .form-container button {
+        padding: 12px;
+    }
+}
+
+/* Error message styles */
+.error-message {
+    color: var(--danger-color);
+    font-size: 14px;
+    margin-top: -15px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.input-error {
+    border-color: var(--danger-color) !important;
+}
+
+.input-error:focus {
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.2) !important;
+}
+
+/* Language switcher styling */
+.language-switcher select {
+    background-color: var(--input-bg);
+    color: var(--text-color);
+    border: 1px solid var(--input-border);
+    padding: 8px 12px;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+}
+
+.language-switcher select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
     </style>
 </head>
 <body>
-       <!-- Форма входа -->
-        <div class="form-container" id="loginForm">
-            <h2>Login</h2>
-            <form id="login" action="{% url 'login' %}" method="POST">
-                {% csrf_token %}
-                <input type="text" name="username" placeholder="Username" required autocomplete="off">
-                <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
-                <button type="submit">Login</button>
-            </form>
-            <div class="switch-form">
-                <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Register</a></p>
-                <p><a href="#" onclick="showPasswordResetForm()">Forgot password?</a></p>
-                <p><a href="#" onclick="showAdminLoginForm()">Login as Admin</a></p>
-            </div>
+    <!-- Форма входа -->
+    <div class="form-container" id="loginForm">
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
         </div>
+        <h2>Welcome Back</h2>
+        <form id="login" action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            <div class="error-message" id="login-username-error"></div>
+            
+            <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
+            <div class="error-message" id="login-password-error"></div>
+            
+            <button type="submit">Sign In</button>
+        </form>
+        <div class="form-footer">
+            <div class="switch-form">
+                <p>Don't have an account? <a href="#" onclick="showRegisterForm()">Sign Up</a></p>
+            </div>
+            <a href="#" onclick="showPasswordResetForm()">Forgot password?</a>
+            <a href="#" onclick="showAdminLoginForm()">Admin Login</a>
+        </div>
+    </div>
 
     <!-- Форма регистрации -->
     <div class="form-container" id="registerForm" style="display: none;">
-        <h2>Register</h2>
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
+        </div>
+        <h2>Create Account</h2>
         <form id="register" action="{% url 'register' %}" method="POST">
             {% csrf_token %}
             <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            <div class="error-message" id="register-username-error"></div>
+            
             <input type="email" name="email" placeholder="Email" required>
+            <div class="error-message" id="register-email-error"></div>
+            
             <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
-            <button type="submit">Register</button>
+            <div class="error-message" id="register-password-error"></div>
+            
+            <button type="submit">Sign Up</button>
         </form>
         <div class="switch-form">
-            <p>Already have an account? <a href="#" onclick="showLoginForm()">Login</a></p>
+            <p>Already have an account? <a href="#" onclick="showLoginForm()">Sign In</a></p>
         </div>
     </div>
 
     <!-- Форма для ввода email и отправки OTP -->
     <div class="form-container" id="otpLoginForm" style="display: none;">
-        <h2>Enter Email</h2>
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
+        </div>
+        <h2>Verify Your Email</h2>
         <form id="otpLogin">
             <input type="email" placeholder="Email" id="otp_email" required>
-            <button type="submit">Send OTP</button>
+            <div class="error-message" id="otp-email-error"></div>
+            
+            <button type="submit">Send Verification Code</button>
         </form>
     </div>
 
     <!-- Форма для ввода OTP -->
     <div class="form-container" id="otpVerificationForm" style="display: none;">
-        <h2>Enter OTP</h2>
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
+        </div>
+        <h2>Enter Verification Code</h2>
         <form id="otpVerification">
-            <input type="text" placeholder="OTP Code" id="otp_code" required>
-            <button type="submit">Verify OTP</button>
+            <input type="text" placeholder="Verification Code" id="otp_code" required>
+            <div class="error-message" id="otp-code-error"></div>
+            
+            <button type="submit">Verify Code</button>
         </form>
     </div>
 
-      <!--добавил-->
-       <!-- Форма запроса на восстановление пароля -->
+    <!-- Форма запроса на восстановление пароля -->
     <div class="form-container" id="requestResetForm" style="display: none;">
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
+        </div>
         <h2>Reset Password</h2>
         <form id="requestReset">
             <input type="text" placeholder="Username" id="reset_username" required>
+            <div class="error-message" id="reset-username-error"></div>
+            
             <input type="email" placeholder="Email" id="reset_email" required>
-            <button type="submit">Send Code</button>
+            <div class="error-message" id="reset-email-error"></div>
+            
+            <button type="submit">Send Reset Code</button>
         </form>
         <div class="switch-form">
-            <p><a href="#" onclick="showLoginForm()">Back to Login</a></p>
+            <p><a href="#" onclick="showLoginForm()">Back to Sign In</a></p>
         </div>
     </div>
 
-    <!-- Форма для ввода кода -->
+    <!-- Форма для ввода кода сброса -->
     <div class="form-container" id="verifyCodeForm" style="display: none;">
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
+        </div>
         <h2>Enter Reset Code</h2>
         <form id="verifyCode">
             <input type="text" placeholder="Reset Code" id="reset_code" required>
+            <div class="error-message" id="reset-code-error"></div>
+            
             <button type="submit">Verify Code</button>
         </form>
     </div>
 
     <!-- Форма для нового пароля -->
     <div class="form-container" id="resetPasswordForm" style="display: none;">
+        <div class="logo">
+            <h1>BPMN<span>Pro</span></h1>
+        </div>
         <h2>Set New Password</h2>
         <form id="resetPassword">
             <input type="password" placeholder="New Password" id="new_password" required>
+            <div class="error-message" id="new-password-error"></div>
+            
             <button type="submit">Reset Password</button>
         </form>
     </div>
 
+    <!-- Форма входа администратора -->
     <div class="form-container" id="adminLoginForm" style="display: none;">
-        <h2>Admin Login</h2>
+        <div class="logo">
+            <h1>BPMN<span>Admin</span></h1>
+        </div>
+        <h2>Admin Portal</h2>
         <form id="adminLogin">
-            <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            <input type="text" name="username" placeholder="Admin Username" required autocomplete="off">
+            <div class="error-message" id="admin-username-error"></div>
+            
             <input type="password" name="password" placeholder="Password" required autocomplete="new-password">
-            <input type="email" name="email" placeholder="Email" required>
-            <button type="submit">Login as Admin</button>
+            <div class="error-message" id="admin-password-error"></div>
+            
+            <input type="email" name="email" placeholder="Admin Email" required>
+            <div class="error-message" id="admin-email-error"></div>
+            
+            <button type="submit">Sign In as Admin</button>
         </form>
         <div class="switch-form">
-            <p><a href="#" onclick="showLoginForm()">Back to Login</a></p>
+            <p><a href="#" onclick="showLoginForm()">Back to User Login</a></p>
         </div>
     </div>
+    <div class="theme-switcher">
+        <select id="themeSelect" class="theme-select">
+            <option value="light">Light Theme</option>
+            <option value="dark">Dark Theme</option>
+        </select>
+    </div>
+
     <script>
         // Функция для показа формы входа администратора
        function showAdminLoginForm() {
@@ -452,6 +860,324 @@
                 return { error: 'An error occurred.' };
             }
         }
+
+        //язык
+        document.addEventListener('DOMContentLoaded', function() {
+    // Объект с переводами для всех форм
+    const translations = {
+        'en': {
+            // Общие элементы
+            'logoBPMN': 'BPMN',
+            'logoPro': 'Pro',
+            'logoAdmin': 'Admin',
+            
+            // Форма входа
+            'welcomeBack': 'Welcome Back',
+            'usernamePlaceholder': 'Username',
+            'passwordPlaceholder': 'Password',
+            'signInButton': 'Sign In',
+            'noAccountText': 'Don\'t have an account?',
+            'signUpLink': 'Sign Up',
+            'forgotPassword': 'Forgot password?',
+            'adminLogin': 'Admin Login',
+            
+            // Форма регистрации
+            'createAccount': 'Create Account',
+            'emailPlaceholder': 'Email',
+            'signUpButton': 'Sign Up',
+            'haveAccountText': 'Already have an account?',
+            'signInLink': 'Sign In',
+            
+            // OTP формы
+            'verifyEmail': 'Verify Your Email',
+            'sendVerificationCode': 'Send Verification Code',
+            'enterVerificationCode': 'Enter Verification Code',
+            'verifyCodeButton': 'Verify Code',
+            
+            // Формы сброса пароля
+            'resetPassword': 'Reset Password',
+            'sendResetCode': 'Send Reset Code',
+            'enterResetCode': 'Enter Reset Code',
+            'setNewPassword': 'Set New Password',
+            'newPasswordPlaceholder': 'New Password',
+            'resetPasswordButton': 'Reset Password',
+            'backToSignIn': 'Back to Sign In',
+            
+            // Админ форма
+            'adminPortal': 'Admin Portal',
+            'adminUsernamePlaceholder': 'Admin Username',
+            'adminEmailPlaceholder': 'Admin Email',
+            'signInAsAdmin': 'Sign In as Admin',
+            'backToUserLogin': 'Back to User Login'
+        },
+        'ru': {
+            // Общие элементы
+            'logoBPMN': 'BPMN',
+            'logoPro': 'Pro',
+            'logoAdmin': 'Admin',
+            
+            // Форма входа
+            'welcomeBack': 'С возвращением',
+            'usernamePlaceholder': 'Имя пользователя',
+            'passwordPlaceholder': 'Пароль',
+            'signInButton': 'Войти',
+            'noAccountText': 'Нет аккаунта?',
+            'signUpLink': 'Зарегистрироваться',
+            'forgotPassword': 'Забыли пароль?',
+            'adminLogin': 'Вход для администратора',
+            
+            // Форма регистрации
+            'createAccount': 'Создать аккаунт',
+            'emailPlaceholder': 'Email',
+            'signUpButton': 'Зарегистрироваться',
+            'haveAccountText': 'Уже есть аккаунт?',
+            'signInLink': 'Войти',
+            
+            // OTP формы
+            'verifyEmail': 'Подтвердите ваш Email',
+            'sendVerificationCode': 'Отправить код подтверждения',
+            'enterVerificationCode': 'Введите код подтверждения',
+            'verifyCodeButton': 'Подтвердить код',
+            
+            // Формы сброса пароля
+            'resetPassword': 'Сброс пароля',
+            'sendResetCode': 'Отправить код сброса',
+            'enterResetCode': 'Введите код сброса',
+            'setNewPassword': 'Установить новый пароль',
+            'newPasswordPlaceholder': 'Новый пароль',
+            'resetPasswordButton': 'Сбросить пароль',
+            'backToSignIn': 'Вернуться к входу',
+            
+            // Админ форма
+            'adminPortal': 'Панель администратора',
+            'adminUsernamePlaceholder': 'Имя администратора',
+            'adminEmailPlaceholder': 'Email администратора',
+            'signInAsAdmin': 'Войти как администратор',
+            'backToUserLogin': 'Вернуться к пользовательскому входу'
+        }
+    };
+
+    // Функция для обновления текста на странице
+    function updateLanguage(lang) {
+        const t = translations[lang];
+        
+        // Обновляем логотипы
+        document.querySelectorAll('.logo h1 span').forEach(span => {
+            span.textContent = t['logo' + span.textContent];
+        });
+        
+        // Форма входа
+        if (document.getElementById('loginForm')) {
+            document.querySelector('#loginForm h2').textContent = t.welcomeBack;
+            document.querySelector('#loginForm input[name="username"]').placeholder = t.usernamePlaceholder;
+            document.querySelector('#loginForm input[name="password"]').placeholder = t.passwordPlaceholder;
+            document.querySelector('#loginForm button[type="submit"]').textContent = t.signInButton;
+            document.querySelector('#loginForm .switch-form p').innerHTML = 
+                t.noAccountText + ' <a href="#" onclick="showRegisterForm()">' + t.signUpLink + '</a>';
+            document.querySelectorAll('#loginForm .form-footer a')[0].textContent = t.forgotPassword;
+            document.querySelectorAll('#loginForm .form-footer a')[1].textContent = t.adminLogin;
+        }
+        
+        // Форма регистрации
+        if (document.getElementById('registerForm')) {
+            document.querySelector('#registerForm h2').textContent = t.createAccount;
+            document.querySelector('#registerForm input[name="username"]').placeholder = t.usernamePlaceholder;
+            document.querySelector('#registerForm input[name="email"]').placeholder = t.emailPlaceholder;
+            document.querySelector('#registerForm input[name="password"]').placeholder = t.passwordPlaceholder;
+            document.querySelector('#registerForm button[type="submit"]').textContent = t.signUpButton;
+            document.querySelector('#registerForm .switch-form p').innerHTML = 
+                t.haveAccountText + ' <a href="#" onclick="showLoginForm()">' + t.signInLink + '</a>';
+        }
+        
+        // OTP формы
+        if (document.getElementById('otpLoginForm')) {
+            document.querySelector('#otpLoginForm h2').textContent = t.verifyEmail;
+            document.querySelector('#otpLoginForm button[type="submit"]').textContent = t.sendVerificationCode;
+        }
+        
+        if (document.getElementById('otpVerificationForm')) {
+            document.querySelector('#otpVerificationForm h2').textContent = t.enterVerificationCode;
+            document.querySelector('#otpVerificationForm button[type="submit"]').textContent = t.verifyCodeButton;
+        }
+        
+        // Формы сброса пароля
+        if (document.getElementById('requestResetForm')) {
+            document.querySelector('#requestResetForm h2').textContent = t.resetPassword;
+            document.querySelector('#requestResetForm button[type="submit"]').textContent = t.sendResetCode;
+            document.querySelector('#requestResetForm .switch-form p').innerHTML = 
+                '<a href="#" onclick="showLoginForm()">' + t.backToSignIn + '</a>';
+        }
+        
+        if (document.getElementById('verifyCodeForm')) {
+            document.querySelector('#verifyCodeForm h2').textContent = t.enterResetCode;
+            document.querySelector('#verifyCodeForm button[type="submit"]').textContent = t.verifyCodeButton;
+        }
+        
+        if (document.getElementById('resetPasswordForm')) {
+            document.querySelector('#resetPasswordForm h2').textContent = t.setNewPassword;
+            document.querySelector('#resetPasswordForm input[type="password"]').placeholder = t.newPasswordPlaceholder;
+            document.querySelector('#resetPasswordForm button[type="submit"]').textContent = t.resetPasswordButton;
+        }
+        
+        // Админ форма
+        if (document.getElementById('adminLoginForm')) {
+            document.querySelector('#adminLoginForm h2').textContent = t.adminPortal;
+            document.querySelector('#adminLoginForm input[name="username"]').placeholder = t.adminUsernamePlaceholder;
+            document.querySelector('#adminLoginForm input[name="password"]').placeholder = t.passwordPlaceholder;
+            document.querySelector('#adminLoginForm input[name="email"]').placeholder = t.adminEmailPlaceholder;
+            document.querySelector('#adminLoginForm button[type="submit"]').textContent = t.signInAsAdmin;
+            document.querySelector('#adminLoginForm .switch-form p').innerHTML = 
+                '<a href="#" onclick="showLoginForm()">' + t.backToUserLogin + '</a>';
+        }
+        
+        // Сохраняем выбор языка
+        localStorage.setItem('userLanguage', lang);
+        updateServerLanguage(lang);
+    }
+
+    // Отправка выбранного языка на сервер
+    function updateServerLanguage(lang) {
+        fetch('/set_language/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({language: lang})
+        }).catch(err => console.error('Language update error:', err));
+    }
+
+    // Получение CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Добавляем переключатель языка в DOM
+    function addLanguageSwitcher() {
+        const languageSwitcher = document.createElement('div');
+        languageSwitcher.className = 'language-switcher';
+        languageSwitcher.style.position = 'absolute';
+        languageSwitcher.style.top = '20px';
+        languageSwitcher.style.right = '20px';
+        languageSwitcher.style.zIndex = '1000';
+        
+        languageSwitcher.innerHTML = `
+            <select id="languageSelect">
+                <option value="en">English</option>
+                <option value="ru">Русский</option>
+            </select>
+        `;
+        
+        document.body.appendChild(languageSwitcher);
+        
+        // Устанавливаем сохраненный язык или язык по умолчанию
+        const savedLang = localStorage.getItem('userLanguage') || 'en';
+        document.getElementById('languageSelect').value = savedLang;
+        updateLanguage(savedLang);
+        
+        // Обработчик изменения языка
+        document.getElementById('languageSelect').addEventListener('change', function() {
+            updateLanguage(this.value);
+        });
+    }
+
+    // Инициализация
+    addLanguageSwitcher();
+});
+
+// тема приложения
+document.addEventListener('DOMContentLoaded', function() {
+    // Функция для применения темы
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+    }
+
+    // Проверяем сохраненную тему в localStorage
+    const savedTheme = localStorage.getItem('userTheme');
+    const themeSelect = document.getElementById('themeSelect');
+    
+    if (savedTheme) {
+        applyTheme(savedTheme);
+        if (themeSelect) themeSelect.value = savedTheme;
+    }
+
+    // Проверяем тему в сессии (если пользователь авторизован)
+    const username = document.getElementById('accountInfo')?.dataset?.username;
+    if (username) {
+        fetch('/get_user_theme/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({username: username})
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.theme) {
+                applyTheme(data.theme);
+                if (themeSelect) themeSelect.value = data.theme;
+                localStorage.setItem('userTheme', data.theme);
+            }
+        })
+        .catch(err => console.error('Theme fetch error:', err));
+    }
+
+    // Обработчик изменения темы
+    if (themeSelect) {
+        themeSelect.addEventListener('change', function() {
+            const selectedTheme = this.value;
+            applyTheme(selectedTheme);
+            localStorage.setItem('userTheme', selectedTheme);
+
+            // Если пользователь авторизован, сохраняем тему на сервере
+            if (username) {
+                fetch('/update_theme/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),
+                    },
+                    body: JSON.stringify({
+                        theme: selectedTheme,
+                        username: username
+                    })
+                }).catch(err => console.error('Theme update error:', err));
+            }
+        });
+    }
+
+    // Функция для получения CSRF токена
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+});
 
     </script>
 </body>

@@ -9,6 +9,66 @@ from django.conf import settings
 from django.shortcuts import redirect
 from django.contrib.auth.models import User
 
+@csrf_exempt
+def update_theme(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            theme = data.get('theme')
+            username = data.get('username')
+            
+            if theme in ['light', 'dark']:
+                # Сохраняем тему в сессии
+                request.session['user_theme'] = theme
+                
+                # Если нужно, можно сохранить тему в профиле пользователя
+                try:
+                    user = Users.objects.get(Username=username)
+                    user.theme = theme
+                    user.save()
+                except Users.DoesNotExist:
+                    pass
+                    
+                return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            pass
+    return JsonResponse({'status': 'error'}, status=400)
+
+@csrf_exempt
+def get_user_theme(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            
+            # Проверяем тему в сессии
+            if 'user_theme' in request.session:
+                return JsonResponse({'theme': request.session['user_theme']})
+                
+            # Если нет в сессии, проверяем в профиле пользователя
+            try:
+                user = Users.objects.get(Username=username)
+                if hasattr(user, 'theme') and user.theme in ['light', 'dark']:
+                    return JsonResponse({'theme': user.theme})
+            except Users.DoesNotExist:
+                pass
+                
+            # Возвращаем тему по умолчанию
+            return JsonResponse({'theme': 'light'})
+            
+        except json.JSONDecodeError:
+            pass
+    return JsonResponse({'status': 'error'}, status=400)
+
+def set_language(request):
+    if request.method == 'POST':
+        language = request.POST.get('language', settings.LANGUAGE_CODE)
+        if language in [lang[0] for lang in settings.LANGUAGES]:
+            request.session['django_language'] = language
+            activate(language)
+        return JsonResponse({'success': True})
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 def vhod(request):
     # Проверяем, передаёт ли пользователь данные (например, POST-запрос при логине)
     if request.method == 'POST':

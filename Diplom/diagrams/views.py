@@ -10,7 +10,7 @@ from .models import BPMNFile, BPMNDiagrams
 from .models import ChatMessage
 from django.contrib.admin.views.decorators import staff_member_required
 from builder.models import BPMNDiagram
-
+from django.utils.translation import activate, get_language
 
 
 def chat_history(request):
@@ -51,7 +51,6 @@ def main_menu(request):
         'username': username,
     }
     return render(request, 'diagrams/main_menu.html', context)
-
 def peculiarities(request):
     return render(request, 'diagrams/peculiarities.html')
 def solutions(request):
@@ -59,26 +58,43 @@ def solutions(request):
 
 def block(request):
     username = request.session.get('username')
+    # Получаем язык из сессии или используем 'ru' по умолчанию
+    language = request.session.get('language', 'ru')
     context = {
         'username': username,
+        'language': language,  # Передаем язык в контекст шаблона
     }
     return  render(request, 'builder/block_diagrams.html', context)
+    
 def activity(request):
     username = request.session.get('username')
+    # Получаем язык и тему из сессии или используем значения по умолчанию
+    language = request.session.get('language', 'ru')
+    theme = request.session.get('theme', 'light')
+    
     context = {
         'username': username,
+        'language': language,
+        'theme': theme,  # Передаем тему в контекст шаблона
     }
-    return  render(request, 'builder/activity.html', context)
+    return render(request, 'builder/activity.html', context)
+
 def sipoc(request):
     username = request.session.get('username')
+    # Получаем язык из сессии или используем 'ru' по умолчанию
+    language = request.session.get('language', 'ru')
     context = {
         'username': username,
+        'language': language,  # Передаем язык в контекст шаблона
     }
     return  render(request, 'builder/SIPOC_diagram.html', context)
 def swim(request):
     username = request.session.get('username')
+    # Получаем язык из сессии или используем 'ru' по умолчанию
+    language = request.session.get('language', 'ru')
     context = {
         'username': username,
+        'language': language,  # Передаем язык в контекст шаблона
     }
     return  render(request, 'builder/Swim_lane_diagram.html', context)
 
@@ -170,3 +186,65 @@ def bpmn_editor(request, pk=None):
         diagram = BPMNFile.objects.create(name="Новая диаграмма")  # Создаём новую, если pk нет
         return redirect('bpmn_editor', pk=diagram.pk)  # Перенаправляем на редактирование с pk
     return render(request, 'diagrams/editor.html', {'diagram': diagram})
+
+@csrf_exempt
+def set_language(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            lang = data.get('language', 'ru')
+            activate(lang)
+            request.session['django_language'] = lang
+            return JsonResponse({'status': 'success', 'language': get_language()})
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+    return JsonResponse({'status': 'error'}, status=400)
+
+def update_theme(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            theme = data.get('theme')
+            username = data.get('username')
+            
+            if theme in ['light', 'dark']:
+                # Сохраняем тему в сессии
+                request.session['user_theme'] = theme
+                
+                # Если нужно, можно сохранить тему в профиле пользователя
+                try:
+                    user = Users.objects.get(Username=username)
+                    user.theme = theme
+                    user.save()
+                except Users.DoesNotExist:
+                    pass
+                    
+                return JsonResponse({'status': 'success'})
+        except json.JSONDecodeError:
+            pass
+    return JsonResponse({'status': 'error'}, status=400)
+
+def get_user_theme(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            username = data.get('username')
+            
+            # Проверяем тему в сессии
+            if 'user_theme' in request.session:
+                return JsonResponse({'theme': request.session['user_theme']})
+                
+            # Если нет в сессии, проверяем в профиле пользователя
+            try:
+                user = Users.objects.get(Username=username)
+                if hasattr(user, 'theme') and user.theme in ['light', 'dark']:
+                    return JsonResponse({'theme': user.theme})
+            except Users.DoesNotExist:
+                pass
+                
+            # Возвращаем тему по умолчанию
+            return JsonResponse({'theme': 'light'})
+            
+        except json.JSONDecodeError:
+            pass
+    return JsonResponse({'status': 'error'}, status=400)
